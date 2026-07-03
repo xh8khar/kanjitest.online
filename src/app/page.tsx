@@ -12,13 +12,13 @@ export const metadata: Metadata = {
     title: "KanjiTest.Online — Free JLPT Kanji Practice",
     description:
       "Master JLPT N5 and N4 kanji with readings, examples, flashcards, and quizzes. N3, N2, N1 coming soon.",
-    url: "https://kanjitest.online",
+    url: "https://www.kanjitest.online",
   },
   twitter: {
     title: "KanjiTest.Online — Free JLPT Kanji Practice",
     description: "Master JLPT N5 and N4 kanji with readings, examples, flashcards, and quizzes.",
   },
-  alternates: { canonical: "https://kanjitest.online" },
+  alternates: { canonical: "https://www.kanjitest.online" },
 }
 
 const levels = [

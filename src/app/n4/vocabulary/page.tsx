@@ -11,10 +11,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: "JLPT N4 Vocabulary List — 473 Words",
     description: "Complete JLPT N4 vocabulary list with readings, meanings, and associated kanji.",
-    url: "https://kanjitest.online/n4/vocabulary",
+    url: "https://www.kanjitest.online/n4/vocabulary",
   },
   twitter: { title: "JLPT N4 Vocabulary List — 473 Words", description: "Complete JLPT N4 vocabulary with readings, meanings, and kanji." },
-  alternates: { canonical: "https://kanjitest.online/n4/vocabulary" },
+  alternates: { canonical: "https://www.kanjitest.online/n4/vocabulary" },
 }
 
 export default function N4Vocabulary() {

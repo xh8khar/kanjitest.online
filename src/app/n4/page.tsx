@@ -11,10 +11,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: "JLPT N4 Kanji Hub — All 171 Characters",
     description: "Browse all 171 JLPT N4 kanji with readings, examples, and sentences.",
-    url: "https://kanjitest.online/n4",
+    url: "https://www.kanjitest.online/n4",
   },
   twitter: { title: "JLPT N4 Kanji Hub — All 171 Characters", description: "Complete list of 171 JLPT N4 kanji with readings and examples." },
-  alternates: { canonical: "https://kanjitest.online/n4" },
+  alternates: { canonical: "https://www.kanjitest.online/n4" },
 }
 
 export default function N4Hub() {

@@ -9,10 +9,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Test Sets — JLPT N4 Kanji Quizzes",
     description: "20 test sets of 20 questions each for JLPT N4 kanji practice.",
-    url: "https://kanjitest.online/n4/sets",
+    url: "https://www.kanjitest.online/n4/sets",
   },
   twitter: { title: "Test Sets — JLPT N4 Kanji Quizzes", description: "20 test sets of 20 kanji questions each." },
-  alternates: { canonical: "https://kanjitest.online/n4/sets" },
+  alternates: { canonical: "https://www.kanjitest.online/n4/sets" },
 }
 
 export default function SetsPage() {

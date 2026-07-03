@@ -36,10 +36,10 @@ export async function generateMetadata({
     openGraph: {
       title: `Test Set ${set} — JLPT N5 Kanji Quiz`,
       description: desc,
-      url: `https://kanjitest.online/n5/sets/${set}/`,
+      url: `https://www.kanjitest.online/n5/sets/${set}/`,
     },
     twitter: { title: `Test Set ${set} — JLPT N5 Kanji Quiz`, description: desc },
-    alternates: { canonical: `https://kanjitest.online/n5/sets/${set}/` },
+    alternates: { canonical: `https://www.kanjitest.online/n5/sets/${set}/` },
   }
 }
 

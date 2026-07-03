@@ -23,10 +23,10 @@ export async function generateMetadata({
     openGraph: {
       title: `Flashcard: ${k.kanji} — JLPT N5`,
       description: `Learn JLPT N5 kanji ${k.kanji} with flashcards.`,
-      url: `https://kanjitest.online/n5/flashcards/${k.id}/`,
+      url: `https://www.kanjitest.online/n5/flashcards/${k.id}/`,
     },
     twitter: { title: `Flashcard: ${k.kanji} — JLPT N5`, description: `JLPT N5 kanji ${k.kanji} flashcard.` },
-    alternates: { canonical: `https://kanjitest.online/n5/flashcards/${k.id}/` },
+    alternates: { canonical: `https://www.kanjitest.online/n5/flashcards/${k.id}/` },
   }
 }
 

@@ -12,7 +12,7 @@ const maru = Zen_Maru_Gothic({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://kanjitest.online"),
+  metadataBase: new URL("https://www.kanjitest.online"),
   title: {
     default: "Kanji Test Online — Free JLPT N5 Kanji Practice",
     template: "%s | Kanji Test Online",

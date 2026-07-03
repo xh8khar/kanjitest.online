@@ -21,10 +21,10 @@ export function generateMetadata({ params }: { params: Promise<{ id: string }> }
       openGraph: {
         title: `${k.kanji} (${k.meanings[0]}) — JLPT N4 Kanji`,
         description: desc,
-        url: `https://kanjitest.online/n4/study/${k.id}/`,
+        url: `https://www.kanjitest.online/n4/study/${k.id}/`,
       },
       twitter: { title: `${k.kanji} (${k.meanings[0]}) — JLPT N4 Kanji`, description: desc },
-      alternates: { canonical: `https://kanjitest.online/n4/study/${k.id}/` },
+      alternates: { canonical: `https://www.kanjitest.online/n4/study/${k.id}/` },
     }
   })
 }

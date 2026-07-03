@@ -9,10 +9,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Privacy Policy — Kanji Test Online",
     description: "Kanji Test Online privacy policy. No personal data collected.",
-    url: "https://kanjitest.online/privacy",
+    url: "https://www.kanjitest.online/privacy",
   },
   twitter: { title: "Privacy Policy — Kanji Test Online", description: "Kanji Test Online privacy policy." },
-  alternates: { canonical: "https://kanjitest.online/privacy" },
+  alternates: { canonical: "https://www.kanjitest.online/privacy" },
 }
 
 export default function PrivacyPage() {

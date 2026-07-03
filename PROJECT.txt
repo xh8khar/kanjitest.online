@@ -1,6 +1,6 @@
 KanjiTest.Online — Project Summary
 ====================================
-Platform: https://kanjitest.online
+Platform: https://www.kanjitest.online
 GitHub:   https://github.com/xh8khar/kanjitest.online
 Deploy:   Cloudflare Pages (static export via npm run build)
 

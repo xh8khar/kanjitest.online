@@ -39,7 +39,7 @@ export default function Footer() {
           <Link href="/about/" className="text-ink/60 hover:text-ink transition-colors">About</Link>
           <Link href="/privacy/" className="text-ink/60 hover:text-ink transition-colors">Privacy</Link>
           <Link href="/terms/" className="text-ink/60 hover:text-ink transition-colors">Terms</Link>
-          <span className="text-xs text-ink/40">&copy; 2026 kanjitest.online</span>
+          <span className="text-xs text-ink/40">&copy; 2026 www.kanjitest.online</span>
         </div>
       </div>
     </footer>

@@ -20,10 +20,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     openGraph: {
       title: `${vocab.word} (${vocab.reading}) — JLPT N5 Vocabulary`,
       description: `${vocab.word} (${vocab.reading}) — ${vocab.english}. JLPT N5 vocabulary with example sentences.`,
-      url: `https://kanjitest.online/n5/vocabulary/${slug}`,
+      url: `https://www.kanjitest.online/n5/vocabulary/${slug}`,
     },
     twitter: { title: `${vocab.word} (${vocab.reading}) — JLPT N5 Vocabulary`, description: `${vocab.word} (${vocab.reading}) — ${vocab.english}.` },
-    alternates: { canonical: `https://kanjitest.online/n5/vocabulary/${slug}` },
+    alternates: { canonical: `https://www.kanjitest.online/n5/vocabulary/${slug}` },
   }
 }
 

@@ -4,9 +4,9 @@ import type { Metadata } from "next"
 export const metadata: Metadata = {
   title: "JLPT N3 Kanji — Coming Soon | KanjiTest.Online",
   description: "JLPT N3 kanji study, flashcards, and tests are coming soon to KanjiTest.Online.",
-  openGraph: { title: "JLPT N3 Kanji — Coming Soon", description: "JLPT N3 kanji study, flashcards, and tests are coming soon.", url: "https://kanjitest.online/n3" },
+  openGraph: { title: "JLPT N3 Kanji — Coming Soon", description: "JLPT N3 kanji study, flashcards, and tests are coming soon.", url: "https://www.kanjitest.online/n3" },
   twitter: { title: "JLPT N3 Kanji — Coming Soon", description: "JLPT N3 kanji study, flashcards, and tests are coming soon." },
-  alternates: { canonical: "https://kanjitest.online/n3" },
+  alternates: { canonical: "https://www.kanjitest.online/n3" },
 }
 
 export default function N3Hub() {

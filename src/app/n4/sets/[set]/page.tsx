@@ -16,10 +16,10 @@ export async function generateMetadata({ params }: { params: Promise<{ set: stri
     openGraph: {
       title: `Test Set ${set} — JLPT N4 Kanji Quiz`,
       description: desc,
-      url: `https://kanjitest.online/n4/sets/${set}/`,
+      url: `https://www.kanjitest.online/n4/sets/${set}/`,
     },
     twitter: { title: `Test Set ${set} — JLPT N4 Kanji Quiz`, description: desc },
-    alternates: { canonical: `https://kanjitest.online/n4/sets/${set}/` },
+    alternates: { canonical: `https://www.kanjitest.online/n4/sets/${set}/` },
   }
 }
 

@@ -11,10 +11,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: "JLPT N5 Vocabulary List — 219 Words",
     description: "Complete JLPT N5 vocabulary list with readings, meanings, and associated kanji.",
-    url: "https://kanjitest.online/n5/vocabulary",
+    url: "https://www.kanjitest.online/n5/vocabulary",
   },
   twitter: { title: "JLPT N5 Vocabulary List — 219 Words", description: "Complete JLPT N5 vocabulary with readings, meanings, and kanji." },
-  alternates: { canonical: "https://kanjitest.online/n5/vocabulary" },
+  alternates: { canonical: "https://www.kanjitest.online/n5/vocabulary" },
 }
 
 export default function N5Vocabulary() {

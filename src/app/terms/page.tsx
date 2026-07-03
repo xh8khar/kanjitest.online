@@ -9,10 +9,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Terms of Use — Kanji Test Online",
     description: "Terms of use for Kanji Test Online. Free JLPT N5 kanji study.",
-    url: "https://kanjitest.online/terms",
+    url: "https://www.kanjitest.online/terms",
   },
   twitter: { title: "Terms of Use — Kanji Test Online", description: "Terms of use for Kanji Test Online." },
-  alternates: { canonical: "https://kanjitest.online/terms" },
+  alternates: { canonical: "https://www.kanjitest.online/terms" },
 }
 
 export default function TermsPage() {

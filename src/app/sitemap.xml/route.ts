@@ -2,7 +2,7 @@ import { getAll, getVocabulary } from "@/lib/kanji"
 
 export const dynamic = "force-static"
 
-const BASE = "https://kanjitest.online"
+const BASE = "https://www.kanjitest.online"
 
 export async function GET() {
   const urls: string[] = [

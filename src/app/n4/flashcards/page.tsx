@@ -9,10 +9,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Flashcards — JLPT N4 Kanji Practice",
     description: "Flip through all 171 JLPT N4 kanji flashcards. Track your progress with Know/Again.",
-    url: "https://kanjitest.online/n4/flashcards",
+    url: "https://www.kanjitest.online/n4/flashcards",
   },
   twitter: { title: "Flashcards — JLPT N4 Kanji Practice", description: "Flip through all 171 JLPT N4 kanji flashcards." },
-  alternates: { canonical: "https://kanjitest.online/n4/flashcards" },
+  alternates: { canonical: "https://www.kanjitest.online/n4/flashcards" },
 }
 
 export default function FlashcardsIndex() {

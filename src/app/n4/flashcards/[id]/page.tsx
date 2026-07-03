@@ -19,10 +19,10 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     openGraph: {
       title: `Flashcard: ${k.kanji} — JLPT N4`,
       description: `Learn JLPT N4 kanji ${k.kanji} with flashcards.`,
-      url: `https://kanjitest.online/n4/flashcards/${k.id}/`,
+      url: `https://www.kanjitest.online/n4/flashcards/${k.id}/`,
     },
     twitter: { title: `Flashcard: ${k.kanji} — JLPT N4`, description: `JLPT N4 kanji ${k.kanji} flashcard.` },
-    alternates: { canonical: `https://kanjitest.online/n4/flashcards/${k.id}/` },
+    alternates: { canonical: `https://www.kanjitest.online/n4/flashcards/${k.id}/` },
   }
 }
 
