@@ -1,3 +1,5 @@
+import { getAll, getVocabulary } from "@/lib/kanji"
+
 export const dynamic = "force-static"
 
 const BASE = "https://kanjitest.online"
@@ -5,21 +7,38 @@ const BASE = "https://kanjitest.online"
 export async function GET() {
   const urls: string[] = [
     BASE,
-    `${BASE}/n5/`,
-    `${BASE}/n5/study/`,
-    `${BASE}/n5/flashcards/`,
-    `${BASE}/n5/sets/`,
     `${BASE}/about/`,
     `${BASE}/privacy/`,
     `${BASE}/terms/`,
+    `${BASE}/n3/`,
+    `${BASE}/n2/`,
+    `${BASE}/n1/`,
   ]
 
-  for (let i = 1; i <= 79; i++) {
-    urls.push(`${BASE}/n5/study/${i}/`)
-  }
+  for (const level of ["n5", "n4"] as const) {
+    const all = getAll(level)
 
-  for (let i = 1; i <= 20; i++) {
-    urls.push(`${BASE}/n5/sets/${i}/`)
+    urls.push(`${BASE}/${level}/`)
+    urls.push(`${BASE}/${level}/study/`)
+    urls.push(`${BASE}/${level}/flashcards/`)
+    urls.push(`${BASE}/${level}/sets/`)
+    urls.push(`${BASE}/${level}/vocabulary/`)
+
+    for (const k of all) {
+      urls.push(`${BASE}/${level}/study/${k.id}/`)
+      urls.push(`${BASE}/${level}/flashcards/${k.id}/`)
+    }
+
+    const totalSets = level === "n4" ? 20 : 20
+    for (let i = 1; i <= totalSets; i++) {
+      urls.push(`${BASE}/${level}/sets/${i}/`)
+    }
+
+    const vocab = getVocabulary(level)
+    for (const v of vocab) {
+      const slug = encodeURIComponent(v.slug)
+      urls.push(`${BASE}/${level}/vocabulary/${slug}/`)
+    }
   }
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
