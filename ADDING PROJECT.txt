@@ -1,0 +1,49 @@
+KanjiTest.Online — Project Summary
+====================================
+Platform: https://kanjitest.online
+GitHub:   https://github.com/xh8khar/kanjitest.online
+Deploy:   Cloudflare Pages (static export via npm run build)
+
+Stack
+-----
+- Next.js (App Router, static export to out/)
+- TypeScript + Tailwind CSS
+- Zen Maru Gothic (Google Fonts)
+- Monochrome black (#000000) design
+- No backend, no DB, no auth — React state + localStorage only
+
+Status
+------
+- N5: 79 kanji, 237 examples, 219 vocabulary words, 20 test sets, flashcards ✓
+- N4: 171 kanji, 513 examples, 473 vocabulary words, 20 test sets, flashcards ✓
+- N3/N2/N1: hub pages only ("Coming Soon")
+
+Features per Level
+------------------
+- Study: Browse kanji with kun/on readings, 3 example words, sentences
+- Flashcards: Flip through kanji, mark "Know it" / "Again" (localStorage)
+- Vocabulary: 219 (N5) / 473 (N4) words with readings, meanings, kanji badges, sentences
+- Test: 20 sets × 20 questions, alternating kanji→reading / reading→kanji, instant MC feedback
+
+Pages Generated
+---------------
+- 1254 static pages total (N5 + N4 study, flashcards, tests, vocabulary)
+- Sitemap includes all 1249 unique URLs (raw hiragana in paths)
+- Every page has unique SEO metadata + schema.org structured data
+
+Key Decisions
+-------------
+- Brand: "KanjiTest.Online" with ".Online" in blue
+- Logo: Black circle with 日
+- output: "export" only in production (NODE_ENV === "production")
+- N4 kanji IDs start at 80 (continuous from N5's 79)
+- Vocabulary slugs use hiragana reading (e.g. /n5/vocabulary/あおい/)
+- Collision slugs: reading-word format (e.g. かぜ-風邪)
+- Separate localStorage keys: kanjitest_flashcards (N5), kanjitest_flashcards_n4 (N4)
+- Kun readings cleaned of okurigana dots (もって not もっ.て)
+
+Build
+-----
+- npm run build (production) → out/ directory (static export)
+- Zero errors, 1254/1254 pages
+- GitHub Actions deploy workflow included (needs CLOUDFLARE_API_TOKEN secret)
