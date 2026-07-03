@@ -36,8 +36,7 @@ export async function GET() {
 
     const vocab = getVocabulary(level)
     for (const v of vocab) {
-      const slug = encodeURIComponent(v.slug)
-      urls.push(`${BASE}/${level}/vocabulary/${slug}/`)
+      urls.push(`${BASE}/${level}/vocabulary/${v.slug}/`)
     }
   }
 

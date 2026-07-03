@@ -36,7 +36,7 @@ export default function N5Vocabulary() {
         {sorted.map((v, i) => (
           <Link
             key={`${v.word}|${v.reading}`}
-            href={`/n5/vocabulary/${encodeURIComponent(v.slug)}/`}
+            href={`/n5/vocabulary/${v.slug}/`}
             className="border border-ink/20 rounded-xl px-5 py-3 bg-white flex items-center gap-4 hover:border-ink/40 transition-all"
           >
             <div className="w-7 h-7 rounded-md bg-ink/10 flex items-center justify-center shrink-0">

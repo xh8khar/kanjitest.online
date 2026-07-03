@@ -79,10 +79,10 @@ export default async function N5VocabDetail({ params }: { params: Promise<{ slug
 
       <div className="flex items-center justify-between mt-6">
         {prev ? (
-          <Link href={`/n5/vocabulary/${encodeURIComponent(prev.slug)}/`} className="text-sm text-ink/60 hover:text-ink transition-colors">&larr; {prev.word}</Link>
+          <Link href={`/n5/vocabulary/${prev.slug}/`} className="text-sm text-ink/60 hover:text-ink transition-colors">&larr; {prev.word}</Link>
         ) : <div />}
         {next ? (
-          <Link href={`/n5/vocabulary/${encodeURIComponent(next.slug)}/`} className="text-sm text-ink/60 hover:text-ink transition-colors">{next.word} &rarr;</Link>
+          <Link href={`/n5/vocabulary/${next.slug}/`} className="text-sm text-ink/60 hover:text-ink transition-colors">{next.word} &rarr;</Link>
         ) : <div />}
       </div>
     </div>
