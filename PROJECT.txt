@@ -2,48 +2,70 @@ KanjiTest.Online — Project Summary
 ====================================
 Platform: https://www.kanjitest.online
 GitHub:   https://github.com/xh8khar/kanjitest.online
-Deploy:   Cloudflare Pages (static export via npm run build)
+Domain:   www.kanjitest.online (Cloudflare DNS → GitHub Pages)
 
 Stack
 -----
-- Next.js (App Router, static export to out/)
-- TypeScript + Tailwind CSS
+- Next.js 16.2.10 (App Router, static export to out/)
+- TypeScript + Tailwind CSS v4
 - Zen Maru Gothic (Google Fonts)
-- Monochrome black (#000000) design
+- Cream (#fdf8f0) background, ink (#1a1a1a) text
 - No backend, no DB, no auth — React state + localStorage only
 
 Status
 ------
 - N5: 79 kanji, 237 examples, 219 vocabulary words, 20 test sets, flashcards ✓
 - N4: 171 kanji, 513 examples, 473 vocabulary words, 20 test sets, flashcards ✓
-- N3/N2/N1: hub pages only ("Coming Soon")
+- N3: 367 kanji, 1101 examples, 935 vocabulary words, 20 test sets, flashcards ✓
+- N2/N1: hub pages only ("Coming Soon")
 
 Features per Level
 ------------------
-- Study: Browse kanji with kun/on readings, 3 example words, sentences
+- Study: Browse kanji with kun/on readings, example words, sentences
 - Flashcards: Flip through kanji, mark "Know it" / "Again" (localStorage)
-- Vocabulary: 219 (N5) / 473 (N4) words with readings, meanings, kanji badges, sentences
+- Vocabulary: Words with readings, meanings, kanji badges, sentences
 - Test: 20 sets × 20 questions, alternating kanji→reading / reading→kanji, instant MC feedback
 
 Pages Generated
 ---------------
-- 1254 static pages total (N5 + N4 study, flashcards, tests, vocabulary)
-- Sitemap includes all 1249 unique URLs (raw hiragana in paths)
-- Every page has unique SEO metadata + schema.org structured data
+- 2947 static pages total (N5 + N4 + N3 study, flashcards, tests, vocabulary)
+- All URLs use kanji characters for study/flashcards (SEO-optimized)
+- Numeric IDs for test sets (meaningful identifiers)
 
 Key Decisions
 -------------
-- Brand: "KanjiTest.Online" with ".Online" in blue
+- Brand: "KanjiTest.Online"
 - Logo: Black circle with 日
+- Template-based title generation ("%s | KanjiTest.Online") in root layout
 - output: "export" only in production (NODE_ENV === "production")
-- N4 kanji IDs start at 80 (continuous from N5's 79)
-- Vocabulary slugs use hiragana reading (e.g. /n5/vocabulary/あおい/)
-- Collision slugs: reading-word format (e.g. かぜ-風邪)
-- Separate localStorage keys: kanjitest_flashcards (N5), kanjitest_flashcards_n4 (N4)
-- Kun readings cleaned of okurigana dots (もって not もっ.て)
+- Kanji IDs per level: N5=1-79, N4=80-250, N3=1-367
+- Study/flashcard URLs use kanji char: /n5/study/一/ instead of /n5/study/1/
+- Vocabulary slugs use hiragana reading: /n5/vocabulary/あおい/
+- Separate localStorage keys per level for flashcards progress
+- Homepage modeled after kanji123.org: hero + level cards + content sections
+- Mobile-first responsive design, horizontal chip nav on mobile
+
+Recent Changes (July 3, 2026)
+------------------------------
+- Added N3 data: 367 kanji, 935 vocabulary words, 20 test sets
+- Mobile UX overhaul: responsive Navbar, Footer, all page layouts
+- Homepage redesign: kanji123.org style with per-level sections
+- Standardized SEO: template-based titles, OG/Twitter tags on all pages
+- Fixed Sidebar React key collision (set keys vs kanji keys)
+- Refactored study/[id] → study/[kanji] and flashcards/[id] → flashcards/[kanji]
+- Added decodeURIComponent for Next.js 16 encoded route params
+- Fixed flashcards index redirect to use kanji instead of numeric id
+- Switched deployment from Cloudflare Pages to GitHub Pages
 
 Build
 -----
-- npm run build (production) → out/ directory (static export)
-- Zero errors, 1254/1254 pages
-- GitHub Actions deploy workflow included (needs CLOUDFLARE_API_TOKEN secret)
+- npm run build → out/ directory (static export)
+- Zero errors, 2947/2947 pages
+- GitHub Actions workflow: .github/workflows/deploy.yml
+- Deploys via peaceiris/actions-gh-pages to gh-pages branch
+
+Known Issues
+------------
+- Need to configure GitHub Pages source to "gh-pages" branch in repo settings
+- Custom domain DNS needs to point to GitHub Pages (xh8khar.github.io)
+- Future: N2/N1 kanji data generation, premium features consideration
