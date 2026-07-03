@@ -2,7 +2,7 @@ import FlashcardsClient from "./FlashcardsClient"
 import { getAll, getByKanji } from "@/lib/kanji"
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
-import { keywords as kw } from "@/lib/seo"
+import { siteUrl, keywords as kw } from "@/lib/seo"
 
 export function generateStaticParams() {
   return getAll("n3").map((k) => ({ kanji: k.kanji }))
@@ -20,10 +20,10 @@ export async function generateMetadata({ params }: { params: Promise<{ kanji: st
     openGraph: {
       title: `Flashcard: ${k.kanji} — JLPT N3`,
       description: `Learn JLPT N3 kanji ${k.kanji} with flashcards.`,
-      url: `https://www.kanjitest.online/n3/flashcards/${k.kanji}/`,
+      url: siteUrl(`/n3/flashcards/${k.kanji}/`),
     },
     twitter: { title: `Flashcard: ${k.kanji} — JLPT N3`, description: `JLPT N3 kanji ${k.kanji} flashcard.` },
-    alternates: { canonical: `https://www.kanjitest.online/n3/flashcards/${k.kanji}/` },
+    alternates: { canonical: siteUrl(`/n3/flashcards/${k.kanji}/`) },
   }
 }
 

@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { webPageSchema, keywords as kw } from "@/lib/seo"
+import { siteUrl, webPageSchema, keywords as kw } from "@/lib/seo"
 
 export const metadata: Metadata = {
   title: "Terms of Use",
@@ -9,10 +9,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Terms of Use",
     description: "Terms of use for KanjiTest.Online. Free JLPT N5, N4, N3 kanji study.",
-    url: "https://www.kanjitest.online/terms",
+    url: siteUrl("/terms"),
   },
   twitter: { title: "Terms of Use", description: "Terms of use for KanjiTest.Online." },
-  alternates: { canonical: "https://www.kanjitest.online/terms" },
+  alternates: { canonical: siteUrl("/terms") },
 }
 
 export default function TermsPage() {

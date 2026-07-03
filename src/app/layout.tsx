@@ -3,7 +3,7 @@ import { Zen_Maru_Gothic } from "next/font/google"
 import "./globals.css"
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
-import { websiteSchema, organizationSchema, keywords as kw } from "@/lib/seo"
+import { siteUrl, websiteSchema, organizationSchema, keywords as kw } from "@/lib/seo"
 
 const maru = Zen_Maru_Gothic({
   weight: ["400", "500", "700", "900"],
@@ -12,7 +12,7 @@ const maru = Zen_Maru_Gothic({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.kanjitest.online"),
+  metadataBase: new URL(siteUrl()),
   title: {
     default: "KanjiTest.Online — Free JLPT N5, N4 & N3 Kanji Practice",
     template: "%s | KanjiTest.Online",

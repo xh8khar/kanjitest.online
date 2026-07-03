@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { siteUrl } from "@/lib/seo"
 
 const LEVELS = [
   { label: "N5", prefix: "/n5", exists: true },
@@ -39,7 +40,7 @@ export default function Footer() {
           <Link href="/about/" className="text-ink/60 hover:text-ink transition-colors">About</Link>
           <Link href="/privacy/" className="text-ink/60 hover:text-ink transition-colors">Privacy</Link>
           <Link href="/terms/" className="text-ink/60 hover:text-ink transition-colors">Terms</Link>
-          <span className="text-[11px] sm:text-xs text-ink/40">&copy; 2026 www.kanjitest.online</span>
+          <span className="text-[11px] sm:text-xs text-ink/40">&copy; 2026 {siteUrl().replace("https://", "")}</span>
         </div>
       </div>
     </footer>

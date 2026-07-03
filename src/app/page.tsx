@@ -1,6 +1,6 @@
 import Link from "next/link"
 import type { Metadata } from "next"
-import { collectionPageSchema, keywords as kw } from "@/lib/seo"
+import { siteUrl, collectionPageSchema, keywords as kw } from "@/lib/seo"
 
 export const metadata: Metadata = {
   title: "Free JLPT Kanji Study, Quiz & Test — N5, N4 & N3",
@@ -11,13 +11,13 @@ export const metadata: Metadata = {
     title: "Free JLPT Kanji Study, Quiz & Test — N5, N4 & N3",
     description:
       "Master JLPT N5, N4, and N3 kanji with readings, examples, flashcards, and quizzes. N2, N1 coming soon.",
-    url: "https://www.kanjitest.online",
+    url: siteUrl(),
   },
   twitter: {
     title: "Free JLPT Kanji Study, Quiz & Test — N5, N4 & N3",
     description: "Master JLPT N5, N4, and N3 kanji with readings, examples, flashcards, and quizzes.",
   },
-  alternates: { canonical: "https://www.kanjitest.online" },
+  alternates: { canonical: siteUrl() },
 }
 
 const levels = [

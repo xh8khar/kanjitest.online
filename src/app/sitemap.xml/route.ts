@@ -1,8 +1,9 @@
+import { siteUrl } from "@/lib/seo"
 import { getAll, getVocabulary } from "@/lib/kanji"
 
 export const dynamic = "force-static"
 
-const BASE = "https://www.kanjitest.online"
+const BASE = siteUrl()
 
 export async function GET() {
   const urls: string[] = [

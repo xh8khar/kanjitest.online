@@ -2,7 +2,7 @@ import Link from "next/link"
 import { getVocabulary } from "@/lib/kanji"
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { keywords as kw } from "@/lib/seo"
+import { siteUrl, keywords as kw } from "@/lib/seo"
 
 export async function generateStaticParams() {
   return getVocabulary().map((v) => ({ slug: v.slug }))
@@ -20,10 +20,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     openGraph: {
       title: `${vocab.word} (${vocab.reading}) — JLPT N5 Vocabulary`,
       description: `${vocab.word} (${vocab.reading}) — ${vocab.english}. JLPT N5 vocabulary with example sentences.`,
-      url: `https://www.kanjitest.online/n5/vocabulary/${slug}`,
+      url: siteUrl(`/n5/vocabulary/${slug}`),
     },
     twitter: { title: `${vocab.word} (${vocab.reading}) — JLPT N5 Vocabulary`, description: `${vocab.word} (${vocab.reading}) — ${vocab.english}.` },
-    alternates: { canonical: `https://www.kanjitest.online/n5/vocabulary/${slug}` },
+    alternates: { canonical: siteUrl(`/n5/vocabulary/${slug}`) },
   }
 }
 

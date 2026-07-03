@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { getVocabulary } from "@/lib/kanji"
 import type { Metadata } from "next"
-import { collectionPageSchema, itemListSchema, keywords as kw } from "@/lib/seo"
+import { siteUrl, collectionPageSchema, itemListSchema, keywords as kw } from "@/lib/seo"
 
 export const metadata: Metadata = {
   title: "JLPT N3 Vocabulary — 935 Words with Readings",
@@ -11,10 +11,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: "JLPT N3 Vocabulary — 935 Words with Readings",
     description: "Complete JLPT N3 vocabulary list with readings, meanings, and associated kanji.",
-    url: "https://www.kanjitest.online/n3/vocabulary",
+    url: siteUrl("/n3/vocabulary"),
   },
   twitter: { title: "JLPT N3 Vocabulary — 935 Words with Readings", description: "Complete JLPT N3 vocabulary with readings, meanings, and kanji." },
-  alternates: { canonical: "https://www.kanjitest.online/n3/vocabulary" },
+  alternates: { canonical: siteUrl("/n3/vocabulary") },
 }
 
 export default function N3Vocabulary() {

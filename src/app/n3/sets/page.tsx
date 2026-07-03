@@ -1,6 +1,6 @@
 import Link from "next/link"
 import type { Metadata } from "next"
-import { collectionPageSchema, keywords as kw } from "@/lib/seo"
+import { siteUrl, collectionPageSchema, keywords as kw } from "@/lib/seo"
 
 export const metadata: Metadata = {
   title: "JLPT N3 Kanji Tests — 20 Practice Quizzes",
@@ -9,10 +9,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: "JLPT N3 Kanji Tests — 20 Practice Quizzes",
     description: "20 test sets of 20 questions each for JLPT N3 kanji practice.",
-    url: "https://www.kanjitest.online/n3/sets",
+    url: siteUrl("/n3/sets"),
   },
   twitter: { title: "JLPT N3 Kanji Tests — 20 Practice Quizzes", description: "20 test sets of 20 kanji questions each." },
-  alternates: { canonical: "https://www.kanjitest.online/n3/sets" },
+  alternates: { canonical: siteUrl("/n3/sets") },
 }
 
 export default function SetsPage() {

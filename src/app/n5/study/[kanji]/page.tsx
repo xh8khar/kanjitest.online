@@ -2,7 +2,7 @@ import Link from "next/link"
 import { getByKanji, getPrevNext, getAll, getSetForKanji } from "@/lib/kanji"
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
-import { breadcrumbSchema, definedTermSchema, keywords as kw } from "@/lib/seo"
+import { siteUrl, breadcrumbSchema, definedTermSchema, keywords as kw } from "@/lib/seo"
 
 export function generateStaticParams() {
   return getAll().map((k) => ({ kanji: k.kanji }))
@@ -33,13 +33,13 @@ export function generateMetadata({ params }: { params: Promise<{ kanji: string }
       openGraph: {
         title: `${k.kanji} (${k.meanings[0]}) — JLPT N5 Kanji`,
         description: desc,
-        url: `https://www.kanjitest.online/n5/study/${k.kanji}/`,
+        url: siteUrl(`/n5/study/${k.kanji}/`),
       },
       twitter: {
         title: `${k.kanji} (${k.meanings[0]}) — JLPT N5 Kanji`,
         description: desc,
       },
-      alternates: { canonical: `https://www.kanjitest.online/n5/study/${k.kanji}/` },
+      alternates: { canonical: siteUrl(`/n5/study/${k.kanji}/`) },
     }
   })
 }

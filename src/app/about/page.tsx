@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { webPageSchema, keywords as kw } from "@/lib/seo"
+import { siteUrl, webPageSchema, keywords as kw } from "@/lib/seo"
 
 export const metadata: Metadata = {
   title: "About — Free JLPT Kanji Study Tool",
@@ -9,10 +9,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: "About — Free JLPT Kanji Study Tool",
     description: "Free JLPT N5, N4, and N3 kanji study tool with flashcards, quizzes, and detailed kanji pages.",
-    url: "https://www.kanjitest.online/about",
+    url: siteUrl("/about"),
   },
   twitter: { title: "About — Free JLPT Kanji Study Tool", description: "Free JLPT N5, N4, and N3 kanji study tool." },
-  alternates: { canonical: "https://www.kanjitest.online/about" },
+  alternates: { canonical: siteUrl("/about") },
 }
 
 export default function AboutPage() {

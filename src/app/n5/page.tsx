@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { getAll } from "@/lib/kanji"
 import type { Metadata } from "next"
-import { collectionPageSchema, itemListSchema, keywords as kw } from "@/lib/seo"
+import { siteUrl, collectionPageSchema, itemListSchema, keywords as kw } from "@/lib/seo"
 
 export const metadata: Metadata = {
   title: "JLPT N5 Kanji — All 79 Characters",
@@ -11,10 +11,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: "JLPT N5 Kanji — All 79 Characters",
     description: "Browse all 79 JLPT N5 kanji with readings, examples, and sentences.",
-    url: "https://www.kanjitest.online/n5",
+    url: siteUrl("/n5"),
   },
   twitter: { title: "JLPT N5 Kanji — All 79 Characters", description: "Complete list of 79 JLPT N5 kanji with readings and examples." },
-  alternates: { canonical: "https://www.kanjitest.online/n5" },
+  alternates: { canonical: siteUrl("/n5") },
 }
 
 export default function N5Hub() {

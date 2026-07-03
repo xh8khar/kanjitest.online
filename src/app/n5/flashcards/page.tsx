@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 import type { Metadata } from "next"
-import { keywords as kw } from "@/lib/seo"
+import { siteUrl, keywords as kw } from "@/lib/seo"
 
 export const metadata: Metadata = {
   title: "JLPT N5 Kanji Flashcards — Flip & Memorize",
@@ -10,10 +10,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: "JLPT N5 Kanji Flashcards — Flip & Memorize",
     description: "Flip through all 79 JLPT N5 kanji flashcards. Track your progress with Know/Again.",
-    url: "https://www.kanjitest.online/n5/flashcards",
+    url: siteUrl("/n5/flashcards"),
   },
   twitter: { title: "JLPT N5 Kanji Flashcards — Flip & Memorize", description: "Flip through all 79 JLPT N5 kanji flashcards." },
-  alternates: { canonical: "https://www.kanjitest.online/n5/flashcards" },
+  alternates: { canonical: siteUrl("/n5/flashcards") },
 }
 
 export default function FlashcardsIndex() {

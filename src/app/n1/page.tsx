@@ -1,12 +1,13 @@
 import Link from "next/link"
 import type { Metadata } from "next"
+import { siteUrl } from "@/lib/seo"
 
 export const metadata: Metadata = {
   title: "JLPT N1 Kanji — Coming Soon",
   description: "JLPT N1 kanji study, flashcards, and tests are coming soon to KanjiTest.Online.",
-  openGraph: { title: "JLPT N1 Kanji — Coming Soon", description: "JLPT N1 kanji study, flashcards, and tests are coming soon.", url: "https://www.kanjitest.online/n1" },
+  openGraph: { title: "JLPT N1 Kanji — Coming Soon", description: "JLPT N1 kanji study, flashcards, and tests are coming soon.", url: siteUrl("/n1") },
   twitter: { title: "JLPT N1 Kanji — Coming Soon", description: "JLPT N1 kanji study, flashcards, and tests are coming soon." },
-  alternates: { canonical: "https://www.kanjitest.online/n1" },
+  alternates: { canonical: siteUrl("/n1") },
 }
 
 export default function N1Hub() {

@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { webPageSchema, keywords as kw } from "@/lib/seo"
+import { siteUrl, webPageSchema, keywords as kw } from "@/lib/seo"
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -9,10 +9,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Privacy Policy",
     description: "KanjiTest.Online privacy policy. No personal data collected.",
-    url: "https://www.kanjitest.online/privacy",
+    url: siteUrl("/privacy"),
   },
   twitter: { title: "Privacy Policy", description: "KanjiTest.Online privacy policy." },
-  alternates: { canonical: "https://www.kanjitest.online/privacy" },
+  alternates: { canonical: siteUrl("/privacy") },
 }
 
 export default function PrivacyPage() {

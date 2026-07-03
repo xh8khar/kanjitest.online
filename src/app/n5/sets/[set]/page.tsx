@@ -1,6 +1,6 @@
 import TestClient from "./TestClient"
 import type { Metadata } from "next"
-import { keywords as kw } from "@/lib/seo"
+import { siteUrl, keywords as kw } from "@/lib/seo"
 
 export function generateStaticParams() {
   return Array.from({ length: 20 }, (_, i) => ({ set: String(i + 1) }))
@@ -36,10 +36,10 @@ export async function generateMetadata({
     openGraph: {
       title: `Test Set ${set} — JLPT N5 Kanji Quiz`,
       description: desc,
-      url: `https://www.kanjitest.online/n5/sets/${set}/`,
+      url: siteUrl(`/n5/sets/${set}/`),
     },
     twitter: { title: `Test Set ${set} — JLPT N5 Kanji Quiz`, description: desc },
-    alternates: { canonical: `https://www.kanjitest.online/n5/sets/${set}/` },
+    alternates: { canonical: siteUrl(`/n5/sets/${set}/`) },
   }
 }
 
