@@ -110,7 +110,7 @@ function TestContent({ setNum }: { setNum: number }) {
                   {i + 1}
                 </div>
                 <Link
-                  href={`/n5/study/${q.kanjiId}/`}
+                  href={`/n5/study/${q.kanji}/`}
                   className="text-[10px] sm:text-xs text-ink/60 hover:text-ink transition-colors"
                 >
                   detail
@@ -172,7 +172,7 @@ function TestContent({ setNum }: { setNum: number }) {
 
               {isWrong && (
                 <Link
-                  href={`/n5/study/${q.kanjiId}/`}
+                  href={`/n5/study/${q.kanji}/`}
                   className="inline-block mt-1.5 text-[11px] sm:text-xs text-ink/60 hover:text-ink transition-colors"
                 >
                   Study &rarr;

@@ -99,7 +99,7 @@ function TestContent({ setNum }: { setNum: number }) {
             <div key={i} className="border border-ink/20 rounded-lg sm:rounded-xl px-3 sm:px-5 py-2.5 sm:py-4 bg-white">
               <div className="flex items-center gap-1.5 sm:gap-3 mb-1.5 sm:mb-3">
                 <div className="w-5 h-5 sm:w-7 sm:h-7 rounded-md bg-ink/10 flex items-center justify-center shrink-0 text-[10px] sm:text-xs font-medium text-ink/60">{i + 1}</div>
-                <Link href={`/n3/study/${q.kanjiId}/`} className="text-[10px] sm:text-xs text-ink/60 hover:text-ink transition-colors">detail</Link>
+                <Link href={`/n3/study/${q.kanji}/`} className="text-[10px] sm:text-xs text-ink/60 hover:text-ink transition-colors">detail</Link>
               </div>
 
               <div className="border border-ink/20 rounded-lg px-2.5 sm:px-4 py-2 sm:py-3 mb-2 sm:mb-3 text-xs sm:text-sm leading-relaxed text-ink bg-ink/10">
@@ -136,7 +136,7 @@ function TestContent({ setNum }: { setNum: number }) {
               </div>
 
               {isWrong && (
-                <Link href={`/n3/study/${q.kanjiId}/`} className="inline-block mt-1 text-[11px] sm:text-xs text-ink/60 hover:text-ink transition-colors">
+                <Link href={`/n3/study/${q.kanji}/`} className="inline-block mt-1 text-[11px] sm:text-xs text-ink/60 hover:text-ink transition-colors">
                   Study &rarr;
                 </Link>
               )}
