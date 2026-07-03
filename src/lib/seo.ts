@@ -34,7 +34,7 @@ export function organizationSchema() {
 
 export function breadcrumbSchema(items: { name: string; url: string }[]) {
   return {
-    "@context": " ",
+    "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: items.map((item, i) => ({
       "@type": "ListItem",

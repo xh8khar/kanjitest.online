@@ -14,17 +14,6 @@ function highlightSentence(sentence: string, word: string): { before: string; ta
   }
 }
 
-export default function TestClient({ setNum, level = "n5" }: { setNum: number; level?: Level }) {
-  if (isNaN(setNum) || setNum < 1 || setNum > 20) {
-    return <div className="px-4 py-8 text-center">
-      <p className="text-ink/70">Set not found.</p>
-      <a href={`/${level}/sets/`} className="text-ink/70 hover:text-ink transition-colors text-sm mt-4 inline-block">&larr; All sets</a>
-    </div>
-  }
-
-  return <TestContent setNum={setNum} level={level} />
-}
-
 function TestContent({ setNum, level }: { setNum: number; level: Level }) {
   const questions = getSetQuestions(setNum, level)
   const [answers, setAnswers] = useState<Record<number, string>>({})
@@ -172,4 +161,15 @@ function TestContent({ setNum, level }: { setNum: number; level: Level }) {
       </div>
     </div>
   )
+}
+
+export default function TestClient({ setNum, level = "n5" }: { setNum: number; level?: Level }) {
+  if (isNaN(setNum) || setNum < 1 || setNum > 20) {
+    return <div className="px-4 py-8 text-center">
+      <p className="text-ink/70">Set not found.</p>
+      <a href={`/${level}/sets/`} className="text-ink/70 hover:text-ink transition-colors text-sm mt-4 inline-block">&larr; All sets</a>
+    </div>
+  }
+
+  return <TestContent setNum={setNum} level={level} />
 }

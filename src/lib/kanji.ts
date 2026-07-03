@@ -182,7 +182,11 @@ export interface VocabEntry {
   sentences: { sentence: string; sentenceEnglish: string }[]
 }
 
+const vocabCache = new Map<Level, VocabEntry[]>()
+
 export function getVocabulary(level: Level = "n5"): VocabEntry[] {
+  const cached = vocabCache.get(level)
+  if (cached) return cached
   const all = getData(level)
   const map = new Map<string, VocabEntry>()
   const seen = new Set<string>()
@@ -237,7 +241,9 @@ export function getVocabulary(level: Level = "n5"): VocabEntry[] {
     }
   }
 
-  return Array.from(map.values())
+  const result = Array.from(map.values())
+  vocabCache.set(level, result)
+  return result
 }
 
 export { toKatakana }

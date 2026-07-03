@@ -2,20 +2,20 @@
 import BaseLayout from "@/layouts/BaseLayout.astro"
 import LevelLayout from "@/layouts/LevelLayout.astro"
 import { getVocabulary } from "@/lib/kanji"
-import { siteUrl, keywords as kw } from "@/lib/seo"
 
 export async function getStaticPaths() {
   const vocab = getVocabulary()
   return vocab.map((v) => ({ params: { slug: v.slug } }))
 }
 
+const level = "n5"
 const { slug } = Astro.params
 const decoded = decodeURIComponent(slug!)
 const allVocab = getVocabulary()
 const vocab = allVocab.find((v) => v.slug === decoded)
 
 if (!vocab) {
-  return Astro.redirect("/404")
+  return Astro.redirect(`/${level}/vocabulary/`)
 }
 
 const idx = allVocab.findIndex((v) => v.slug === decoded)
@@ -27,9 +27,9 @@ const next = idx < allVocab.length - 1 ? allVocab[idx + 1] : null
   title={`${vocab.word} (${vocab.reading}) — JLPT N5 Vocabulary`}
   description={`${vocab.word} (${vocab.reading}) — ${vocab.english}. Example sentences and associated kanji for JLPT N5.`}
 >
-  <LevelLayout level="n5" currentPath={`/n5/vocabulary/${vocab.slug}/`}>
+  <LevelLayout level={level}>
     <div class="px-4 py-6 sm:py-8">
-      <a href="/n5/vocabulary/" class="text-xs text-ink/60 hover:text-ink transition-colors">&larr; All Vocabulary</a>
+      <a href={`/${level}/vocabulary/`} class="text-xs text-ink/60 hover:text-ink transition-colors">&larr; All Vocabulary</a>
 
       <div class="mt-5 sm:mt-6 border border-ink/20 rounded-lg sm:rounded-xl bg-white px-4 sm:px-6 py-5 sm:py-6">
         <h1 class="text-2xl sm:text-3xl font-black text-ink">{vocab.word} <span class="text-xs sm:text-sm font-normal text-ink/60">({vocab.english})</span></h1>
@@ -42,7 +42,7 @@ const next = idx < allVocab.length - 1 ? allVocab[idx + 1] : null
               {vocab.kanjiIds.map((id, i) => (
                 <a
                   key={id}
-                  href={`/n5/study/${vocab.kanjiChars[i]}/`}
+                  href={`/${level}/study/${vocab.kanjiChars[i]}/`}
                   class="border border-ink/20 rounded-lg px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-ink hover:border-ink/40 transition-all"
                 >
                   {vocab.kanjiChars[i]}
@@ -69,10 +69,10 @@ const next = idx < allVocab.length - 1 ? allVocab[idx + 1] : null
 
       <div class="flex items-center justify-between mt-5 sm:mt-6">
         {prev ? (
-          <a href={`/n5/vocabulary/${prev.slug}/`} class="text-xs sm:text-sm text-ink/60 hover:text-ink transition-colors">&larr; {prev.word}</a>
+          <a href={`/${level}/vocabulary/${prev.slug}/`} class="text-xs sm:text-sm text-ink/60 hover:text-ink transition-colors">&larr; {prev.word}</a>
         ) : <div />}
         {next ? (
-          <a href={`/n5/vocabulary/${next.slug}/`} class="text-xs sm:text-sm text-ink/60 hover:text-ink transition-colors">{next.word} &rarr;</a>
+          <a href={`/${level}/vocabulary/${next.slug}/`} class="text-xs sm:text-sm text-ink/60 hover:text-ink transition-colors">{next.word} &rarr;</a>
         ) : <div />}
       </div>
     </div>

@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro"
 import TestClient from "@/components/TestClient"
-import { siteUrl, keywords as kw } from "@/lib/seo"
+
 
 export function getStaticPaths() {
   return Array.from({ length: 20 }, (_, i) => ({ params: { set: String(i + 1) } }))
