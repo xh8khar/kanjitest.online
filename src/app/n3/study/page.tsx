@@ -4,24 +4,24 @@ import type { Metadata } from "next"
 import { collectionPageSchema, itemListSchema, keywords as kw } from "@/lib/seo"
 
 export const metadata: Metadata = {
-  title: "JLPT N4 Kanji — Complete Study List with Readings",
+  title: "JLPT N3 Kanji — Complete Study List with Readings",
   description:
-    "Complete list of 171 JLPT N4 kanji with kun/on readings, example words, and daily sentences. Click any kanji to study.",
-  keywords: kw(["JLPT N4 study list", "N4 kanji readings and meanings", "learn JLPT N4 kanji", "all N4 kanji with examples"]),
+    "Complete list of 367 JLPT N3 kanji with kun/on readings, example words, and daily sentences. Click any kanji to study.",
+  keywords: kw(["JLPT N3 study list", "N3 kanji readings and meanings", "learn JLPT N3 kanji", "all N3 kanji with examples"]),
   openGraph: {
-    title: "JLPT N4 Kanji — Complete Study List with Readings",
-    description: "Complete list of 171 JLPT N4 kanji with readings, examples, and sentences.",
-    url: "https://www.kanjitest.online/n4/study",
+    title: "JLPT N3 Kanji — Complete Study List with Readings",
+    description: "Complete list of 367 JLPT N3 kanji with readings, examples, and sentences.",
+    url: "https://www.kanjitest.online/n3/study",
   },
-  twitter: { title: "JLPT N4 Kanji — Complete Study List with Readings", description: "171 JLPT N4 kanji with readings, examples, and sentences." },
-  alternates: { canonical: "https://www.kanjitest.online/n4/study" },
+  twitter: { title: "JLPT N3 Kanji — Complete Study List with Readings", description: "367 JLPT N3 kanji with readings, examples, and sentences." },
+  alternates: { canonical: "https://www.kanjitest.online/n3/study" },
 }
 
-export default function N4StudyList() {
-  const all = getAll("n4")
-  const items = all.map((k) => ({ name: `${k.kanji} (${k.kun[0]?.replace(/\..+$/, "") || k.on[0]}) — ${k.meanings[0]}`, url: `/n4/study/${k.kanji}/` }))
+export default function N3StudyList() {
+  const all = getAll("n3")
+  const items = all.map((k) => ({ name: `${k.kanji} (${k.kun[0]?.replace(/\..+$/, "") || k.on[0]}) — ${k.meanings[0]}`, url: `/n3/study/${k.kanji}/` }))
   const listSchema = itemListSchema(items)
-  const pageSchema = collectionPageSchema("JLPT N4 Kanji — Complete Study List with Readings", "171 JLPT N4 kanji with readings, examples, and sentences.", "/n4/study")
+  const pageSchema = collectionPageSchema("JLPT N3 Kanji — Complete Study List with Readings", "367 JLPT N3 kanji with readings, examples, and sentences.", "/n3/study")
 
   return (
     <div className="px-4 py-6 sm:py-8">
@@ -37,7 +37,7 @@ export default function N4StudyList() {
           return (
             <Link
               key={k.id}
-              href={`/n4/study/${k.kanji}/`}
+              href={`/n3/study/${k.kanji}/`}
               className="border border-ink/20 rounded-lg sm:rounded-xl px-3 sm:px-5 py-2.5 sm:py-3 bg-white flex items-center gap-2 sm:gap-4 hover:border-ink/40 transition-all"
             >
               <div className="w-7 h-7 rounded-md bg-ink/10 flex items-center justify-center shrink-0">

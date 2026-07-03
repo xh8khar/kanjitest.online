@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const vocab = getVocabulary("n4").find((v) => v.slug === decoded)
   if (!vocab) return {}
   return {
-    title: `${vocab.word} (${vocab.reading}) — JLPT N4 Vocabulary | KanjiTest.Online`,
+    title: `${vocab.word} (${vocab.reading}) — JLPT N4 Vocabulary`,
     description: `${vocab.word} (${vocab.reading}) — ${vocab.english}. Example sentences and associated kanji for JLPT N4.`,
     keywords: kw([`${vocab.word} meaning`, `${vocab.word} reading`, `JLPT N4 ${vocab.word}`, `${vocab.word} example sentence`]),
     openGraph: {
@@ -38,22 +38,22 @@ export default async function N4VocabDetail({ params }: { params: Promise<{ slug
   const next = idx < getVocabulary("n4").length - 1 ? getVocabulary("n4")[idx + 1] : null
 
   return (
-    <div className="px-4 py-8">
+    <div className="px-4 py-6 sm:py-8">
       <Link href="/n4/vocabulary/" className="text-xs text-ink/60 hover:text-ink transition-colors">&larr; All Vocabulary</Link>
 
-      <div className="mt-6 border border-ink/20 rounded-xl bg-white px-6 py-6">
-        <h1 className="text-3xl font-black text-ink">{vocab.word} <span className="text-sm font-normal text-ink/60">({vocab.english})</span></h1>
-        <p className="text-base text-ink/70 mt-1">{vocab.reading}</p>
+      <div className="mt-5 sm:mt-6 border border-ink/20 rounded-lg sm:rounded-xl bg-white px-4 sm:px-6 py-5 sm:py-6">
+        <h1 className="text-2xl sm:text-3xl font-black text-ink">{vocab.word} <span className="text-xs sm:text-sm font-normal text-ink/60">({vocab.english})</span></h1>
+        <p className="text-sm sm:text-base text-ink/70 mt-1">{vocab.reading}</p>
 
         {vocab.kanjiChars.length > 0 && (
-          <div className="mt-5">
-            <p className="text-xs font-medium uppercase tracking-widest text-ink/50 mb-2">Contains Kanji</p>
-            <div className="flex gap-2">
+          <div className="mt-4 sm:mt-5">
+            <p className="text-[11px] sm:text-xs font-medium uppercase tracking-widest text-ink/50 mb-1.5 sm:mb-2">Contains Kanji</p>
+            <div className="flex gap-1.5 sm:gap-2">
               {vocab.kanjiIds.map((id, i) => (
                 <Link
                   key={id}
-                  href={`/n4/study/${id}/`}
-                  className="border border-ink/20 rounded-lg px-3 py-2 text-sm text-ink hover:border-ink/40 transition-all"
+                  href={`/n4/study/${vocab.kanjiChars[i]}/`}
+                  className="border border-ink/20 rounded-lg px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-ink hover:border-ink/40 transition-all"
                 >
                   {vocab.kanjiChars[i]}
                 </Link>
@@ -63,13 +63,13 @@ export default async function N4VocabDetail({ params }: { params: Promise<{ slug
         )}
 
         {vocab.sentences.length > 0 && (
-          <div className="mt-6">
-            <p className="text-xs font-medium uppercase tracking-widest text-ink/50 mb-3">Example Sentences</p>
-            <div className="space-y-3">
+          <div className="mt-5 sm:mt-6">
+            <p className="text-[11px] sm:text-xs font-medium uppercase tracking-widest text-ink/50 mb-2 sm:mb-3">Example Sentences</p>
+            <div className="space-y-2 sm:space-y-3">
               {vocab.sentences.slice(0, 3).map((s, i) => (
-                <div key={i} className="border border-ink/20 rounded-lg px-4 py-3">
-                  <p className="text-sm text-ink">{s.sentence}</p>
-                  <p className="text-xs text-ink/60 mt-1">{s.sentenceEnglish}</p>
+                <div key={i} className="border border-ink/20 rounded-lg px-3 sm:px-4 py-2.5 sm:py-3">
+                  <p className="text-xs sm:text-sm text-ink">{s.sentence}</p>
+                  <p className="text-[11px] sm:text-xs text-ink/60 mt-0.5 sm:mt-1">{s.sentenceEnglish}</p>
                 </div>
               ))}
             </div>
@@ -77,12 +77,12 @@ export default async function N4VocabDetail({ params }: { params: Promise<{ slug
         )}
       </div>
 
-      <div className="flex items-center justify-between mt-6">
+      <div className="flex items-center justify-between mt-5 sm:mt-6">
         {prev ? (
-          <Link href={`/n4/vocabulary/${prev.slug}/`} className="text-sm text-ink/60 hover:text-ink transition-colors">&larr; {prev.word}</Link>
+          <Link href={`/n4/vocabulary/${prev.slug}/`} className="text-xs sm:text-sm text-ink/60 hover:text-ink transition-colors">&larr; {prev.word}</Link>
         ) : <div />}
         {next ? (
-          <Link href={`/n4/vocabulary/${next.slug}/`} className="text-sm text-ink/60 hover:text-ink transition-colors">{next.word} &rarr;</Link>
+          <Link href={`/n4/vocabulary/${next.slug}/`} className="text-xs sm:text-sm text-ink/60 hover:text-ink transition-colors">{next.word} &rarr;</Link>
         ) : <div />}
       </div>
     </div>

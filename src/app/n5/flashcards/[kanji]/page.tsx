@@ -1,20 +1,21 @@
 import FlashcardsClient from "./FlashcardsClient"
-import { getAll, getById } from "@/lib/kanji"
+import { getAll, getByKanji } from "@/lib/kanji"
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import { keywords as kw } from "@/lib/seo"
 
 export function generateStaticParams() {
-  return getAll().map((k) => ({ id: String(k.id) }))
+  return getAll().map((k) => ({ kanji: k.kanji }))
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ id: string }>
+  params: Promise<{ kanji: string }>
 }): Promise<Metadata> {
-  const { id } = await params
-  const k = getById(parseInt(id))
+  const { kanji } = await params
+  const decoded = decodeURIComponent(kanji)
+  const k = getByKanji(decoded)
   if (!k) return {}
   return {
     title: `Flashcard: ${k.kanji} (${k.meanings[0]}) — JLPT N5`,
@@ -23,20 +24,21 @@ export async function generateMetadata({
     openGraph: {
       title: `Flashcard: ${k.kanji} — JLPT N5`,
       description: `Learn JLPT N5 kanji ${k.kanji} with flashcards.`,
-      url: `https://www.kanjitest.online/n5/flashcards/${k.id}/`,
+      url: `https://www.kanjitest.online/n5/flashcards/${k.kanji}/`,
     },
     twitter: { title: `Flashcard: ${k.kanji} — JLPT N5`, description: `JLPT N5 kanji ${k.kanji} flashcard.` },
-    alternates: { canonical: `https://www.kanjitest.online/n5/flashcards/${k.id}/` },
+    alternates: { canonical: `https://www.kanjitest.online/n5/flashcards/${k.kanji}/` },
   }
 }
 
 export default async function FlashcardsPage({
   params,
 }: {
-  params: Promise<{ id: string }>
+  params: Promise<{ kanji: string }>
 }) {
-  const { id } = await params
-  const k = getById(parseInt(id))
+  const { kanji } = await params
+  const decoded = decodeURIComponent(kanji)
+  const k = getByKanji(decoded)
   if (!k) notFound()
-  return <FlashcardsClient id={parseInt(id)} />
+  return <FlashcardsClient kanji={decoded} />
 }

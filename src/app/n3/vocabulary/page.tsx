@@ -4,24 +4,24 @@ import type { Metadata } from "next"
 import { collectionPageSchema, itemListSchema, keywords as kw } from "@/lib/seo"
 
 export const metadata: Metadata = {
-  title: "JLPT N4 Vocabulary — 473 Words with Readings",
+  title: "JLPT N3 Vocabulary — 935 Words with Readings",
   description:
-    "Complete JLPT N4 vocabulary list with readings, meanings, and associated kanji. Browse 473 essential Japanese words for intermediate learners.",
-  keywords: kw(["JLPT N4 vocabulary list", "N4 Japanese words", "intermediate Japanese vocabulary", "N4 word list with readings", "learn N4 vocabulary"]),
+    "Complete JLPT N3 vocabulary list with readings, meanings, and associated kanji. Browse 935 essential Japanese words for intermediate learners.",
+  keywords: kw(["JLPT N3 vocabulary list", "N3 Japanese words", "intermediate Japanese vocabulary", "N3 word list with readings", "learn N3 vocabulary"]),
   openGraph: {
-    title: "JLPT N4 Vocabulary — 473 Words with Readings",
-    description: "Complete JLPT N4 vocabulary list with readings, meanings, and associated kanji.",
-    url: "https://www.kanjitest.online/n4/vocabulary",
+    title: "JLPT N3 Vocabulary — 935 Words with Readings",
+    description: "Complete JLPT N3 vocabulary list with readings, meanings, and associated kanji.",
+    url: "https://www.kanjitest.online/n3/vocabulary",
   },
-  twitter: { title: "JLPT N4 Vocabulary — 473 Words with Readings", description: "Complete JLPT N4 vocabulary with readings, meanings, and kanji." },
-  alternates: { canonical: "https://www.kanjitest.online/n4/vocabulary" },
+  twitter: { title: "JLPT N3 Vocabulary — 935 Words with Readings", description: "Complete JLPT N3 vocabulary with readings, meanings, and kanji." },
+  alternates: { canonical: "https://www.kanjitest.online/n3/vocabulary" },
 }
 
-export default function N4Vocabulary() {
-  const vocab = getVocabulary("n4")
+export default function N3Vocabulary() {
+  const vocab = getVocabulary("n3")
   const sorted = [...vocab].sort((a, b) => a.reading.localeCompare(b.reading, "ja"))
-  const items = sorted.map((v) => ({ name: `${v.word} (${v.reading}) — ${v.english}`, url: `/n4/vocabulary/${v.slug}/` }))
-  const pageSchema = collectionPageSchema("JLPT N4 Vocabulary — 473 Words with Readings", "Complete JLPT N4 vocabulary list with readings, meanings, and associated kanji.", "/n4/vocabulary")
+  const items = sorted.map((v) => ({ name: `${v.word} (${v.reading}) — ${v.english}`, url: `/n3/vocabulary/${v.slug}/` }))
+  const pageSchema = collectionPageSchema("JLPT N3 Vocabulary — 935 Words with Readings", "Complete JLPT N3 vocabulary list with readings, meanings, and associated kanji.", "/n3/vocabulary")
   const listSchema = itemListSchema(items)
 
   return (
@@ -36,7 +36,7 @@ export default function N4Vocabulary() {
         {sorted.map((v, i) => (
           <Link
             key={`${v.word}|${v.reading}`}
-            href={`/n4/vocabulary/${v.slug}/`}
+            href={`/n3/vocabulary/${v.slug}/`}
             className="border border-ink/20 rounded-lg sm:rounded-xl px-3 sm:px-5 py-2.5 sm:py-3 bg-white flex items-center gap-2 sm:gap-4 hover:border-ink/40 transition-all"
           >
             <div className="w-7 h-7 rounded-md bg-ink/10 flex items-center justify-center shrink-0">

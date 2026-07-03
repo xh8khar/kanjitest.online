@@ -30,11 +30,11 @@ export default function Sidebar({ level = "n5" }: { level?: Level }) {
         <p className="text-xs font-medium uppercase tracking-widest text-ink/50 px-3 mb-2">Jump to Kanji</p>
         <div className="grid grid-cols-8 gap-1 px-2">
           {all.map((k) => {
-            const isDetail = path === `${prefix}/study/${k.id}/`
+            const isDetail = path === `${prefix}/study/${k.kanji}/`
             return (
               <Link
                 key={k.id}
-                href={`${prefix}/study/${k.id}/`}
+                href={`${prefix}/study/${k.kanji}/`}
                 className={`w-7 h-7 rounded-md flex items-center justify-center text-xs transition-all ${
                   isDetail
                     ? "bg-ink text-white"
@@ -53,7 +53,7 @@ export default function Sidebar({ level = "n5" }: { level?: Level }) {
         <div className="flex flex-wrap gap-1.5 px-2">
           {Array.from({ length: setCount }, (_, i) => i + 1).map((n) => (
             <Link
-              key={n}
+              key={`set-${n}`}
               href={`${prefix}/sets/${n}/`}
               className={`px-2 h-7 rounded-md text-xs flex items-center transition-all ${
                 isActive(`${prefix}/sets/${n}/`)

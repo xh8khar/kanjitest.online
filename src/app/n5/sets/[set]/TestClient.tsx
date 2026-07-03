@@ -49,15 +49,15 @@ function TestContent({ setNum }: { setNum: number }) {
     : 0
 
   return (
-    <div className="px-4 py-8">
+    <div className="px-4 py-6 sm:py-8">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-start sm:items-center justify-between mb-6 gap-2">
         <div>
-          <h1 className="text-xl font-bold text-ink">Set {setNum}</h1>
+          <h1 className="text-lg sm:text-xl font-bold text-ink">Set {setNum}</h1>
           <p className="text-xs text-ink/60">{answered} / {total} answered</p>
         </div>
-        <Link href="/n5/sets/" className="border border-ink/20 rounded-lg h-11 px-4 text-sm text-ink/70 hover:border-ink/40 hover:text-ink transition-all flex items-center">
-          &larr; All sets
+        <Link href="/n5/sets/" className="shrink-0 border border-ink/20 rounded-lg h-10 sm:h-11 px-3 sm:px-4 text-xs sm:text-sm text-ink/70 hover:border-ink/40 hover:text-ink transition-all flex items-center">
+          &larr; All
         </Link>
       </div>
 
@@ -103,22 +103,22 @@ function TestContent({ setNum }: { setNum: number }) {
           const highlight = highlightSentence(q.sentence, highlightWord)
 
           return (
-            <div key={i} className="border border-ink/20 rounded-xl px-5 py-4 bg-white">
+            <div key={i} className="border border-ink/20 rounded-lg sm:rounded-xl px-4 sm:px-5 py-3 sm:py-4 bg-white">
               {/* Question header */}
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-7 h-7 rounded-md bg-ink/10 flex items-center justify-center shrink-0 text-xs font-medium text-ink/60">
+              <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-md bg-ink/10 flex items-center justify-center shrink-0 text-[10px] sm:text-xs font-medium text-ink/60">
                   {i + 1}
                 </div>
                 <Link
                   href={`/n5/study/${q.kanjiId}/`}
-                  className="text-xs text-ink/60 hover:text-ink transition-colors"
+                  className="text-[10px] sm:text-xs text-ink/60 hover:text-ink transition-colors"
                 >
                   detail
                 </Link>
               </div>
 
               {/* Sentence with target word */}
-              <div className="border border-ink/20 rounded-lg px-4 py-3 mb-3 text-sm leading-relaxed text-ink bg-ink/10">
+              <div className="border border-ink/20 rounded-lg px-3 sm:px-4 py-2.5 sm:py-3 mb-2 sm:mb-3 text-xs sm:text-sm leading-relaxed text-ink bg-ink/10">
                 {highlight.before}
                 <span className="font-bold underline decoration-2 decoration-ink underline-offset-4">
                   {highlight.target}
@@ -126,10 +126,10 @@ function TestContent({ setNum }: { setNum: number }) {
                 {highlight.after}
               </div>
 
-              <p className="text-xs text-ink/60 mb-3">
+              <p className="text-[11px] sm:text-xs text-ink/60 mb-2 sm:mb-3">
                 {q.qType === "k2r"
-                  ? `What is the reading of ${q.prompt}?`
-                  : `Select the correct kanji for ${q.prompt}.`}
+                  ? `Reading of ${q.prompt}?`
+                  : `Kanji for ${q.prompt}?`}
               </p>
 
               {/* Options */}
@@ -138,7 +138,7 @@ function TestContent({ setNum }: { setNum: number }) {
                   const isOptionCorrect = isAnswered && opt === q.correct
                   const isOptionWrong = isAnswered && opt === selected && opt !== q.correct
 
-                  let labelClasses = "h-11 rounded-lg border border-ink/20 px-4 flex items-center gap-3 cursor-pointer transition-all "
+                  let labelClasses = "min-h-[44px] rounded-lg border border-ink/20 px-3 sm:px-4 flex items-center gap-2 sm:gap-3 cursor-pointer transition-all "
                   if (isOptionCorrect) {
                     labelClasses += "border-ink bg-ink/10 text-ink font-medium "
                   } else if (isOptionWrong) {
@@ -170,13 +170,12 @@ function TestContent({ setNum }: { setNum: number }) {
                 })}
               </div>
 
-              {/* Wrong answer → study link */}
               {isWrong && (
                 <Link
                   href={`/n5/study/${q.kanjiId}/`}
-                  className="inline-block mt-2 text-xs text-ink/60 hover:text-ink transition-colors"
+                  className="inline-block mt-1.5 text-[11px] sm:text-xs text-ink/60 hover:text-ink transition-colors"
                 >
-                  Study {q.kanji} &rarr;
+                  Study &rarr;
                 </Link>
               )}
             </div>

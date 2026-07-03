@@ -21,7 +21,7 @@ export default function TestClient({ params }: { params: Promise<{ set: string }
   if (isNaN(setNum) || setNum < 1 || setNum > 20) {
     return <div className="px-4 py-8 text-center">
       <p className="text-ink/70">Set not found.</p>
-      <Link href="/n4/sets/" className="text-ink/70 hover:text-ink transition-colors text-sm mt-4 inline-block">&larr; All sets</Link>
+      <Link href="/n3/sets/" className="text-ink/70 hover:text-ink transition-colors text-sm mt-4 inline-block">&larr; All sets</Link>
     </div>
   }
 
@@ -29,7 +29,7 @@ export default function TestClient({ params }: { params: Promise<{ set: string }
 }
 
 function TestContent({ setNum }: { setNum: number }) {
-  const questions = getSetQuestions(setNum, "n4")
+  const questions = getSetQuestions(setNum, "n3")
   const [answers, setAnswers] = useState<Record<number, string>>({})
 
   const handleSelect = (qIdx: number, value: string) => {
@@ -45,25 +45,25 @@ function TestContent({ setNum }: { setNum: number }) {
     : 0
 
   return (
-    <div className="px-4 py-6 sm:py-8">
-      <div className="flex items-start sm:items-center justify-between mb-6 gap-2">
+    <div className="px-4 py-5 sm:py-8">
+      <div className="flex items-start sm:items-center justify-between mb-5 sm:mb-6 gap-2">
         <div>
           <h1 className="text-lg sm:text-xl font-bold text-ink">Set {setNum}</h1>
           <p className="text-xs text-ink/60">{answered} / {total} answered</p>
         </div>
-        <Link href="/n4/sets/" className="shrink-0 border border-ink/20 rounded-lg h-10 sm:h-11 px-3 sm:px-4 text-xs sm:text-sm text-ink/70 hover:border-ink/40 hover:text-ink transition-all flex items-center">
+        <Link href="/n3/sets/" className="shrink-0 border border-ink/20 rounded-lg h-9 sm:h-11 px-3 sm:px-4 text-xs sm:text-sm text-ink/70 hover:border-ink/40 hover:text-ink transition-all flex items-center">
           &larr; All
         </Link>
       </div>
 
       {allDone && (
-        <div className="border border-ink/20 rounded-xl px-5 py-5 mb-6 bg-white">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-ink flex items-center justify-center text-white font-bold text-sm">
+        <div className="border border-ink/20 rounded-xl px-4 sm:px-5 py-4 sm:py-5 mb-5 sm:mb-6 bg-white">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-ink flex items-center justify-center text-white font-bold text-xs sm:text-sm">
               {Math.round((correctCount / total) * 100)}%
             </div>
             <div>
-              <p className="font-bold text-ink">{correctCount}/{total}</p>
+              <p className="font-bold text-ink text-sm sm:text-base">{correctCount}/{total}</p>
               <p className="text-xs text-ink/60">
                 {correctCount === total
                   ? "Perfect score!"
@@ -75,18 +75,18 @@ function TestContent({ setNum }: { setNum: number }) {
               </p>
             </div>
           </div>
-          <div className="flex gap-2 mt-4">
-            <Link href={`/n4/sets/${setNum < 20 ? setNum + 1 : 1}/`} className="flex-1 h-11 rounded-lg border border-ink/20 text-sm text-ink/70 flex items-center justify-center hover:border-ink/40 hover:text-ink transition-all">
+          <div className="flex gap-2 mt-3 sm:mt-4">
+            <Link href={`/n3/sets/${setNum < 20 ? setNum + 1 : 1}/`} className="flex-1 h-10 sm:h-11 rounded-lg border border-ink/20 text-xs sm:text-sm text-ink/70 flex items-center justify-center hover:border-ink/40 hover:text-ink transition-all">
               Next set &rarr;
             </Link>
-            <Link href="/n4/study/" className="flex-1 h-11 rounded-lg border border-ink/20 text-sm text-ink/70 flex items-center justify-center hover:border-ink/40 hover:text-ink transition-all">
+            <Link href="/n3/study/" className="flex-1 h-10 sm:h-11 rounded-lg border border-ink/20 text-xs sm:text-sm text-ink/70 flex items-center justify-center hover:border-ink/40 hover:text-ink transition-all">
               Study
             </Link>
           </div>
         </div>
       )}
 
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         {questions.map((q, i) => {
           const selected = answers[i]
           const isAnswered = selected !== undefined
@@ -96,19 +96,19 @@ function TestContent({ setNum }: { setNum: number }) {
           const highlight = highlightSentence(q.sentence, highlightWord)
 
           return (
-            <div key={i} className="border border-ink/20 rounded-lg sm:rounded-xl px-4 sm:px-5 py-3 sm:py-4 bg-white">
-              <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-                <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-md bg-ink/10 flex items-center justify-center shrink-0 text-[10px] sm:text-xs font-medium text-ink/60">{i + 1}</div>
-                <Link href={`/n4/study/${q.kanjiId}/`} className="text-[10px] sm:text-xs text-ink/60 hover:text-ink transition-colors">detail</Link>
+            <div key={i} className="border border-ink/20 rounded-lg sm:rounded-xl px-3 sm:px-5 py-2.5 sm:py-4 bg-white">
+              <div className="flex items-center gap-1.5 sm:gap-3 mb-1.5 sm:mb-3">
+                <div className="w-5 h-5 sm:w-7 sm:h-7 rounded-md bg-ink/10 flex items-center justify-center shrink-0 text-[10px] sm:text-xs font-medium text-ink/60">{i + 1}</div>
+                <Link href={`/n3/study/${q.kanjiId}/`} className="text-[10px] sm:text-xs text-ink/60 hover:text-ink transition-colors">detail</Link>
               </div>
 
-              <div className="border border-ink/20 rounded-lg px-3 sm:px-4 py-2.5 sm:py-3 mb-2 sm:mb-3 text-xs sm:text-sm leading-relaxed text-ink bg-ink/10">
+              <div className="border border-ink/20 rounded-lg px-2.5 sm:px-4 py-2 sm:py-3 mb-2 sm:mb-3 text-xs sm:text-sm leading-relaxed text-ink bg-ink/10">
                 {highlight.before}
                 <span className="font-bold underline decoration-2 decoration-ink underline-offset-4">{highlight.target}</span>
                 {highlight.after}
               </div>
 
-              <p className="text-[11px] sm:text-xs text-ink/60 mb-2 sm:mb-3">
+              <p className="text-[11px] sm:text-xs text-ink/60 mb-1.5 sm:mb-3">
                 {q.qType === "k2r"
                   ? `Reading of ${q.prompt}?`
                   : `Kanji for ${q.prompt}?`}
@@ -127,7 +127,7 @@ function TestContent({ setNum }: { setNum: number }) {
                   return (
                     <label key={`${i}-${opt}`} className={labelClasses}>
                       <input type="radio" name={`q-${i}`} value={opt} checked={selected === opt} onChange={() => handleSelect(i, opt)} className="sr-only" />
-                      <span className="text-sm">{opt}</span>
+                      <span className="text-xs sm:text-sm">{opt}</span>
                       {isOptionCorrect && <span className="ml-auto text-xs text-ink">&#10003;</span>}
                       {isOptionWrong && <span className="ml-auto text-xs text-ink/70">&#10007;</span>}
                     </label>
@@ -136,7 +136,7 @@ function TestContent({ setNum }: { setNum: number }) {
               </div>
 
               {isWrong && (
-                <Link href={`/n4/study/${q.kanjiId}/`} className="inline-block mt-1.5 text-[11px] sm:text-xs text-ink/60 hover:text-ink transition-colors">
+                <Link href={`/n3/study/${q.kanjiId}/`} className="inline-block mt-1 text-[11px] sm:text-xs text-ink/60 hover:text-ink transition-colors">
                   Study &rarr;
                 </Link>
               )}

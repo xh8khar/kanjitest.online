@@ -15,7 +15,7 @@ export async function GET() {
     `${BASE}/n1/`,
   ]
 
-  for (const level of ["n5", "n4"] as const) {
+  for (const level of ["n5", "n4", "n3"] as const) {
     const all = getAll(level)
 
     urls.push(`${BASE}/${level}/`)
@@ -25,8 +25,8 @@ export async function GET() {
     urls.push(`${BASE}/${level}/vocabulary/`)
 
     for (const k of all) {
-      urls.push(`${BASE}/${level}/study/${k.id}/`)
-      urls.push(`${BASE}/${level}/flashcards/${k.id}/`)
+      urls.push(`${BASE}/${level}/study/${k.kanji}/`)
+      urls.push(`${BASE}/${level}/flashcards/${k.kanji}/`)
     }
 
     const totalSets = level === "n4" ? 20 : 20

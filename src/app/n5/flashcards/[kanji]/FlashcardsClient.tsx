@@ -1,11 +1,11 @@
 "use client"
 
 import { useEffect, useState, useCallback } from "react"
-import { getAll, getById } from "@/lib/kanji"
+import { getAll, getByKanji } from "@/lib/kanji"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 
-const STORAGE_KEY = "kanjitest_flashcards_n4"
+const STORAGE_KEY = "kanjitest_flashcards"
 
 interface FlashcardState {
   known: number[]
@@ -25,8 +25,8 @@ function saveState(s: FlashcardState) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(s))
 }
 
-export default function FlashcardsClient({ id }: { id: number }) {
-  const all = getAll("n4")
+export default function FlashcardsClient({ kanji }: { kanji: string }) {
+  const all = getAll()
   const router = useRouter()
   const [state, setState] = useState<FlashcardState>({ known: [] })
   const [flipped, setFlipped] = useState(false)
@@ -35,33 +35,33 @@ export default function FlashcardsClient({ id }: { id: number }) {
     setState(loadState())
   }, [])
 
-  const k = getById(id, "n4")
+  const k = getByKanji(kanji)
 
-  const idx = all.findIndex((x) => x.id === id)
+  const idx = all.findIndex((x) => x.kanji === kanji)
   const prev = idx > 0 ? all[idx - 1] : null
   const next = idx < all.length - 1 ? all[idx + 1] : null
 
   const handleKnow = useCallback(() => {
     setFlipped(false)
     setState((prev) => {
-      const known = prev.known.includes(id) ? prev.known : [...prev.known, id]
+      const known = prev.known.includes(k!.id) ? prev.known : [...prev.known, k!.id]
       const nextState = { ...prev, known }
       saveState(nextState)
       return nextState
     })
-    if (next) router.push(`/n4/flashcards/${next.id}/`)
-  }, [id, next, router])
+    if (next) router.push(`/n5/flashcards/${next.kanji}/`)
+  }, [k, next, router])
 
   const handleAgain = useCallback(() => {
     setFlipped(false)
     setState((prev) => {
-      const known = prev.known.filter((k) => k !== id)
+      const known = prev.known.filter((x) => x !== k!.id)
       const nextState = { ...prev, known }
       saveState(nextState)
       return nextState
     })
-    if (next) router.push(`/n4/flashcards/${next.id}/`)
-  }, [id, next, router])
+    if (next) router.push(`/n5/flashcards/${next.kanji}/`)
+  }, [k, next, router])
 
   if (!k) return null
 
@@ -75,15 +75,15 @@ export default function FlashcardsClient({ id }: { id: number }) {
           <p className="text-sm text-ink/60">{knownCount} / {all.length} known</p>
         </div>
         <Link
-          href="/n4/"
+          href="/n5/"
           className="text-sm text-ink/60 hover:text-ink transition-colors"
         >
-          Back to N4
+          Back to N5
         </Link>
       </div>
 
       <div
-        className="bg-ink/5 border border-ink/20 rounded-xl min-h-[340px] flex flex-col items-center justify-center cursor-pointer select-none"
+        className="bg-ink/5 border border-ink/20 rounded-xl min-h-[280px] sm:min-h-[340px] flex flex-col items-center justify-center cursor-pointer select-none"
         onClick={() => setFlipped((f) => !f)}
       >
         {!flipped ? (
@@ -129,14 +129,14 @@ export default function FlashcardsClient({ id }: { id: number }) {
         )}
       </div>
 
-      <div className="flex items-center justify-between mt-6 gap-3">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between mt-6 gap-2 sm:gap-3">
         <div className="flex gap-2">
           {prev && (
             <button
               className="h-11 px-4 text-sm border border-ink/20 rounded-lg text-ink/60 hover:text-ink hover:border-ink/40 transition-colors"
               onClick={() => {
                 setFlipped(false)
-                router.push(`/n4/flashcards/${prev.id}/`)
+                router.push(`/n5/flashcards/${prev.kanji}/`)
               }}
             >
               ← {prev.kanji}
@@ -147,7 +147,7 @@ export default function FlashcardsClient({ id }: { id: number }) {
               className="h-11 px-4 text-sm border border-ink/20 rounded-lg text-ink/60 hover:text-ink hover:border-ink/40 transition-colors"
               onClick={() => {
                 setFlipped(false)
-                router.push(`/n4/flashcards/${next.id}/`)
+                router.push(`/n5/flashcards/${next.kanji}/`)
               }}
             >
               {next.kanji} →

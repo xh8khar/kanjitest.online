@@ -14,22 +14,22 @@ const maru = Zen_Maru_Gothic({
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.kanjitest.online"),
   title: {
-    default: "Kanji Test Online — Free JLPT N5 Kanji Practice",
-    template: "%s | Kanji Test Online",
+    default: "KanjiTest.Online — Free JLPT N5, N4 & N3 Kanji Practice",
+    template: "%s | KanjiTest.Online",
   },
   description:
-    "Free JLPT N5 kanji learning platform. Study all 79 kanji with readings and examples, flip flashcards, and test yourself with 20 quiz sets. Beautiful, cute, and free forever.",
+    "Free JLPT N5, N4, and N3 kanji learning platform. Study 617 kanji with readings and examples, flip flashcards, and test yourself with quiz sets. Beautiful, cute, and free forever.",
   keywords: kw(["Kanji Test Online", "JLPT N5 kanji practice", "free Japanese kanji study", "learn kanji online", "Japanese reading practice", "JLPT N5 study"]),
   robots: { index: true, follow: true },
   openGraph: {
     type: "website",
     locale: "en_US",
     siteName: "Kanji Test Online",
-    title: "Kanji Test Online — Free JLPT N5 Kanji Practice",
+    title: "Kanji Test Online — Free JLPT N5, N4 & N3 Kanji Practice",
     description:
-      "Master all 79 JLPT N5 kanji with readings, examples, flashcards, and quizzes. Free forever.",
+      "Master JLPT N5, N4, and N3 kanji with readings, examples, flashcards, and quizzes. Free forever.",
   },
-  twitter: { card: "summary_large_image", title: "Kanji Test Online", description: "Free JLPT N5 kanji learning platform." },
+  twitter: { card: "summary_large_image", title: "Kanji Test Online — Free JLPT N5, N4 & N3 Kanji Practice", description: "Free JLPT N5, N4, and N3 kanji learning platform." },
   icons: {
     icon: { url: "/icon.svg", type: "image/svg+xml" },
     apple: { url: "/icon.svg", type: "image/svg+xml" },
@@ -54,7 +54,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema()) }}
         />
       </head>
-      <body className="font-maru antialiased min-h-dvh flex flex-col">
+      <body className="font-maru antialiased min-h-dvh flex flex-col overflow-x-hidden">
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />

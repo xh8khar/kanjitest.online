@@ -3,20 +3,20 @@ import type { Metadata } from "next"
 import { collectionPageSchema, keywords as kw } from "@/lib/seo"
 
 export const metadata: Metadata = {
-  title: "JLPT N4 Kanji Tests — 20 Practice Quizzes",
-  description: "20 test sets of 20 questions each. Practice reading and meaning recognition for JLPT N4 kanji with real sentence context.",
-  keywords: kw(["kanji test online", "free JLPT N4 kanji test", "online kanji quiz", "JLPT N4 practice test", "N4 kanji reading quiz"]),
+  title: "JLPT N3 Kanji Tests — 20 Practice Quizzes",
+  description: "20 test sets of 20 questions each. Practice reading and meaning recognition for JLPT N3 kanji with real sentence context.",
+  keywords: kw(["kanji test online", "free JLPT N3 kanji test", "online kanji quiz", "JLPT N3 practice test", "N3 kanji reading quiz"]),
   openGraph: {
-    title: "JLPT N4 Kanji Tests — 20 Practice Quizzes",
-    description: "20 test sets of 20 questions each for JLPT N4 kanji practice.",
-    url: "https://www.kanjitest.online/n4/sets",
+    title: "JLPT N3 Kanji Tests — 20 Practice Quizzes",
+    description: "20 test sets of 20 questions each for JLPT N3 kanji practice.",
+    url: "https://www.kanjitest.online/n3/sets",
   },
-  twitter: { title: "JLPT N4 Kanji Tests — 20 Practice Quizzes", description: "20 test sets of 20 kanji questions each." },
-  alternates: { canonical: "https://www.kanjitest.online/n4/sets" },
+  twitter: { title: "JLPT N3 Kanji Tests — 20 Practice Quizzes", description: "20 test sets of 20 kanji questions each." },
+  alternates: { canonical: "https://www.kanjitest.online/n3/sets" },
 }
 
 export default function SetsPage() {
-  const pageSchema = collectionPageSchema("JLPT N4 Kanji Tests — 20 Practice Quizzes", "20 test sets of 20 questions each for JLPT N4 kanji.", "/n4/sets")
+  const pageSchema = collectionPageSchema("JLPT N3 Kanji Tests — 20 Practice Quizzes", "20 test sets of 20 questions each for JLPT N3 kanji.", "/n3/sets")
   return (
     <div className="px-4 py-6 sm:py-8">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(pageSchema) }} />
@@ -27,7 +27,7 @@ export default function SetsPage() {
         {Array.from({ length: 20 }, (_, i) => i + 1).map((n) => (
           <Link
             key={n}
-            href={`/n4/sets/${n}/`}
+            href={`/n3/sets/${n}/`}
             className="border border-ink/20 rounded-xl py-4 sm:py-5 text-center bg-white hover:border-ink/40 transition-all"
           >
             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-ink/10 flex items-center justify-center mx-auto mb-1.5 sm:mb-2">

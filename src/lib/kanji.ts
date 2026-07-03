@@ -1,9 +1,10 @@
 import n5raw from "@/data/n5.json"
 import n4raw from "@/data/n4.json"
+import n3raw from "@/data/n3.json"
 import { seededShuffle } from "./random"
 import { toKatakana } from "./kana"
 
-export type Level = "n5" | "n4"
+export type Level = "n5" | "n4" | "n3"
 
 export interface Example {
   word: string
@@ -26,6 +27,7 @@ export interface KanjiEntry {
 const data: Record<Level, KanjiEntry[]> = {
   n5: n5raw as KanjiEntry[],
   n4: n4raw as KanjiEntry[],
+  n3: n3raw as KanjiEntry[],
 }
 
 function getData(level: Level): KanjiEntry[] {
@@ -38,6 +40,10 @@ export function getAll(level: Level = "n5"): KanjiEntry[] {
 
 export function getById(id: number, level: Level = "n5"): KanjiEntry | undefined {
   return getData(level).find((k) => k.id === id)
+}
+
+export function getByKanji(kanji: string, level: Level = "n5"): KanjiEntry | undefined {
+  return getData(level).find((k) => k.kanji === kanji)
 }
 
 export function getPrevNext(id: number, level: Level = "n5"): { prev: KanjiEntry | null; next: KanjiEntry | null } {
