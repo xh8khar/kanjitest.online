@@ -85,8 +85,8 @@ function TestContent({ setNum }: { setNum: number }) {
             <Link href={`/n5/sets/${setNum < 20 ? setNum + 1 : 1}/`} className="flex-1 h-11 rounded-lg border border-ink/20 text-sm text-ink/70 flex items-center justify-center hover:border-ink/40 hover:text-ink transition-all">
               Next set &rarr;
             </Link>
-            <Link href="/n5/study/" className="flex-1 h-11 rounded-lg border border-ink/20 text-sm text-ink/70 flex items-center justify-center hover:border-ink/40 hover:text-ink transition-all">
-              Study
+            <Link href="/n5/study/" className="flex-1 h-11 rounded-lg bg-ink text-white text-sm font-medium flex items-center justify-center gap-1.5 hover:bg-ink/80 transition-all">
+              📖 Study
             </Link>
           </div>
         </div>
@@ -111,9 +111,9 @@ function TestContent({ setNum }: { setNum: number }) {
                 </div>
                 <Link
                   href={`/n5/study/${q.kanji}/`}
-                  className="text-[10px] sm:text-xs text-ink/60 hover:text-ink transition-colors"
+                  className="inline-flex items-center gap-1 rounded-md border border-ink/20 px-2 py-0.5 text-[10px] sm:text-xs text-ink/60 hover:text-ink hover:border-ink/40 transition-all bg-white"
                 >
-                  detail
+                  📖 detail
                 </Link>
               </div>
 
@@ -173,9 +173,9 @@ function TestContent({ setNum }: { setNum: number }) {
               {isWrong && (
                 <Link
                   href={`/n5/study/${q.kanji}/`}
-                  className="inline-block mt-1.5 text-[11px] sm:text-xs text-ink/60 hover:text-ink transition-colors"
+                  className="inline-flex items-center gap-1 mt-1.5 rounded-md border border-ink/20 px-2.5 py-1 text-[11px] sm:text-xs text-ink/70 hover:text-ink hover:border-ink/40 transition-all bg-white"
                 >
-                  Study &rarr;
+                  📖 Study &rarr;
                 </Link>
               )}
             </div>

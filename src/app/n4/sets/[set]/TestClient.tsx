@@ -79,8 +79,8 @@ function TestContent({ setNum }: { setNum: number }) {
             <Link href={`/n4/sets/${setNum < 20 ? setNum + 1 : 1}/`} className="flex-1 h-11 rounded-lg border border-ink/20 text-sm text-ink/70 flex items-center justify-center hover:border-ink/40 hover:text-ink transition-all">
               Next set &rarr;
             </Link>
-            <Link href="/n4/study/" className="flex-1 h-11 rounded-lg border border-ink/20 text-sm text-ink/70 flex items-center justify-center hover:border-ink/40 hover:text-ink transition-all">
-              Study
+            <Link href="/n4/study/" className="flex-1 h-11 rounded-lg bg-ink text-white text-sm font-medium flex items-center justify-center gap-1.5 hover:bg-ink/80 transition-all">
+              📖 Study
             </Link>
           </div>
         </div>
@@ -99,7 +99,7 @@ function TestContent({ setNum }: { setNum: number }) {
             <div key={i} className="border border-ink/20 rounded-lg sm:rounded-xl px-4 sm:px-5 py-3 sm:py-4 bg-white">
               <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
                 <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-md bg-ink/10 flex items-center justify-center shrink-0 text-[10px] sm:text-xs font-medium text-ink/60">{i + 1}</div>
-                <Link href={`/n4/study/${q.kanji}/`} className="text-[10px] sm:text-xs text-ink/60 hover:text-ink transition-colors">detail</Link>
+                <Link href={`/n4/study/${q.kanji}/`} className="inline-flex items-center gap-1 rounded-md border border-ink/20 px-2 py-0.5 text-[10px] sm:text-xs text-ink/60 hover:text-ink hover:border-ink/40 transition-all bg-white">📖 detail</Link>
               </div>
 
               <div className="border border-ink/20 rounded-lg px-3 sm:px-4 py-2.5 sm:py-3 mb-2 sm:mb-3 text-xs sm:text-sm leading-relaxed text-ink bg-ink/10">
@@ -136,8 +136,8 @@ function TestContent({ setNum }: { setNum: number }) {
               </div>
 
               {isWrong && (
-                <Link href={`/n4/study/${q.kanji}/`} className="inline-block mt-1.5 text-[11px] sm:text-xs text-ink/60 hover:text-ink transition-colors">
-                  Study &rarr;
+                <Link href={`/n4/study/${q.kanji}/`} className="inline-flex items-center gap-1 mt-1.5 rounded-md border border-ink/20 px-2.5 py-1 text-[11px] sm:text-xs text-ink/70 hover:text-ink hover:border-ink/40 transition-all bg-white">
+                  📖 Study &rarr;
                 </Link>
               )}
             </div>
