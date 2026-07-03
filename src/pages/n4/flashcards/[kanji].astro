@@ -1,0 +1,27 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro"
+import { getByKanji, getAll } from "@/lib/kanji"
+import FlashcardsClient from "@/components/FlashcardsClient"
+import { siteUrl, keywords as kw } from "@/lib/seo"
+
+export function getStaticPaths() {
+  const level = "n4"
+  return getAll(level).map((k) => ({ params: { kanji: k.kanji } }))
+}
+
+const level = "n4"
+const { kanji } = Astro.params
+const decoded = decodeURIComponent(kanji!)
+const k = getByKanji(decoded, level)
+
+if (!k) {
+  return Astro.redirect(`/${level}/flashcards/`)
+}
+
+const title = `Flashcard: ${k.kanji} (${k.meanings[0]}) — JLPT N4`
+const description = `Flashcard for JLPT N4 kanji ${k.kanji} (${k.meanings[0]}). Flip to see readings, meanings, and example words.`
+---
+
+<BaseLayout {title} {description}>
+  <FlashcardsClient kanji={decoded} level={level} client:load />
+</BaseLayout>

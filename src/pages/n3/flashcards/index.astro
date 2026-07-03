@@ -1,0 +1,15 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro"
+import { getAll } from "@/lib/kanji"
+import { siteUrl, keywords as kw } from "@/lib/seo"
+
+const level = "n3"
+const all = getAll(level)
+
+const title = `JLPT N3 Kanji Flashcards — Flip & Memorize`
+const description = `Flip through all ${all.length} JLPT N3 kanji flashcards. Tap to reveal readings and meanings. Track your progress with Know/Again.`
+---
+
+<BaseLayout {title} {description}>
+  <meta http-equiv="refresh" content={`0;url=/${level}/flashcards/${encodeURIComponent(all[0].kanji)}/`} />
+</BaseLayout>

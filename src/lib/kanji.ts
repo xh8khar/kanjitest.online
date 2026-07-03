@@ -1,10 +1,12 @@
 import n5raw from "@/data/n5.json"
 import n4raw from "@/data/n4.json"
 import n3raw from "@/data/n3.json"
+import n2raw from "@/data/n2.json"
+import n1raw from "@/data/n1.json"
 import { seededShuffle } from "./random"
 import { toKatakana } from "./kana"
 
-export type Level = "n5" | "n4" | "n3"
+export type Level = "n5" | "n4" | "n3" | "n2" | "n1"
 
 export interface Example {
   word: string
@@ -28,6 +30,8 @@ const data: Record<Level, KanjiEntry[]> = {
   n5: n5raw as KanjiEntry[],
   n4: n4raw as KanjiEntry[],
   n3: n3raw as KanjiEntry[],
+  n2: n2raw as KanjiEntry[],
+  n1: n1raw as KanjiEntry[],
 }
 
 function getData(level: Level): KanjiEntry[] {

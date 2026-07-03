@@ -1,0 +1,65 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro"
+import { siteUrl, webPageSchema } from "@/lib/seo"
+---
+
+<BaseLayout
+  title="Privacy Policy | KanjiTest.Online"
+  description="Privacy policy for KanjiTest.Online — how we handle your data."
+>
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(webPageSchema("Privacy Policy | KanjiTest.Online", "Privacy policy for KanjiTest.Online."))}
+    />
+
+    <h1 class="text-3xl sm:text-4xl font-black text-ink mb-6">Privacy Policy</h1>
+    <p class="text-xs sm:text-sm text-ink/50 mb-8">Last updated: July 2024</p>
+
+    <div class="space-y-6 text-sm sm:text-base text-ink/80 leading-relaxed">
+      <section>
+        <h2 class="text-xl font-bold text-ink mb-2">1. Information We Collect</h2>
+        <p>
+          KanjiTest.Online does <strong class="text-ink font-semibold">not</strong> collect or store any
+          personal information unless you voluntarily provide it (e.g., by contacting us via email). We do not
+          use cookies, tracking scripts, or analytics that collect personally identifiable data.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-ink mb-2">2. Third-Party Services</h2>
+        <p>
+          This site may use third-party services (e.g., hosting providers or CDN services) that automatically
+          collect standard server logs such as IP addresses, browser type, and request timestamps. These logs
+          are used solely for operational purposes (diagnosing errors, monitoring traffic) and are not shared
+          with any third parties beyond the service provider.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-ink mb-2">3. No Registration</h2>
+        <p>
+          KanjiTest.Online does not require registration or account creation. You can use all features
+          without providing any personal data.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-ink mb-2">4. Changes to This Policy</h2>
+        <p>
+          We may update this privacy policy from time to time. Any changes will be posted on this page with
+          an updated revision date. Continued use of the site after changes constitutes acceptance of the
+          updated policy.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-ink mb-2">5. Contact</h2>
+        <p>
+          If you have any questions about this privacy policy, please contact us at
+          <a href="mailto:hello@kanjitest.online" class="text-blue-600 underline hover:text-blue-800"> hello@kanjitest.online</a>.
+        </p>
+      </section>
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,23 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro"
+import LevelLayout from "@/layouts/LevelLayout.astro"
+import TestClient from "@/components/TestClient"
+import { siteUrl, keywords as kw } from "@/lib/seo"
+
+export async function getStaticPaths() {
+  return Array.from({ length: 20 }, (_, i) => ({ params: { set: String(i + 1) } }))
+}
+
+const { set } = Astro.params
+const setNum = parseInt(set!, 10)
+const desc = `Practice JLPT N5 kanji with Set ${setNum} of 20 questions. Test your kanji-to-reading and reading-to-kanji skills with real sentence context.`
+---
+
+<BaseLayout
+  title={`Kanji Test Online – JLPT N5 Kanji Quiz Set ${setNum} (20 Questions)`}
+  description={desc}
+>
+  <LevelLayout level="n5" currentPath={`/n5/sets/${setNum}/`}>
+    <TestClient setNum={setNum} client:load />
+  </LevelLayout>
+</BaseLayout>

@@ -1,4 +1,4 @@
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.kanjitest.online"
+const SITE_URL = import.meta.env.PUBLIC_SITE_URL ?? "https://www.kanjitest.online"
 const SITE_NAME = "Kanji Test Online"
 
 export function siteUrl(path = ""): string {
@@ -45,13 +45,13 @@ export function breadcrumbSchema(items: { name: string; url: string }[]) {
   }
 }
 
-export function definedTermSchema(kanji: string, meaning: string, id: number) {
+export function definedTermSchema(kanji: string, meaning: string, id: number, level = "N5") {
   return {
     "@context": "https://schema.org",
     "@type": "DefinedTerm",
     name: kanji,
-    description: `${kanji} — ${meaning}. JLPT N5 kanji #${id}.`,
-    inDefinedTermSet: "JLPT N5 Kanji",
+    description: `${kanji} — ${meaning}. JLPT ${level} kanji #${id}.`,
+    inDefinedTermSet: `JLPT ${level} Kanji`,
   }
 }
 

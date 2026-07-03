@@ -1,0 +1,57 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro"
+import LevelLayout from "@/layouts/LevelLayout.astro"
+import { getAll } from "@/lib/kanji"
+import { siteUrl, collectionPageSchema, itemListSchema, keywords as kw } from "@/lib/seo"
+
+const level = "n2"
+const all = getAll(level)
+const items = all.map((k) => ({ name: `${k.kanji} (${k.kun[0]?.replace(/\..+$/, "") || k.on[0]}) — ${k.meanings[0]}`, url: `/${level}/study/${k.kanji}/` }))
+const listSchema = itemListSchema(items)
+const pageSchema = collectionPageSchema(`JLPT N2 Kanji — Complete Study List with Readings`, `${all.length} JLPT N2 kanji with readings, examples, and sentences.`, `/${level}/study`)
+const title = `JLPT N2 Kanji — Complete Study List with Readings`
+const description = `Complete list of ${all.length} JLPT N2 kanji with kun/on readings, example words, and daily sentences. Click any kanji to start learning.`
+---
+
+<BaseLayout {title} {description}>
+  <LevelLayout {level}>
+    <script set:html={JSON.stringify(pageSchema)} type="application/ld+json" />
+    <script set:html={JSON.stringify(listSchema)} type="application/ld+json" />
+
+    <div class="px-4 py-6 sm:py-8">
+      <h1 class="text-lg sm:text-xl font-bold text-ink">Study</h1>
+      <p class="text-xs text-ink/60 mt-1 mb-5 sm:mb-6">{all.length} kanji</p>
+
+      <div class="space-y-1.5 sm:space-y-2">
+        {all.map((k) => {
+          const ex = k.examples[0]
+          return (
+            <a
+              key={k.id}
+              href={`/${level}/study/${k.kanji}/`}
+              class="border border-ink/20 rounded-lg sm:rounded-xl px-3 sm:px-5 py-2.5 sm:py-3 bg-white flex items-center gap-2 sm:gap-4 hover:border-ink/40 transition-all"
+            >
+              <div class="w-7 h-7 rounded-md bg-ink/10 flex items-center justify-center shrink-0">
+                <span class="text-[11px] sm:text-xs font-medium text-ink/60">{k.id}</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-baseline gap-2 sm:gap-3">
+                  <span class="text-base sm:text-lg font-bold text-ink leading-none">{k.kanji}</span>
+                  <span class="text-[11px] sm:text-xs text-ink/70 truncate">
+                    {k.kun.map((r) => r.replace(/\..+$/, "")).join("、") || k.on.join("、")}
+                  </span>
+                </div>
+                {ex && (
+                  <p class="text-[11px] sm:text-xs text-ink/60 mt-0.5 truncate">
+                    {ex.word} &middot; {ex.english}
+                  </p>
+                )}
+              </div>
+              <span class="text-ink/30 shrink-0 text-sm">&rarr;</span>
+            </a>
+          )
+        })}
+      </div>
+    </div>
+  </LevelLayout>
+</BaseLayout>

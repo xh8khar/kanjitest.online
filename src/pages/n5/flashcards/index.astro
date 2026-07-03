@@ -1,0 +1,17 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro"
+import LevelLayout from "@/layouts/LevelLayout.astro"
+---
+
+<BaseLayout
+  title="JLPT N5 Kanji Flashcards — Flip & Memorize"
+  description="Flip through all 79 JLPT N5 kanji flashcards. Tap to reveal readings and meanings. Track your progress with Know/Again."
+>
+  <LevelLayout level="n5" currentPath="/n5/flashcards/">
+    <meta http-equiv="refresh" content="0;url=/n5/flashcards/%E4%B8%80/" />
+    <div class="px-4 py-8 text-center">
+      <p class="text-ink/70">Redirecting to the first flashcard...</p>
+      <a href="/n5/flashcards/%E4%B8%80/" class="text-ink/70 hover:text-ink transition-colors text-sm mt-4 inline-block">Click here if not redirected.</a>
+    </div>
+  </LevelLayout>
+</BaseLayout>

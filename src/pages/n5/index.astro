@@ -1,0 +1,77 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro"
+import LevelLayout from "@/layouts/LevelLayout.astro"
+import { getAll, getVocabulary } from "@/lib/kanji"
+import { siteUrl, collectionPageSchema, itemListSchema } from "@/lib/seo"
+
+const all = getAll()
+const items = all.map((k) => ({ name: `${k.kanji} — ${k.meanings[0]}`, url: `/n5/study/${k.kanji}/` }))
+const pageSchema = collectionPageSchema("JLPT N5 Kanji Hub — All 79 Characters", "Browse all 79 JLPT N5 kanji with readings, examples, and sentences.", "/n5")
+const listSchema = itemListSchema(items)
+const vocab = getVocabulary().length
+---
+
+<BaseLayout
+  title="JLPT N5 Kanji — All 79 Characters"
+  description="Browse all 79 JLPT N5 kanji with kun/on readings, example words, and daily-life sentences. Study, flashcard, and test yourself."
+>
+  <LevelLayout level="n5" currentPath="/n5/">
+    <script type="application/ld+json" set:html={JSON.stringify(pageSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(listSchema)} />
+
+    <div class="px-4 py-6 sm:py-8">
+      <h1 class="text-lg sm:text-xl font-bold text-ink">All 79 Kanji</h1>
+      <p class="text-xs sm:text-sm text-ink/60 mt-1 mb-6 sm:mb-8">JLPT N5 — the most fundamental Japanese characters</p>
+
+      <div class="flex gap-1.5 sm:grid sm:grid-cols-3 md:grid-cols-4 overflow-x-auto pb-1 sm:pb-0 sm:gap-3 mb-6 sm:mb-10 scrollbar-none">
+        <a
+          href="/n5/study/"
+          class="shrink-0 sm:shrink border border-ink/20 rounded-xl px-3 sm:px-5 py-2.5 sm:py-5 bg-white hover:border-ink/40 transition-all sm:text-center flex sm:block items-center gap-2"
+        >
+          <span class="text-base sm:text-xl">📖</span>
+          <p class="font-medium text-xs sm:text-sm text-ink sm:mt-2">Study</p>
+          <p class="hidden sm:block text-xs text-ink/70 mt-0.5">79 characters</p>
+        </a>
+        <a
+          href="/n5/flashcards/"
+          class="shrink-0 sm:shrink border border-ink/20 rounded-xl px-3 sm:px-5 py-2.5 sm:py-5 bg-white hover:border-ink/40 transition-all sm:text-center flex sm:block items-center gap-2"
+        >
+          <span class="text-base sm:text-xl">🃏</span>
+          <p class="font-medium text-xs sm:text-sm text-ink sm:mt-2">Flashcards</p>
+          <p class="hidden sm:block text-xs text-ink/70 mt-0.5">Flip & memorize</p>
+        </a>
+        <a
+          href="/n5/vocabulary/"
+          class="shrink-0 sm:shrink border border-ink/20 rounded-xl px-3 sm:px-5 py-2.5 sm:py-5 bg-white hover:border-ink/40 transition-all sm:text-center flex sm:block items-center gap-2"
+        >
+          <span class="text-base sm:text-xl">📝</span>
+          <p class="font-medium text-xs sm:text-sm text-ink sm:mt-2">Vocabulary</p>
+          <p class="hidden sm:block text-xs text-ink/70 mt-0.5">{vocab} words</p>
+        </a>
+        <a
+          href="/n5/sets/"
+          class="shrink-0 sm:shrink border border-ink/20 rounded-xl px-3 sm:px-5 py-2.5 sm:py-5 bg-white hover:border-ink/40 transition-all sm:text-center flex sm:block items-center gap-2"
+        >
+          <span class="text-base sm:text-xl">✍️</span>
+          <p class="font-medium text-xs sm:text-sm text-ink sm:mt-2">Tests</p>
+          <p class="hidden sm:block text-xs text-ink/70 mt-0.5">20 sets</p>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-1.5 sm:gap-2">
+        {all.map((k) => (
+          <a
+            key={k.id}
+            href={`/n5/study/${k.kanji}/`}
+            class="border border-ink/20 rounded-lg p-2 sm:p-3 text-center hover:border-ink/40 transition-all bg-white"
+          >
+            <div class="text-base sm:text-lg font-bold text-ink leading-none">{k.kanji}</div>
+            <div class="text-[10px] text-ink/60 mt-0.5 leading-tight">
+              {k.kun[0]?.replace(/\..+$/, "") || k.on[0]}
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </LevelLayout>
+</BaseLayout>

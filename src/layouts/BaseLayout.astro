@@ -1,0 +1,43 @@
+---
+import "../styles/global.css"
+import Navbar from "@/components/Navbar"
+import Footer from "@/components/Footer.astro"
+import { websiteSchema, organizationSchema } from "@/lib/seo"
+
+export interface Props {
+  title?: string
+  description?: string
+  noIndex?: boolean
+}
+
+const { title, description, noIndex } = Astro.props
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    {title && <title>{title}</title>}
+    {description && <meta name="description" content={description} />}
+    {noIndex && <meta name="robots" content="noindex" />}
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="apple-touch-icon" href="/icon.svg" />
+    <meta name="theme-color" content="#000000" />
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(websiteSchema())}
+    />
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(organizationSchema())}
+    />
+  </head>
+  <body class="font-sans antialiased min-h-dvh flex flex-col overflow-x-hidden">
+    <Navbar client:load />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

@@ -1,0 +1,73 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro"
+import { siteUrl, webPageSchema } from "@/lib/seo"
+---
+
+<BaseLayout
+  title="Terms of Service | KanjiTest.Online"
+  description="Terms of service for KanjiTest.Online — free JLPT kanji study platform."
+>
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(webPageSchema("Terms of Service | KanjiTest.Online", "Terms of service for KanjiTest.Online."))}
+    />
+
+    <h1 class="text-3xl sm:text-4xl font-black text-ink mb-6">Terms of Service</h1>
+    <p class="text-xs sm:text-sm text-ink/50 mb-8">Last updated: July 2024</p>
+
+    <div class="space-y-6 text-sm sm:text-base text-ink/80 leading-relaxed">
+      <section>
+        <h2 class="text-xl font-bold text-ink mb-2">1. Acceptance of Terms</h2>
+        <p>
+          By accessing or using KanjiTest.Online, you agree to be bound by these Terms of Service. If you
+          do not agree with any part of these terms, you must not use the site.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-ink mb-2">2. Free Use</h2>
+        <p>
+          KanjiTest.Online is provided completely free of charge. No payment is required to access any
+          content or feature on this site. We reserve the right to modify or discontinue any part of the
+          service at any time without notice.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-ink mb-2">3. Accuracy of Content</h2>
+        <p>
+          While we strive to ensure all kanji data, readings, meanings, and example sentences are accurate,
+          we make no guarantees regarding completeness or correctness. Kanji content is compiled from publicly
+          available sources and may contain errors. Use the information at your own discretion.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-ink mb-2">4. Intellectual Property</h2>
+        <p>
+          The site design, code, and original content are the intellectual property of KanjiTest.Online.
+          The kanji data and example sentences are derived from publicly available educational resources and
+          are used for educational purposes. You may not reproduce, distribute, or modify substantial portions
+          of the site without prior written permission.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-ink mb-2">5. Limitation of Liability</h2>
+        <p>
+          KanjiTest.Online is provided "as is" without any warranty, express or implied. We shall not be
+          liable for any damages arising from the use or inability to use the site.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-bold text-ink mb-2">6. Contact</h2>
+        <p>
+          For questions about these terms, please contact us at
+          <a href="mailto:hello@kanjitest.online" class="text-blue-600 underline hover:text-blue-800"> hello@kanjitest.online</a>.
+        </p>
+      </section>
+    </div>
+  </div>
+</BaseLayout>
