@@ -4,40 +4,48 @@ import { getAll, getVocabulary } from "@/lib/kanji"
 
 export const GET: APIRoute = () => {
   const BASE = siteUrl()
-  const urls: string[] = [
-    BASE,
-    `${BASE}/about/`,
-    `${BASE}/privacy/`,
-    `${BASE}/terms/`,
+  const now = new Date().toISOString().split("T")[0]
+
+  interface UrlEntry {
+    loc: string
+    priority: string
+    changefreq: string
+  }
+
+  const entries: UrlEntry[] = [
+    { loc: BASE, priority: "1.0", changefreq: "weekly" },
+    { loc: `${BASE}/about/`, priority: "0.5", changefreq: "monthly" },
+    { loc: `${BASE}/privacy/`, priority: "0.3", changefreq: "monthly" },
+    { loc: `${BASE}/terms/`, priority: "0.3", changefreq: "monthly" },
   ]
 
   for (const level of ["n5", "n4", "n3", "n2", "n1"] as const) {
     const all = getAll(level)
 
-    urls.push(`${BASE}/${level}/`)
-    urls.push(`${BASE}/${level}/study/`)
-    urls.push(`${BASE}/${level}/flashcards/`)
-    urls.push(`${BASE}/${level}/sets/`)
-    urls.push(`${BASE}/${level}/vocabulary/`)
+    entries.push({ loc: `${BASE}/${level}/`, priority: "0.9", changefreq: "weekly" })
+    entries.push({ loc: `${BASE}/${level}/study/`, priority: "0.9", changefreq: "weekly" })
+    entries.push({ loc: `${BASE}/${level}/flashcards/`, priority: "0.8", changefreq: "weekly" })
+    entries.push({ loc: `${BASE}/${level}/sets/`, priority: "0.8", changefreq: "weekly" })
+    entries.push({ loc: `${BASE}/${level}/vocabulary/`, priority: "0.8", changefreq: "weekly" })
 
     for (const k of all) {
-      urls.push(`${BASE}/${level}/study/${k.kanji}/`)
-      urls.push(`${BASE}/${level}/flashcards/${k.kanji}/`)
+      entries.push({ loc: `${BASE}/${level}/study/${k.kanji}/`, priority: "0.7", changefreq: "monthly" })
+      entries.push({ loc: `${BASE}/${level}/flashcards/${k.kanji}/`, priority: "0.6", changefreq: "monthly" })
     }
 
     for (let i = 1; i <= 20; i++) {
-      urls.push(`${BASE}/${level}/sets/${i}/`)
+      entries.push({ loc: `${BASE}/${level}/sets/${i}/`, priority: "0.7", changefreq: "monthly" })
     }
 
     const vocab = getVocabulary(level)
     for (const v of vocab) {
-      urls.push(`${BASE}/${level}/vocabulary/${v.slug}/`)
+      entries.push({ loc: `${BASE}/${level}/vocabulary/${v.slug}/`, priority: "0.6", changefreq: "monthly" })
     }
   }
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls.map((url) => `  <url><loc>${url}</loc></url>`).join("\n")}
+${entries.map((e) => `  <url><loc>${e.loc}</loc><lastmod>${now}</lastmod><changefreq>${e.changefreq}</changefreq><priority>${e.priority}</priority></url>`).join("\n")}
 </urlset>`
 
   return new Response(sitemap, {

@@ -3,7 +3,7 @@ import "../styles/global.css"
 import Navbar from "@/components/Navbar"
 import Sidebar from "@/components/Sidebar"
 import Footer from "@/components/Footer.astro"
-import { websiteSchema, organizationSchema } from "@/lib/seo"
+import { websiteSchema, organizationSchema, siteUrl } from "@/lib/seo"
 import type { Level } from "@/lib/kanji"
 
 export interface Props {
@@ -11,23 +11,49 @@ export interface Props {
   description?: string
   noIndex?: boolean
   level?: Level
+  ogImage?: string
 }
 
-const { title, description, noIndex, level } = Astro.props
+const { title, description, noIndex, level, ogImage } = Astro.props
 const prefix = level ? `/${level}` : ""
+const canonical = Astro.url.pathname.endsWith("/") ? Astro.url.pathname : `${Astro.url.pathname}/`
+const finalTitle = title || "KanjiTest.Online"
+const finalDesc = description || "Free JLPT N5, N4, N3, N2, and N1 kanji study with flashcards, vocabulary, and practice tests."
+const image = ogImage || "/icon.svg"
 ---
 
-<html lang="en">
+<html lang="ja">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    {title && <title>{title}</title>}
-    {description && <meta name="description" content={description} />}
-    {noIndex && <meta name="robots" content="noindex" />}
+    <title>{finalTitle}</title>
+    <meta name="description" content={finalDesc} />
+    {noIndex ? (
+      <meta name="robots" content="noindex" />
+    ) : (
+      <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    )}
+    <link rel="canonical" href={siteUrl(canonical)} />
     <link rel="icon" type="image/svg+xml" href="/icon.svg" />
     <link rel="apple-touch-icon" href="/icon.svg" />
     <meta name="theme-color" content="#000000" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={siteUrl(canonical)} />
+    <meta property="og:title" content={finalTitle} />
+    <meta property="og:description" content={finalDesc} />
+    <meta property="og:image" content={siteUrl(image)} />
+    <meta property="og:site_name" content="KanjiTest.Online" />
+    <meta property="og:locale" content="ja_JP" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={finalTitle} />
+    <meta name="twitter:description" content={finalDesc} />
+    <meta name="twitter:image" content={siteUrl(image)} />
+
     <script
       type="application/ld+json"
       set:html={JSON.stringify(websiteSchema())}
