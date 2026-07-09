@@ -2,38 +2,18 @@
 import DefaultLayout from "@/layouts/DefaultLayout.astro"
 ---
 
-<DefaultLayout title="404 — Page Not Found | KanjiTest.Online" description="The page you are looking for does not exist.">
+<DefaultLayout title="404 — Page Not Found | KanjiTest.Online" description="The page you are looking for does not exist." noIndex>
   <div class="max-w-2xl mx-auto px-4 py-16 sm:py-24 text-center">
-    <span class="text-7xl sm:text-9xl font-black text-ink/10 select-none">404</span>
-    <h1 class="text-2xl sm:text-3xl font-black text-ink -mt-3 sm:-mt-4">Page Not Found</h1>
-    <p class="text-sm sm:text-base text-ink/60 mt-3 mb-8">
-      Oops! Looks like this kanji doesn&rsquo;t exist in our dictionary.
+    <span class="block text-8xl sm:text-9xl font-jp font-black text-ink/8 select-none animate-float">迷</span>
+    <h1 class="text-2xl sm:text-3xl font-black text-ink mt-2 animate-fade-up">Page not found</h1>
+    <p class="text-sm sm:text-base text-ink/60 mt-3 mb-8 animate-fade-up" style="animation-delay: 100ms">
+      迷 means “lost” — and so is this page. Let&rsquo;s get you back on the path.
     </p>
-    <div class="flex flex-wrap justify-center gap-3">
-      <a
-        href="/"
-        class="h-11 px-5 bg-ink text-white rounded-xl text-sm font-bold flex items-center hover:bg-ink/80 transition-all"
-      >
-        Home
-      </a>
-      <a
-        href="/n5/study/"
-        class="h-11 px-5 bg-ink/10 text-ink rounded-xl text-sm font-medium flex items-center hover:bg-ink/20 transition-all"
-      >
-        Study
-      </a>
-      <a
-        href="/n5/flashcards/"
-        class="h-11 px-5 bg-ink/10 text-ink rounded-xl text-sm font-medium flex items-center hover:bg-ink/20 transition-all"
-      >
-        Flashcards
-      </a>
-      <a
-        href="/n5/sets/1/"
-        class="h-11 px-5 bg-ink/10 text-ink rounded-xl text-sm font-medium flex items-center hover:bg-ink/20 transition-all"
-      >
-        Test
-      </a>
+    <div class="flex flex-wrap justify-center gap-3 animate-fade-up" style="animation-delay: 200ms">
+      <a href="/" class="btn btn-accent h-11 px-6 text-sm">Home</a>
+      <a href="/n5/study/" class="btn btn-ghost h-11 px-6 text-sm">📖 Study</a>
+      <a href="/n5/flashcards/" class="btn btn-ghost h-11 px-6 text-sm">🃏 Flashcards</a>
+      <a href="/n5/sets/1/" class="btn btn-ghost h-11 px-6 text-sm">✍️ Test</a>
     </div>
   </div>
 </DefaultLayout>

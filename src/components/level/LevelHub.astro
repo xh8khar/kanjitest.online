@@ -1,0 +1,88 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import { getAll, getVocabulary } from "@/lib/kanji"
+import type { Level } from "@/lib/kanji"
+import { levelMeta, SETS_PER_LEVEL } from "@/lib/levels"
+import { collectionPageSchema, itemListSchema } from "@/lib/seo"
+
+export interface Props {
+  level: Level
+}
+
+const { level } = Astro.props
+const meta = levelMeta(level)
+const all = getAll(level)
+const vocabCount = getVocabulary(level).length
+const prefix = `/${level}`
+
+const title = `JLPT ${meta.label} Kanji — All ${all.length} Characters`
+const description = `Browse all ${all.length} JLPT ${meta.label} kanji with kun/on readings, example words, and daily-life sentences. Study, flashcard, and test yourself.`
+
+const items = all.map((k) => ({ name: `${k.kanji} — ${k.meanings[0]}`, url: `${prefix}/study/${k.kanji}/` }))
+const pageSchema = collectionPageSchema(`JLPT ${meta.label} Kanji Hub — All ${all.length} Characters`, `Browse all ${all.length} JLPT ${meta.label} kanji with readings and examples.`, prefix)
+const listSchema = itemListSchema(items)
+
+const tools = [
+  { href: `${prefix}/study/`, icon: "📖", label: "Study", sub: `${all.length} characters` },
+  { href: `${prefix}/flashcards/`, icon: "🃏", label: "Flashcards", sub: "Flip & memorize" },
+  { href: `${prefix}/vocabulary/`, icon: "📝", label: "Vocabulary", sub: `${vocabCount.toLocaleString()} words` },
+  { href: `${prefix}/sets/`, icon: "✍️", label: "Tests", sub: `${SETS_PER_LEVEL} sets` },
+]
+---
+
+<DefaultLayout title={title} description={description} level={level}>
+  <script type="application/ld+json" set:html={JSON.stringify(pageSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(listSchema)} />
+
+  <div class="px-4 py-6 sm:py-8">
+    <!-- Level hero -->
+    <div class="relative card overflow-hidden mb-6 sm:mb-8 animate-fade-up">
+      <div class={`absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r ${meta.gradient}`} />
+      <span aria-hidden="true" class="absolute -right-4 -bottom-10 text-[9rem] leading-none font-jp font-black text-ink/[0.04] select-none pointer-events-none">
+        {all[0]?.kanji}{all[1]?.kanji}
+      </span>
+      <div class="relative p-5 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+        <span class={`w-16 h-16 sm:w-20 sm:h-20 shrink-0 rounded-2xl bg-gradient-to-br ${meta.gradient} text-white text-2xl sm:text-3xl font-black flex items-center justify-center shadow-xl ${meta.glow}`}>
+          {meta.label}
+        </span>
+        <div class="min-w-0">
+          <h1 class="text-xl sm:text-3xl font-black text-ink">JLPT {meta.label} — {meta.tagline}</h1>
+          <p class="text-[13px] sm:text-base text-ink/60 mt-1 leading-relaxed">{meta.blurb}</p>
+          <div class="flex flex-wrap gap-2 mt-3">
+            <span class="chip">{all.length.toLocaleString()} kanji</span>
+            <span class="chip">{vocabCount.toLocaleString()} words</span>
+            <span class="chip">{SETS_PER_LEVEL} tests</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tools -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 mb-8 sm:mb-10">
+      {tools.map((t, i) => (
+        <a href={t.href} class="card card-hover group p-4 sm:p-5 animate-fade-up" style={`animation-delay: ${100 + i * 70}ms`}>
+          <span class="inline-flex w-10 h-10 items-center justify-center rounded-xl bg-ink/[0.04] text-xl transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6">{t.icon}</span>
+          <p class="font-bold text-sm text-ink mt-2.5 group-hover:text-vermilion transition-colors">{t.label}</p>
+          <p class="text-xs text-ink/50 mt-0.5">{t.sub}</p>
+        </a>
+      ))}
+    </div>
+
+    <!-- Kanji grid -->
+    <h2 class="text-sm font-bold uppercase tracking-widest text-ink/40 mb-3 reveal">All {all.length.toLocaleString()} kanji</h2>
+    <div class="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-1.5 sm:gap-2">
+      {all.map((k, i) => (
+        <a
+          href={`${prefix}/study/${k.kanji}/`}
+          class="kanji-tile p-2 sm:p-2.5 reveal"
+          style={`--reveal-delay: ${(i % 10) * 35}ms`}
+        >
+          <span class="block text-lg sm:text-xl font-jp font-bold text-ink leading-none">{k.kanji}</span>
+          <span class="block text-[10px] text-ink/50 mt-1 leading-tight truncate">
+            {k.kun[0]?.replace(/\..+$/, "") || k.on[0]}
+          </span>
+        </a>
+      ))}
+    </div>
+  </div>
+</DefaultLayout>

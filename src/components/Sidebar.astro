@@ -1,0 +1,105 @@
+---
+import { getAll } from "@/lib/kanji"
+import type { Level } from "@/lib/kanji"
+import { levelMeta, SETS_PER_LEVEL } from "@/lib/levels"
+
+export interface Props {
+  level: Level
+}
+
+const { level } = Astro.props
+const meta = levelMeta(level)
+const all = getAll(level)
+const prefix = `/${level}`
+const path = decodeURIComponent(Astro.url.pathname)
+
+const isActive = (href: string) => path.startsWith(href)
+
+// Show a window of kanji around the current one so N1's 2200+ characters
+// don't inflate every page; the study index has the full grid.
+const WINDOW = 48
+const currentIdx = all.findIndex((k) => path === `${prefix}/study/${k.kanji}/` || path === `${prefix}/flashcards/${k.kanji}/`)
+const start = currentIdx === -1 ? 0 : Math.max(0, Math.min(currentIdx - Math.floor(WINDOW / 2), all.length - WINDOW))
+const windowed = all.slice(start, start + WINDOW)
+
+const tools = [
+  { href: `${prefix}/study/`, label: "Study", icon: "📖" },
+  { href: `${prefix}/flashcards/`, label: "Flashcards", icon: "🃏" },
+  { href: `${prefix}/vocabulary/`, label: "Vocabulary", icon: "📝" },
+  { href: `${prefix}/sets/`, label: "Tests", icon: "✍️" },
+]
+---
+
+<div class="space-y-7 py-6 pr-6 max-h-[calc(100vh-5rem)] overflow-y-auto">
+  <a href={`${prefix}/`} class="flex items-center gap-3 group">
+    <span class={`w-10 h-10 rounded-xl bg-gradient-to-br ${meta.gradient} text-white font-black flex items-center justify-center shadow-lg ${meta.glow} transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3`}>
+      {meta.label}
+    </span>
+    <span>
+      <span class="block text-sm font-bold text-ink leading-tight">JLPT {meta.label}</span>
+      <span class="block text-[11px] text-ink/50">{meta.tagline}</span>
+    </span>
+  </a>
+
+  <div class="space-y-1">
+    {tools.map((t) => (
+      <a
+        href={t.href}
+        class={`flex items-center gap-2.5 px-3 h-10 rounded-xl text-sm transition-all duration-200 ${
+          isActive(t.href)
+            ? "bg-ink text-white font-semibold shadow-md shadow-ink/20"
+            : "text-ink/65 hover:text-ink hover:bg-ink/5 hover:translate-x-0.5"
+        }`}
+      >
+        <span class="text-base">{t.icon}</span>
+        {t.label}
+      </a>
+    ))}
+  </div>
+
+  <div>
+    <p class="text-[11px] font-bold uppercase tracking-widest text-ink/40 px-1 mb-2">
+      {currentIdx === -1 ? "Jump to kanji" : "Nearby kanji"}
+    </p>
+    <div class="grid grid-cols-6 gap-1">
+      {windowed.map((k) => {
+        const isCurrent = currentIdx !== -1 && all[currentIdx].kanji === k.kanji
+        return (
+          <a
+            href={`${prefix}/study/${k.kanji}/`}
+            class={`w-8 h-8 rounded-lg flex items-center justify-center text-[13px] font-jp transition-all duration-200 ${
+              isCurrent
+                ? "bg-vermilion text-white shadow-md shadow-vermilion/30 scale-105"
+                : "text-ink/60 hover:bg-ink/8 hover:text-ink hover:scale-110"
+            }`}
+          >
+            {k.kanji}
+          </a>
+        )
+      })}
+    </div>
+    {all.length > WINDOW && (
+      <a href={`${prefix}/`} class="inline-flex items-center gap-1 mt-2.5 px-1 text-[11px] font-semibold text-ink/45 hover:text-vermilion transition-colors">
+        All {all.length} kanji →
+      </a>
+    )}
+  </div>
+
+  <div>
+    <p class="text-[11px] font-bold uppercase tracking-widest text-ink/40 px-1 mb-2">Test sets</p>
+    <div class="grid grid-cols-5 gap-1">
+      {Array.from({ length: SETS_PER_LEVEL }, (_, i) => i + 1).map((n) => (
+        <a
+          href={`${prefix}/sets/${n}/`}
+          class={`h-8 rounded-lg text-xs font-semibold flex items-center justify-center transition-all duration-200 ${
+            isActive(`${prefix}/sets/${n}/`)
+              ? "bg-ink text-white shadow-md shadow-ink/20"
+              : "text-ink/50 hover:bg-ink/8 hover:text-ink"
+          }`}
+        >
+          {n}
+        </a>
+      ))}
+    </div>
+  </div>
+</div>

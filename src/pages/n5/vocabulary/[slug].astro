@@ -1,77 +1,12 @@
 ---
-import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import VocabDetailPage from "@/components/level/VocabDetailPage.astro"
 import { getVocabulary } from "@/lib/kanji"
 
-export async function getStaticPaths() {
-  const vocab = getVocabulary()
-  return vocab.map((v) => ({ params: { slug: v.slug } }))
+export function getStaticPaths() {
+  return getVocabulary("n5").map((v) => ({ params: { slug: v.slug } }))
 }
 
-const level = "n5"
-const { slug } = Astro.params
-const decoded = decodeURIComponent(slug!)
-const allVocab = getVocabulary()
-const vocab = allVocab.find((v) => v.slug === decoded)
-
-if (!vocab) {
-  return Astro.redirect(`/${level}/vocabulary/`)
-}
-
-const idx = allVocab.findIndex((v) => v.slug === decoded)
-const prev = idx > 0 ? allVocab[idx - 1] : null
-const next = idx < allVocab.length - 1 ? allVocab[idx + 1] : null
+const slug = decodeURIComponent(Astro.params.slug!)
 ---
 
-<DefaultLayout
-  title={`${vocab.word} (${vocab.reading}) — JLPT N5 Vocabulary`}
-  description={`${vocab.word} (${vocab.reading}) — ${vocab.english}. Example sentences and associated kanji for JLPT N5.`}
-  level={level}>
-    <div class="px-4 py-6 sm:py-8">
-      <a href={`/${level}/vocabulary/`} class="text-xs text-ink/60 hover:text-ink transition-colors">&larr; All Vocabulary</a>
-
-      <div class="mt-5 sm:mt-6 border border-ink/20 rounded-lg sm:rounded-xl bg-white px-4 sm:px-6 py-5 sm:py-6">
-        <h1 class="text-2xl sm:text-3xl font-black text-ink">{vocab.word} <span class="text-xs sm:text-sm font-normal text-ink/60">({vocab.english})</span></h1>
-        <p class="text-sm sm:text-base text-ink/70 mt-1">{vocab.reading}</p>
-
-        {vocab.kanjiChars.length > 0 && (
-          <div class="mt-4 sm:mt-5">
-            <p class="text-[11px] sm:text-xs font-medium uppercase tracking-widest text-ink/50 mb-1.5 sm:mb-2">Contains Kanji</p>
-            <div class="flex gap-1.5 sm:gap-2">
-              {vocab.kanjiIds.map((id, i) => (
-                <a
-                  key={id}
-                  href={`/${level}/study/${vocab.kanjiChars[i]}/`}
-                  class="border border-ink/20 rounded-lg px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-ink hover:border-ink/40 transition-all"
-                >
-                  {vocab.kanjiChars[i]}
-                </a>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {vocab.sentences.length > 0 && (
-          <div class="mt-5 sm:mt-6">
-            <p class="text-[11px] sm:text-xs font-medium uppercase tracking-widest text-ink/50 mb-2 sm:mb-3">Example Sentences</p>
-            <div class="space-y-2 sm:space-y-3">
-              {vocab.sentences.slice(0, 3).map((s, i) => (
-                <div key={i} class="border border-ink/20 rounded-lg px-3 sm:px-4 py-2.5 sm:py-3">
-                  <p class="text-xs sm:text-sm text-ink">{s.sentence}</p>
-                  <p class="text-[11px] sm:text-xs text-ink/60 mt-0.5 sm:mt-1">{s.sentenceEnglish}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-
-      <div class="flex items-center justify-between mt-5 sm:mt-6">
-        {prev ? (
-          <a href={`/${level}/vocabulary/${prev.slug}/`} class="text-xs sm:text-sm text-ink/60 hover:text-ink transition-colors">&larr; {prev.word}</a>
-        ) : <div />}
-        {next ? (
-          <a href={`/${level}/vocabulary/${next.slug}/`} class="text-xs sm:text-sm text-ink/60 hover:text-ink transition-colors">{next.word} &rarr;</a>
-        ) : <div />}
-      </div>
-    </div>
-</DefaultLayout>
+<VocabDetailPage level="n5" slug={slug} />

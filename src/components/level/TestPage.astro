@@ -1,0 +1,26 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import TestClient from "@/components/TestClient"
+import { getSetQuestions } from "@/lib/kanji"
+import type { Level } from "@/lib/kanji"
+import { levelMeta, QUESTIONS_PER_SET } from "@/lib/levels"
+
+export interface Props {
+  level: Level
+  setNum: number
+}
+
+const { level, setNum } = Astro.props
+const meta = levelMeta(level)
+
+// Questions are generated at build time and serialized as island props,
+// so the level's full JSON dataset never ships to the browser.
+const questions = getSetQuestions(setNum, level)
+
+const title = `Kanji Test Online – JLPT ${meta.label} Kanji Quiz Set ${setNum} (${QUESTIONS_PER_SET} Questions)`
+const description = `Practice JLPT ${meta.label} kanji with Set ${setNum} of ${QUESTIONS_PER_SET} questions. Test your kanji-to-reading and reading-to-kanji skills with real sentence context.`
+---
+
+<DefaultLayout title={title} description={description} level={level}>
+  <TestClient client:load level={level} setNum={setNum} questions={questions} />
+</DefaultLayout>

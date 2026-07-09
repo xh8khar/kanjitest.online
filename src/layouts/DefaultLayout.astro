@@ -1,7 +1,8 @@
 ---
 import "../styles/global.css"
-import Navbar from "@/components/Navbar"
-import Sidebar from "@/components/Sidebar"
+import { ClientRouter } from "astro:transitions"
+import Navbar from "@/components/Navbar.astro"
+import Sidebar from "@/components/Sidebar.astro"
 import Footer from "@/components/Footer.astro"
 import { websiteSchema, organizationSchema, siteUrl } from "@/lib/seo"
 import type { Level } from "@/lib/kanji"
@@ -20,12 +21,20 @@ const canonical = Astro.url.pathname.endsWith("/") ? Astro.url.pathname : `${Ast
 const finalTitle = title || "KanjiTest.Online"
 const finalDesc = description || "Free JLPT N5, N4, N3, N2, and N1 kanji study with flashcards, vocabulary, and practice tests."
 const image = ogImage || "/icon.svg"
+const path = Astro.url.pathname
+
+const subLinks = [
+  { id: "study", label: "Study", icon: "📖" },
+  { id: "flashcards", label: "Cards", icon: "🃏" },
+  { id: "vocabulary", label: "Vocab", icon: "📝" },
+  { id: "sets", label: "Test", icon: "✍️" },
+]
 ---
 
-<html lang="ja">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <title>{finalTitle}</title>
     <meta name="description" content={finalDesc} />
@@ -37,7 +46,16 @@ const image = ogImage || "/icon.svg"
     <link rel="canonical" href={siteUrl(canonical)} />
     <link rel="icon" type="image/svg+xml" href="/icon.svg" />
     <link rel="apple-touch-icon" href="/icon.svg" />
-    <meta name="theme-color" content="#000000" />
+    <meta name="theme-color" content="#faf7f2" />
+
+    <script is:inline>document.documentElement.classList.add("js")</script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600;900&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -46,7 +64,7 @@ const image = ogImage || "/icon.svg"
     <meta property="og:description" content={finalDesc} />
     <meta property="og:image" content={siteUrl(image)} />
     <meta property="og:site_name" content="KanjiTest.Online" />
-    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:locale" content="en_US" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -54,34 +72,52 @@ const image = ogImage || "/icon.svg"
     <meta name="twitter:description" content={finalDesc} />
     <meta name="twitter:image" content={siteUrl(image)} />
 
-    <script
-      type="application/ld+json"
-      set:html={JSON.stringify(websiteSchema())}
-    />
-    <script
-      type="application/ld+json"
-      set:html={JSON.stringify(organizationSchema())}
-    />
+    <script type="application/ld+json" set:html={JSON.stringify(websiteSchema())} />
+    <script type="application/ld+json" set:html={JSON.stringify(organizationSchema())} />
+
+    <ClientRouter />
   </head>
   <body class="font-sans antialiased min-h-dvh flex flex-col overflow-x-hidden">
-    <Navbar client:load />
+    <Navbar />
     <main class="flex-1">
       {level ? (
         <div class="max-w-6xl mx-auto">
-          <div class="lg:hidden overflow-x-auto px-4 py-2 sm:py-3 scrollbar-none">
-            <div class="flex gap-1.5 sm:gap-2 pb-0.5">
-              <a href={`${prefix}/study/`} class="shrink-0 border border-ink/20 rounded-lg h-9 sm:h-11 px-2.5 sm:px-4 text-[11px] sm:text-sm text-ink/70 hover:border-ink/40 transition-all bg-white flex items-center">Study</a>
-              <a href={`${prefix}/flashcards/`} class="shrink-0 border border-ink/20 rounded-lg h-9 sm:h-11 px-2.5 sm:px-4 text-[11px] sm:text-sm text-ink/70 hover:border-ink/40 transition-all bg-white flex items-center">Flashcards</a>
-              <a href={`${prefix}/vocabulary/`} class="shrink-0 border border-ink/20 rounded-lg h-9 sm:h-11 px-2.5 sm:px-4 text-[11px] sm:text-sm text-ink/70 hover:border-ink/40 transition-all bg-white flex items-center">Vocab</a>
-              <a href={`${prefix}/sets/`} class="shrink-0 border border-ink/20 rounded-lg h-9 sm:h-11 px-2.5 sm:px-4 text-[11px] sm:text-sm text-ink/70 hover:border-ink/40 transition-all bg-white flex items-center">Test</a>
-              <a href={`${prefix}/`} class="shrink-0 border border-ink/20 rounded-lg h-9 sm:h-11 px-2.5 sm:px-4 text-[11px] sm:text-sm text-ink/70 hover:border-ink/40 transition-all bg-white flex items-center">Hub</a>
+          <div class="lg:hidden overflow-x-auto px-4 py-2.5 scrollbar-none">
+            <div class="flex gap-2 pb-0.5">
+              {subLinks.map((s) => {
+                const active = path.startsWith(`${prefix}/${s.id}/`)
+                return (
+                  <a
+                    href={`${prefix}/${s.id}/`}
+                    class={`shrink-0 h-9 px-3.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all ${
+                      active
+                        ? "bg-ink text-white shadow-md shadow-ink/20"
+                        : "bg-white border border-ink/15 text-ink/70 hover:border-ink/35"
+                    }`}
+                  >
+                    <span class="text-sm">{s.icon}</span>
+                    {s.label}
+                  </a>
+                )
+              })}
+              <a
+                href={`${prefix}/`}
+                class={`shrink-0 h-9 px-3.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all ${
+                  path === `${prefix}/`
+                    ? "bg-ink text-white shadow-md shadow-ink/20"
+                    : "bg-white border border-ink/15 text-ink/70 hover:border-ink/35"
+                }`}
+              >
+                <span class="text-sm">⛩️</span>
+                Hub
+              </a>
             </div>
           </div>
 
           <div class="flex">
-            <aside class="hidden lg:block w-56 shrink-0">
+            <aside class="hidden lg:block w-60 shrink-0">
               <div class="sticky top-20">
-                <Sidebar level={level} client:load />
+                <Sidebar level={level} />
               </div>
             </aside>
 
@@ -95,5 +131,31 @@ const image = ogImage || "/icon.svg"
       )}
     </main>
     <Footer />
+
+    <script>
+      // Scroll-reveal: elements with .reveal slide in as they enter the viewport.
+      // Runs on first load and after every view transition.
+      function setupReveals() {
+        const els = document.querySelectorAll<HTMLElement>(".reveal:not(.is-visible)")
+        if (!els.length) return
+        if (!("IntersectionObserver" in window)) {
+          els.forEach((el) => el.classList.add("is-visible"))
+          return
+        }
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible")
+                io.unobserve(entry.target)
+              }
+            }
+          },
+          { threshold: 0.08, rootMargin: "0px 0px -6% 0px" }
+        )
+        els.forEach((el) => io.observe(el))
+      }
+      document.addEventListener("astro:page-load", setupReveals)
+    </script>
   </body>
 </html>

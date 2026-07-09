@@ -1,0 +1,77 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import { getAll } from "@/lib/kanji"
+import type { Level } from "@/lib/kanji"
+import { levelMeta } from "@/lib/levels"
+import { collectionPageSchema, itemListSchema } from "@/lib/seo"
+
+export interface Props {
+  level: Level
+}
+
+const { level } = Astro.props
+const meta = levelMeta(level)
+const all = getAll(level)
+const prefix = `/${level}`
+
+const title = `JLPT ${meta.label} Kanji — Complete Study List with Readings`
+const description = `Complete list of ${all.length} JLPT ${meta.label} kanji with kun/on readings, example words, and daily sentences. Click any kanji to start learning.`
+
+const items = all.map((k) => ({
+  name: `${k.kanji} (${k.kun[0]?.replace(/\..+$/, "") || k.on[0]}) — ${k.meanings[0]}`,
+  url: `${prefix}/study/${k.kanji}/`,
+}))
+const pageSchema = collectionPageSchema(title, `${all.length} JLPT ${meta.label} kanji with readings, examples, and sentences.`, `${prefix}/study`)
+const listSchema = itemListSchema(items)
+---
+
+<DefaultLayout title={title} description={description} level={level}>
+  <script type="application/ld+json" set:html={JSON.stringify(pageSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(listSchema)} />
+
+  <div class="px-4 py-6 sm:py-8">
+    <div class="flex items-end justify-between mb-6 animate-fade-up">
+      <div>
+        <h1 class="text-xl sm:text-2xl font-black text-ink">Study</h1>
+        <p class="text-xs sm:text-sm text-ink/55 mt-1">{all.length.toLocaleString()} kanji · JLPT {meta.label}</p>
+      </div>
+      <a href={`${prefix}/flashcards/${all[0]?.kanji}/`} class="btn btn-primary h-10 px-4 text-xs sm:text-sm">
+        🃏 Start deck
+      </a>
+    </div>
+
+    <div class="space-y-2">
+      {all.map((k, i) => {
+        const ex = k.examples[0]
+        return (
+          <a
+            href={`${prefix}/study/${k.kanji}/`}
+            class="card card-hover group px-3 sm:px-5 py-2.5 sm:py-3 flex items-center gap-3 sm:gap-4 reveal"
+            style={`--reveal-delay: ${(i % 8) * 40}ms`}
+          >
+            <span class={`w-10 h-10 sm:w-11 sm:h-11 rounded-xl ${meta.accentBgSoft} flex items-center justify-center shrink-0 text-lg sm:text-xl font-jp font-bold text-ink transition-transform duration-300 group-hover:scale-110`}>
+              {k.kanji}
+            </span>
+            <span class="flex-1 min-w-0">
+              <span class="flex items-baseline gap-2">
+                <span class="text-sm sm:text-[15px] font-bold text-ink group-hover:text-vermilion transition-colors">
+                  {k.meanings[0]}
+                </span>
+                <span class="text-[11px] sm:text-xs text-ink/60 truncate">
+                  {k.kun.map((r) => r.replace(/\..+$/, "")).join("、") || k.on.join("、")}
+                </span>
+              </span>
+              {ex && (
+                <span class="block text-[11px] sm:text-xs text-ink/50 mt-0.5 truncate">
+                  {ex.word} · {ex.english}
+                </span>
+              )}
+            </span>
+            <span class="text-[10px] text-ink/30 shrink-0 tabular-nums">#{k.id}</span>
+            <span class="text-ink/25 shrink-0 text-sm transition-all duration-300 group-hover:text-vermilion group-hover:translate-x-0.5">&rarr;</span>
+          </a>
+        )
+      })}
+    </div>
+  </div>
+</DefaultLayout>

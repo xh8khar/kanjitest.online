@@ -1,0 +1,45 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import { getAll } from "@/lib/kanji"
+import type { Level } from "@/lib/kanji"
+import { levelMeta } from "@/lib/levels"
+
+export interface Props {
+  level: Level
+}
+
+const { level } = Astro.props
+const meta = levelMeta(level)
+const all = getAll(level)
+const prefix = `/${level}`
+
+const title = `JLPT ${meta.label} Kanji Flashcards — Flip & Memorize`
+const description = `Flip through all ${all.length} JLPT ${meta.label} kanji flashcards. Tap to reveal readings and meanings. Track your progress with Know/Again.`
+---
+
+<DefaultLayout title={title} description={description} level={level}>
+  <div class="px-4 py-6 sm:py-8">
+    <div class="flex items-end justify-between mb-6 animate-fade-up">
+      <div>
+        <h1 class="text-xl sm:text-2xl font-black text-ink">Flashcards</h1>
+        <p class="text-xs sm:text-sm text-ink/55 mt-1">{all.length.toLocaleString()} cards · JLPT {meta.label}</p>
+      </div>
+      <a href={`${prefix}/flashcards/${all[0]?.kanji}/`} class="btn btn-accent h-10 px-4 text-xs sm:text-sm">
+        Start deck →
+      </a>
+    </div>
+
+    <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 sm:gap-2.5">
+      {all.map((k, i) => (
+        <a
+          href={`${prefix}/flashcards/${k.kanji}/`}
+          class="kanji-tile group p-3 sm:p-4 reveal"
+          style={`--reveal-delay: ${(i % 6) * 45}ms`}
+        >
+          <span class="block text-2xl sm:text-3xl font-jp font-bold text-ink leading-none transition-transform duration-300 group-hover:scale-110">{k.kanji}</span>
+          <span class="block text-[10px] sm:text-[11px] text-ink/50 mt-1.5 truncate">{k.meanings[0]}</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</DefaultLayout>

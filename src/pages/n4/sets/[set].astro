@@ -1,18 +1,12 @@
 ---
-import DefaultLayout from "@/layouts/DefaultLayout.astro"
-import TestClient from "@/components/TestClient"
+import TestPage from "@/components/level/TestPage.astro"
+import { SETS_PER_LEVEL } from "@/lib/levels"
 
 export function getStaticPaths() {
-  return Array.from({ length: 20 }, (_, i) => ({ params: { set: String(i + 1) } }))
+  return Array.from({ length: SETS_PER_LEVEL }, (_, i) => ({ params: { set: String(i + 1) } }))
 }
 
-const level = "n4"
-const { set } = Astro.params
-const setNum = parseInt(set!)
-const title = `Kanji Test Online – JLPT N4 Kanji Quiz Set ${setNum} (20 Questions)`
-const description = `Practice JLPT N4 kanji with Set ${setNum} of 20 questions. Test your kanji-to-reading and reading-to-kanji skills.`
+const setNum = parseInt(Astro.params.set!, 10)
 ---
 
-<DefaultLayout title={title} description={description} level={level}>
-  <TestClient setNum={setNum} level={level} client:load />
-</DefaultLayout>
+<TestPage level="n4" setNum={setNum} />

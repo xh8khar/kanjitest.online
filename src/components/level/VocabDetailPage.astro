@@ -1,0 +1,85 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import { getVocabulary } from "@/lib/kanji"
+import type { Level } from "@/lib/kanji"
+import { levelMeta } from "@/lib/levels"
+
+export interface Props {
+  level: Level
+  slug: string
+}
+
+const { level, slug } = Astro.props
+const meta = levelMeta(level)
+const prefix = `/${level}`
+const allVocab = getVocabulary(level)
+const idx = allVocab.findIndex((v) => v.slug === slug)
+const vocab = allVocab[idx]!
+const prev = idx > 0 ? allVocab[idx - 1] : null
+const next = idx < allVocab.length - 1 ? allVocab[idx + 1] : null
+
+const title = `${vocab.word} (${vocab.reading}) — JLPT ${meta.label} Vocabulary`
+const description = `${vocab.word} (${vocab.reading}) — ${vocab.english}. Example sentences and associated kanji for JLPT ${meta.label}.`
+---
+
+<DefaultLayout title={title} description={description} level={level}>
+  <div class="px-4 py-6 sm:py-8">
+    <a href={`${prefix}/vocabulary/`} class="inline-flex items-center gap-1 text-xs text-ink/55 hover:text-vermilion transition-colors animate-fade-in">
+      &larr; All vocabulary
+    </a>
+
+    <div class="relative card overflow-hidden mt-4 animate-fade-up">
+      <div class={`absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r ${meta.gradient}`} />
+      <div class="px-4 sm:px-6 py-6 sm:py-7">
+        <h1 class="text-3xl sm:text-4xl font-jp font-black text-ink leading-tight animate-ink-in">{vocab.word}</h1>
+        <p class="text-base sm:text-lg text-ink/70 mt-1.5">{vocab.reading}</p>
+        <p class="text-sm text-ink/55 mt-0.5">{vocab.english}</p>
+
+        {vocab.kanjiChars.length > 0 && (
+          <div class="mt-5">
+            <p class="text-[11px] font-bold uppercase tracking-widest text-ink/40 mb-2">Contains kanji</p>
+            <div class="flex flex-wrap gap-2">
+              {vocab.kanjiChars.map((c) => (
+                <a
+                  href={`${prefix}/study/${c}/`}
+                  class="kanji-tile w-11 h-11 flex items-center justify-center text-xl font-jp font-bold text-ink"
+                >
+                  {c}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {vocab.sentences.length > 0 && (
+          <div class="mt-6">
+            <p class="text-[11px] font-bold uppercase tracking-widest text-ink/40 mb-2.5">Example sentences</p>
+            <div class="space-y-2.5">
+              {vocab.sentences.slice(0, 3).map((s, i) => (
+                <div class="rounded-xl bg-ink/[0.03] border border-ink/8 px-4 py-3 reveal" style={`--reveal-delay: ${i * 80}ms`}>
+                  <p class="text-[13px] sm:text-sm text-ink font-jp leading-relaxed">{s.sentence}</p>
+                  <p class="text-[11px] sm:text-xs text-ink/55 mt-1">{s.sentenceEnglish}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+
+    <div class="flex gap-2 mt-5">
+      {prev ? (
+        <a href={`${prefix}/vocabulary/${prev.slug}/`} class="card card-hover group flex-1 h-13 flex items-center gap-2 px-4 text-sm text-ink/70">
+          <span class="text-ink/35 transition-transform duration-300 group-hover:-translate-x-1">&larr;</span>
+          <span class="font-jp font-bold text-ink truncate">{prev.word}</span>
+        </a>
+      ) : <div class="flex-1" />}
+      {next ? (
+        <a href={`${prefix}/vocabulary/${next.slug}/`} class="card card-hover group flex-1 h-13 flex items-center justify-end gap-2 px-4 text-sm text-ink/70">
+          <span class="font-jp font-bold text-ink truncate">{next.word}</span>
+          <span class="text-ink/35 transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
+        </a>
+      ) : <div class="flex-1" />}
+    </div>
+  </div>
+</DefaultLayout>

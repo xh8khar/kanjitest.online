@@ -1,0 +1,45 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import type { Level } from "@/lib/kanji"
+import { levelMeta, SETS_PER_LEVEL, QUESTIONS_PER_SET } from "@/lib/levels"
+import { collectionPageSchema } from "@/lib/seo"
+
+export interface Props {
+  level: Level
+}
+
+const { level } = Astro.props
+const meta = levelMeta(level)
+const prefix = `/${level}`
+
+const title = `JLPT ${meta.label} Kanji Tests — ${SETS_PER_LEVEL} Practice Quizzes`
+const description = `${SETS_PER_LEVEL} test sets of ${QUESTIONS_PER_SET} questions each. Practice reading and meaning recognition for JLPT ${meta.label} kanji with real sentence context.`
+const pageSchema = collectionPageSchema(title, `${SETS_PER_LEVEL} test sets of ${QUESTIONS_PER_SET} questions each for JLPT ${meta.label} kanji.`, `${prefix}/sets`)
+---
+
+<DefaultLayout title={title} description={description} level={level}>
+  <script type="application/ld+json" set:html={JSON.stringify(pageSchema)} />
+
+  <div class="px-4 py-6 sm:py-8">
+    <div class="mb-6 animate-fade-up">
+      <h1 class="text-xl sm:text-2xl font-black text-ink">Practice tests</h1>
+      <p class="text-xs sm:text-sm text-ink/55 mt-1">{SETS_PER_LEVEL} sets · {QUESTIONS_PER_SET} questions each · JLPT {meta.label}</p>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 sm:gap-3">
+      {Array.from({ length: SETS_PER_LEVEL }, (_, i) => i + 1).map((n, i) => (
+        <a
+          href={`${prefix}/sets/${n}/`}
+          class="card card-hover group p-4 sm:p-5 text-center reveal"
+          style={`--reveal-delay: ${(i % 4) * 60}ms`}
+        >
+          <span class={`inline-flex w-11 h-11 rounded-xl bg-gradient-to-br ${meta.gradient} text-white font-black items-center justify-center shadow-lg ${meta.glow} transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}>
+            {n}
+          </span>
+          <p class="text-sm font-bold text-ink mt-2.5 group-hover:text-vermilion transition-colors">Set {n}</p>
+          <p class="text-[11px] text-ink/50 mt-0.5">{QUESTIONS_PER_SET} questions</p>
+        </a>
+      ))}
+    </div>
+  </div>
+</DefaultLayout>

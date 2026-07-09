@@ -1,30 +1,43 @@
 ---
 import DefaultLayout from "@/layouts/DefaultLayout.astro"
 import { getAll, getVocabulary } from "@/lib/kanji"
-import { siteUrl, collectionPageSchema } from "@/lib/seo"
+import { LEVELS, LEVEL_IDS, SETS_PER_LEVEL, QUESTIONS_PER_SET } from "@/lib/levels"
+import { collectionPageSchema } from "@/lib/seo"
 
-const levels = [
-  { id: "n5", label: "N5", kanji: 79, vocab: 219, color: "bg-emerald-500", desc: "Foundations" },
-  { id: "n4", label: "N4", kanji: 171, vocab: 473, color: "bg-sky-500", desc: "Building" },
-  { id: "n3", label: "N3", kanji: 367, vocab: 935, color: "bg-violet-500", desc: "Confidence" },
-  { id: "n2", label: "N2", kanji: 984, vocab: 3432, color: "bg-orange-500", desc: "Advanced" },
-  { id: "n1", label: "N1", kanji: 2215, vocab: 9250, color: "bg-rose-500", desc: "Mastery" },
+const levels = LEVEL_IDS.map((id) => ({
+  ...LEVELS[id],
+  kanji: getAll(id).length,
+  vocab: getVocabulary(id).length,
+}))
+
+const totalKanji = levels.reduce((s, l) => s + l.kanji, 0)
+const totalVocab = levels.reduce((s, l) => s + l.vocab, 0)
+const maxKanji = Math.max(...levels.map((l) => l.kanji))
+
+const floatingKanji = [
+  { char: "学", top: "12%", left: "6%", size: "text-5xl", delay: "0s", rot: "-8deg" },
+  { char: "桜", top: "22%", left: "88%", size: "text-6xl", delay: "1.2s", rot: "6deg" },
+  { char: "夢", top: "64%", left: "4%", size: "text-4xl", delay: "0.6s", rot: "5deg" },
+  { char: "道", top: "70%", left: "92%", size: "text-5xl", delay: "1.8s", rot: "-5deg" },
+  { char: "心", top: "8%", left: "70%", size: "text-4xl", delay: "2.4s", rot: "-4deg" },
+  { char: "空", top: "48%", left: "82%", size: "text-4xl", delay: "0.9s", rot: "7deg" },
+  { char: "力", top: "40%", left: "10%", size: "text-6xl", delay: "1.5s", rot: "4deg" },
 ]
 
 const sampleKanji = [
-  { char: "学", meaning: "study", level: "N5", url: "/n5/study/%E5%AD%A6/" },
-  { char: "食", meaning: "eat", level: "N5", url: "/n5/study/%E9%A3%9F/" },
-  { char: "時", meaning: "time", level: "N5", url: "/n5/study/%E6%99%82/" },
-  { char: "物", meaning: "thing", level: "N4", url: "/n4/study/%E7%89%A9/" },
-  { char: "病", meaning: "sick", level: "N4", url: "/n4/study/%E7%97%85/" },
-  { char: "美", meaning: "beauty", level: "N3", url: "/n3/study/%E7%BE%8E/" },
+  { char: "学", meaning: "study", level: "N5", url: "/n5/study/学/" },
+  { char: "食", meaning: "eat", level: "N5", url: "/n5/study/食/" },
+  { char: "時", meaning: "time", level: "N5", url: "/n5/study/時/" },
+  { char: "物", meaning: "thing", level: "N4", url: "/n4/study/物/" },
+  { char: "病", meaning: "sick", level: "N4", url: "/n4/study/病/" },
+  { char: "美", meaning: "beauty", level: "N3", url: "/n3/study/美/" },
 ]
 
 const features = [
-  { icon: "📖", title: "Study", desc: "Browse kanji with kun/on readings, meanings, and real example sentences.", url: "/n5/study/" },
-  { icon: "🃏", title: "Flashcards", desc: "Flip through kanji cards. Mark 'Know it' or 'Again' to track your progress.", url: "/n5/flashcards/" },
+  { icon: "📖", title: "Study", desc: "Browse every kanji with kun/on readings, meanings, and real example sentences.", url: "/n5/study/" },
+  { icon: "🃏", title: "Flashcards", desc: "Flip 3D cards and mark “Know it” or “Again” — your progress is saved on your device.", url: "/n5/flashcards/" },
   { icon: "📝", title: "Vocabulary", desc: "Learn words with readings, kanji breakdowns, and example sentences.", url: "/n5/vocabulary/" },
-  { icon: "✍️", title: "Practice Tests", desc: "20 sets per level, 20 questions each. Kanji → reading and reading → kanji.", url: "/n5/sets/1/" },
+  { icon: "✍️", title: "Practice Tests", desc: `${SETS_PER_LEVEL} sets per level with instant, animated feedback on every answer.`, url: "/n5/sets/1/" },
 ]
 
 const jsonLd = collectionPageSchema(
@@ -40,99 +53,128 @@ const jsonLd = collectionPageSchema(
 >
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
-  <!-- Hero -->
+  <!-- ———————— Hero ———————— -->
   <section class="relative overflow-hidden">
-    <div class="max-w-5xl mx-auto px-4 pt-10 sm:pt-16 pb-14 sm:pb-20 text-center">
-      <div class="inline-flex items-center gap-1.5 bg-ink/5 text-ink/60 text-xs sm:text-sm rounded-full px-3.5 py-1.5 mb-5 sm:mb-6 font-medium">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-        Completely free — no account needed
+    <!-- soft gradient blobs -->
+    <div aria-hidden="true" class="absolute inset-0 pointer-events-none">
+      <div class="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-vermilion/10 blur-3xl animate-drift" />
+      <div class="absolute -bottom-32 -right-16 w-[28rem] h-[28rem] rounded-full bg-sky-400/10 blur-3xl animate-drift" style="animation-delay: -7s" />
+      {floatingKanji.map((f) => (
+        <span
+          class={`hidden sm:block absolute font-jp font-black text-ink/[0.06] select-none animate-float ${f.size}`}
+          style={`top:${f.top}; left:${f.left}; animation-delay:${f.delay}; --float-rot:${f.rot}`}
+        >
+          {f.char}
+        </span>
+      ))}
+    </div>
+
+    <div class="relative max-w-5xl mx-auto px-4 pt-14 sm:pt-24 pb-16 sm:pb-24 text-center">
+      <div class="inline-flex items-center gap-2 bg-white border border-ink/10 text-ink/60 text-xs sm:text-sm rounded-full px-4 py-1.5 mb-6 font-medium shadow-sm animate-fade-up">
+        <span class="relative flex w-2 h-2">
+          <span class="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 animate-ping" />
+          <span class="relative inline-flex rounded-full w-2 h-2 bg-emerald-500" />
+        </span>
+        {totalKanji.toLocaleString()} kanji · {totalVocab.toLocaleString()} words · free forever
       </div>
-      <h1 class="text-4xl sm:text-6xl font-black text-ink leading-[1.1] tracking-tight">
-        Master JLPT Kanji<br />
-        <span class="text-blue-500">Free &amp; Online</span>
+
+      <h1 class="text-4xl sm:text-6xl md:text-7xl font-black text-ink leading-[1.05] tracking-tight text-balance animate-fade-up" style="animation-delay: 80ms">
+        Master JLPT kanji,<br />
+        <span class="relative inline-block text-vermilion">
+          one character
+          <svg class="absolute -bottom-2 left-0 w-full" viewBox="0 0 200 9" fill="none" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M2 7c40-5 120-5 196-3" stroke="currentColor" stroke-width="4" stroke-linecap="round" class="text-vermilion/40" />
+          </svg>
+        </span>{" "}at a time.
       </h1>
-      <p class="text-sm sm:text-lg text-ink/60 mt-3 sm:mt-4 max-w-xl mx-auto leading-relaxed">
-        Study kanji with readings and examples. Flip flashcards. Test your knowledge.
-        All JLPT levels — N5 through N1 — completely free, forever.
+
+      <p class="text-sm sm:text-lg text-ink/60 mt-5 max-w-xl mx-auto leading-relaxed animate-fade-up" style="animation-delay: 160ms">
+        Study readings and real sentences, flip flashcards, and take practice tests
+        for every level from N5 to N1 — no account, no paywall.
       </p>
 
-      <!-- CTA buttons -->
-      <div class="flex flex-wrap justify-center gap-3 mt-7 sm:mt-9">
-        <a href="/n5/study/" class="h-11 sm:h-13 px-6 sm:px-8 bg-ink text-white text-sm sm:text-base font-bold rounded-xl flex items-center gap-2 hover:bg-ink/80 transition-all shadow-sm">
-          Start Studying
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+      <div class="flex flex-wrap justify-center gap-3 mt-8 sm:mt-10 animate-fade-up" style="animation-delay: 240ms">
+        <a href="/n5/study/" class="btn btn-accent h-12 sm:h-13 px-7 sm:px-9 text-sm sm:text-base">
+          Start studying
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
         </a>
-        <a href="#levels" class="h-11 sm:h-13 px-6 sm:px-8 border border-ink/20 text-sm sm:text-base font-medium rounded-xl flex items-center text-ink/70 hover:text-ink hover:border-ink/40 transition-all">
-          Browse Levels
+        <a href="#levels" class="btn btn-ghost h-12 sm:h-13 px-7 sm:px-9 text-sm sm:text-base font-semibold">
+          Browse levels
         </a>
       </div>
 
-      <!-- Sample kanji preview -->
-      <div class="mt-10 sm:mt-14 flex flex-wrap justify-center gap-3 sm:gap-4">
-        {sampleKanji.map((k) => (
+      <!-- sample kanji -->
+      <div class="mt-12 sm:mt-16 flex flex-wrap justify-center gap-3 sm:gap-4">
+        {sampleKanji.map((k, i) => (
           <a
-            key={k.char}
             href={k.url}
-            class="group bg-white border border-ink/10 rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-4 hover:border-ink/30 hover:shadow-sm transition-all text-center min-w-[80px] sm:min-w-[100px]"
+            class="card card-hover group px-4 sm:px-6 py-3 sm:py-4 text-center min-w-[80px] sm:min-w-[104px] animate-fade-up"
+            style={`animation-delay: ${320 + i * 70}ms`}
           >
-            <div class="text-2xl sm:text-3xl font-black text-ink group-hover:scale-110 transition-transform">{k.char}</div>
-            <div class="text-[10px] sm:text-xs text-ink/50 mt-1">{k.meaning}</div>
-            <div class="text-[10px] text-ink/30">{k.level}</div>
+            <span class="block text-3xl sm:text-4xl font-jp font-black text-ink transition-transform duration-300 group-hover:scale-110 group-hover:text-vermilion">{k.char}</span>
+            <span class="block text-[10px] sm:text-xs text-ink/50 mt-1.5">{k.meaning}</span>
+            <span class="block text-[10px] text-ink/30">{k.level}</span>
           </a>
         ))}
       </div>
     </div>
   </section>
 
-  <!-- How it works -->
-  <section class="border-t border-ink/10">
-    <div class="max-w-5xl mx-auto px-4 py-14 sm:py-20">
-      <h2 class="text-2xl sm:text-3xl font-black text-ink text-center">How It Works</h2>
-      <p class="text-sm sm:text-base text-ink/60 text-center mt-2 max-w-xl mx-auto">Four simple tools to take you from beginner to mastery.</p>
+  <!-- ———————— How it works ———————— -->
+  <section class="border-t border-ink/5 bg-white/50">
+    <div class="max-w-5xl mx-auto px-4 py-16 sm:py-24">
+      <h2 class="text-2xl sm:text-4xl font-black text-ink text-center reveal">Four tools. One goal.</h2>
+      <p class="text-sm sm:text-base text-ink/60 text-center mt-3 max-w-xl mx-auto reveal" style="--reveal-delay: 80ms">
+        Everything you need to go from recognizing your first character to passing N1.
+      </p>
 
-      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mt-8 sm:mt-10">
-        {features.map((f) => (
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mt-10 sm:mt-12">
+        {features.map((f, i) => (
           <a
-            key={f.title}
             href={f.url}
-            class="border border-ink/10 rounded-2xl p-5 sm:p-6 bg-white hover:border-ink/30 hover:shadow-sm transition-all group"
+            class="card card-hover group p-5 sm:p-6 reveal"
+            style={`--reveal-delay: ${i * 90}ms`}
           >
-            <span class="text-2xl sm:text-3xl">{f.icon}</span>
-            <h3 class="text-sm sm:text-base font-bold text-ink mt-3 group-hover:text-blue-600 transition-colors">{f.title}</h3>
-            <p class="text-xs sm:text-sm text-ink/60 mt-1.5 leading-relaxed">{f.desc}</p>
+            <span class="inline-flex w-11 h-11 items-center justify-center rounded-xl bg-ink/[0.04] text-2xl transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6">{f.icon}</span>
+            <h3 class="text-base font-bold text-ink mt-4 group-hover:text-vermilion transition-colors">{f.title}</h3>
+            <p class="text-[13px] text-ink/60 mt-1.5 leading-relaxed">{f.desc}</p>
           </a>
         ))}
       </div>
     </div>
   </section>
 
-  <!-- Levels -->
-  <section id="levels" class="border-t border-ink/10">
-    <div class="max-w-5xl mx-auto px-4 py-14 sm:py-20">
-      <h2 class="text-2xl sm:text-3xl font-black text-ink text-center">Choose Your Level</h2>
-      <p class="text-sm sm:text-base text-ink/60 text-center mt-2 max-w-xl mx-auto">Every level includes study guides, flashcards, vocabulary, and 20 practice tests.</p>
+  <!-- ———————— Levels ———————— -->
+  <section id="levels" class="border-t border-ink/5 scroll-mt-14">
+    <div class="max-w-5xl mx-auto px-4 py-16 sm:py-24">
+      <h2 class="text-2xl sm:text-4xl font-black text-ink text-center reveal">Choose your level</h2>
+      <p class="text-sm sm:text-base text-ink/60 text-center mt-3 max-w-xl mx-auto reveal" style="--reveal-delay: 80ms">
+        Every level includes study guides, flashcards, vocabulary, and {SETS_PER_LEVEL} practice tests.
+      </p>
 
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 mt-8 sm:mt-10">
-        {levels.map((l) => (
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 mt-10 sm:mt-12">
+        {levels.map((l, i) => (
           <a
-            key={l.id}
             href={`/${l.id}/`}
-            class="border border-ink/10 rounded-2xl bg-white hover:border-ink/30 hover:shadow-sm transition-all overflow-hidden group"
+            class="card card-hover group overflow-hidden reveal"
+            style={`--reveal-delay: ${i * 80}ms`}
           >
-            <div class="h-1.5 {l.color}" />
+            <div class={`h-1.5 bg-gradient-to-r ${l.gradient}`} />
             <div class="p-5 sm:p-6">
-              <div class="flex items-center justify-between mb-3">
-                <span class="text-lg sm:text-xl font-black text-ink">{l.label}</span>
-                <span class="text-[11px] sm:text-xs text-ink/50 bg-ink/5 rounded-full px-2.5 py-0.5 font-medium">{l.desc}</span>
+              <div class="flex items-center justify-between mb-4">
+                <span class={`w-11 h-11 rounded-xl bg-gradient-to-br ${l.gradient} text-white font-black flex items-center justify-center shadow-lg ${l.glow} transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}>
+                  {l.label}
+                </span>
+                <span class="chip">{l.tagline}</span>
               </div>
-              <div class="flex gap-3 sm:gap-4 text-xs sm:text-sm text-ink/70">
-                <span><strong class="text-ink font-semibold">{l.kanji}</strong> kanji</span>
-                <span><strong class="text-ink font-semibold">{l.vocab}</strong> words</span>
-                <span><strong class="text-ink font-semibold">20</strong> tests</span>
+              <div class="flex gap-4 text-[13px] text-ink/70">
+                <span><strong class="text-ink font-bold">{l.kanji.toLocaleString()}</strong> kanji</span>
+                <span><strong class="text-ink font-bold">{l.vocab.toLocaleString()}</strong> words</span>
+                <span><strong class="text-ink font-bold">{SETS_PER_LEVEL}</strong> tests</span>
               </div>
-              <div class="mt-4 pt-3 border-t border-ink/10 flex items-center justify-between">
+              <div class="mt-4 pt-3.5 border-t border-ink/5 flex items-center justify-between">
                 <span class="text-xs text-ink/50">Start learning</span>
-                <span class="text-ink/30 group-hover:text-ink/60 transition-colors text-sm">&rarr;</span>
+                <span class="text-ink/30 group-hover:text-vermilion group-hover:translate-x-1 transition-all duration-300 text-sm">&rarr;</span>
               </div>
             </div>
           </a>
@@ -141,56 +183,73 @@ const jsonLd = collectionPageSchema(
     </div>
   </section>
 
-  <!-- Quick action: jump straight to a test -->
-  <section class="bg-ink text-white">
-    <div class="max-w-5xl mx-auto px-4 py-14 sm:py-20 text-center">
-      <h2 class="text-2xl sm:text-3xl font-black">Ready to Test Yourself?</h2>
-      <p class="text-sm sm:text-base text-white/60 mt-2 max-w-lg mx-auto">Jump straight into a practice quiz. Pick a set from any level — no sign-up required.</p>
-      <div class="flex flex-wrap justify-center gap-2 sm:gap-3 mt-6 sm:mt-8">
-        {levels.map((l) => (
+  <!-- ———————— Test CTA ———————— -->
+  <section class="relative bg-ink text-white overflow-hidden">
+    <span aria-hidden="true" class="absolute -left-6 top-1/2 -translate-y-1/2 text-[14rem] leading-none font-jp font-black text-white/[0.04] select-none pointer-events-none">試験</span>
+    <div class="relative max-w-5xl mx-auto px-4 py-16 sm:py-24 text-center">
+      <h2 class="text-2xl sm:text-4xl font-black reveal">Ready to test yourself?</h2>
+      <p class="text-sm sm:text-base text-white/60 mt-3 max-w-lg mx-auto reveal" style="--reveal-delay: 80ms">
+        Jump straight into a practice quiz — {QUESTIONS_PER_SET} questions, instant feedback, no sign-up.
+      </p>
+      <div class="flex flex-wrap justify-center gap-2.5 sm:gap-3 mt-8 sm:mt-10">
+        {levels.map((l, i) => (
           <a
-            key={l.id}
             href={`/${l.id}/sets/1/`}
-            class="h-10 sm:h-12 px-4 sm:px-6 bg-white/10 hover:bg-white/20 rounded-xl text-xs sm:text-sm font-bold text-white flex items-center gap-2 transition-all"
+            class="btn h-11 sm:h-12 px-5 sm:px-6 text-xs sm:text-sm text-white bg-white/10 hover:bg-white/20 reveal"
+            style={`--reveal-delay: ${120 + i * 60}ms`}
           >
-            {l.label} Test 1
-            <svg class="w-3 h-3 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+            {l.label} test
+            <svg class="w-3 h-3 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
           </a>
         ))}
       </div>
     </div>
   </section>
 
-  <!-- JLPT Levels overview -->
-  <section class="border-t border-ink/10">
-    <div class="max-w-5xl mx-auto px-4 py-14 sm:py-20">
-      <h2 class="text-2xl sm:text-3xl font-black text-ink text-center">Kanji by JLPT Level</h2>
-      <p class="text-sm sm:text-base text-ink/60 text-center mt-2 max-w-xl mx-auto">The JLPT spans 5 levels, from N5 (easiest) to N1 (most advanced). Each level progressively adds more kanji.</p>
+  <!-- ———————— Kanji by level ———————— -->
+  <section class="border-t border-ink/5">
+    <div class="max-w-5xl mx-auto px-4 py-16 sm:py-24">
+      <h2 class="text-2xl sm:text-4xl font-black text-ink text-center reveal">Kanji by JLPT level</h2>
+      <p class="text-sm sm:text-base text-ink/60 text-center mt-3 max-w-xl mx-auto reveal" style="--reveal-delay: 80ms">
+        The JLPT spans 5 levels, from N5 (easiest) to N1 (most advanced). Each level adds progressively more kanji.
+      </p>
 
-      <div class="mt-8 sm:mt-10 max-w-2xl mx-auto space-y-3 sm:space-y-4">
-        {levels.map((l) => {
-          const pct = l.id === "n5" ? 4 : l.id === "n4" ? 10 : l.id === "n3" ? 25 : l.id === "n2" ? 50 : 100
-          return (
-            <div key={l.id} class="flex items-center gap-3 sm:gap-4">
-              <span class="w-8 sm:w-10 shrink-0 text-sm sm:text-base font-bold text-ink">{l.label}</span>
-              <div class="flex-1 h-3 sm:h-4 bg-ink/10 rounded-full overflow-hidden">
-                <div class="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full transition-all" style={{ width: `${pct}%` }} />
-              </div>
-              <div class="flex gap-2 sm:gap-3 shrink-0 text-[11px] sm:text-xs text-ink/60">
-                <span>{l.kanji} kanji</span>
-                <span class="hidden sm:inline">{l.vocab} words</span>
-              </div>
+      <div class="mt-10 sm:mt-12 max-w-2xl mx-auto space-y-4">
+        {levels.map((l, i) => (
+          <div class="flex items-center gap-3 sm:gap-4 reveal" style={`--reveal-delay: ${i * 80}ms`}>
+            <span class="w-9 sm:w-11 shrink-0 text-sm sm:text-base font-black text-ink">{l.label}</span>
+            <div class="flex-1 h-3.5 sm:h-4 bg-ink/5 rounded-full overflow-hidden">
+              <div
+                class={`h-full rounded-full bg-gradient-to-r ${l.gradient} progress-bar`}
+                style={`--bar-width: ${Math.max(3, Math.round((l.kanji / maxKanji) * 100))}%`}
+              />
             </div>
-          )
-        })}
+            <div class="flex gap-2.5 shrink-0 text-[11px] sm:text-xs text-ink/60 tabular-nums">
+              <span class="w-16 text-right">{l.kanji.toLocaleString()} kanji</span>
+              <span class="hidden sm:inline w-20 text-right">{l.vocab.toLocaleString()} words</span>
+            </div>
+          </div>
+        ))}
       </div>
 
-      <div class="flex justify-center mt-8 sm:mt-10">
-        <a href="/about/" class="h-11 sm:h-12 px-6 sm:px-8 border border-ink/20 rounded-xl text-sm font-medium text-ink/70 hover:text-ink hover:border-ink/40 transition-all flex items-center gap-2">
+      <div class="flex justify-center mt-10 sm:mt-12">
+        <a href="/about/" class="btn btn-ghost h-11 sm:h-12 px-7 text-sm font-semibold reveal">
           Learn more about the platform
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
         </a>
       </div>
     </div>
   </section>
 </DefaultLayout>
+
+<style>
+  /* Bars grow to their width once the reveal wrapper becomes visible */
+  .progress-bar {
+    width: 0;
+    transition: width 1.1s var(--ease-out-expo) 0.15s;
+  }
+  :global(html.js .reveal.is-visible) .progress-bar,
+  :global(html:not(.js)) .progress-bar {
+    width: var(--bar-width);
+  }
+</style>

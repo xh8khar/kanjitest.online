@@ -1,0 +1,62 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import { getVocabulary } from "@/lib/kanji"
+import type { Level } from "@/lib/kanji"
+import { levelMeta } from "@/lib/levels"
+import { collectionPageSchema, itemListSchema } from "@/lib/seo"
+
+export interface Props {
+  level: Level
+}
+
+const { level } = Astro.props
+const meta = levelMeta(level)
+const prefix = `/${level}`
+const vocab = getVocabulary(level)
+const sorted = [...vocab].sort((a, b) => a.reading.localeCompare(b.reading, "ja"))
+
+const title = `JLPT ${meta.label} Vocabulary — ${sorted.length.toLocaleString()} Words with Readings`
+const description = `Complete JLPT ${meta.label} vocabulary list with readings, meanings, and associated kanji. Browse ${sorted.length.toLocaleString()} essential Japanese words.`
+
+const items = sorted.map((v) => ({ name: `${v.word} (${v.reading}) — ${v.english}`, url: `${prefix}/vocabulary/${v.slug}/` }))
+const pageSchema = collectionPageSchema(title, `Complete JLPT ${meta.label} vocabulary list with readings, meanings, and associated kanji.`, `${prefix}/vocabulary`)
+const listSchema = itemListSchema(items)
+---
+
+<DefaultLayout title={title} description={description} level={level}>
+  <script type="application/ld+json" set:html={JSON.stringify(pageSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(listSchema)} />
+
+  <div class="px-4 py-6 sm:py-8">
+    <div class="mb-6 animate-fade-up">
+      <h1 class="text-xl sm:text-2xl font-black text-ink">Vocabulary</h1>
+      <p class="text-xs sm:text-sm text-ink/55 mt-1">{sorted.length.toLocaleString()} words · JLPT {meta.label} · あいうえお order</p>
+    </div>
+
+    <div class="space-y-2">
+      {sorted.map((v, i) => (
+        <a
+          href={`${prefix}/vocabulary/${v.slug}/`}
+          class="card card-hover group px-3 sm:px-5 py-2.5 sm:py-3 flex items-center gap-3 sm:gap-4 reveal"
+          style={`--reveal-delay: ${(i % 8) * 40}ms`}
+        >
+          <span class="flex-1 min-w-0">
+            <span class="flex items-baseline gap-2 flex-wrap">
+              <span class="text-base sm:text-lg font-jp font-bold text-ink leading-none group-hover:text-vermilion transition-colors">{v.word}</span>
+              <span class="text-[11px] sm:text-xs text-ink/60">{v.reading}</span>
+            </span>
+            <span class="block text-[11px] sm:text-xs text-ink/50 mt-1 truncate">{v.english}</span>
+          </span>
+          <span class="flex gap-1 shrink-0">
+            {v.kanjiChars.map((c) => (
+              <span class={`w-6 h-6 rounded-md ${meta.accentBgSoft} text-[11px] font-jp font-bold text-ink/70 flex items-center justify-center`}>
+                {c}
+              </span>
+            ))}
+          </span>
+          <span class="text-ink/25 shrink-0 text-sm transition-all duration-300 group-hover:text-vermilion group-hover:translate-x-0.5">&rarr;</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</DefaultLayout>

@@ -1,17 +1,40 @@
-"use client"
-
-import { useEffect, useState, useCallback } from "react"
-import { getAll, getByKanji } from "@/lib/kanji"
-import type { Level } from "@/lib/kanji"
+import { useEffect, useState, useCallback, useRef } from "react"
+import { navigate } from "astro:transitions/client"
 
 const STORAGE_KEY = "kanjitest_flashcards"
+
+export interface CardExample {
+  word: string
+  reading: string
+  english: string
+  sentence?: string
+  sentenceEnglish?: string
+}
+
+export interface CardEntry {
+  id: number
+  kanji: string
+  kun: string[]
+  on: string[]
+  meanings: string[]
+  strokes: number
+  examples: CardExample[]
+}
+
+interface Props {
+  level: string
+  entry: CardEntry
+  index: number
+  total: number
+  prevKanji: string | null
+  nextKanji: string | null
+}
 
 interface FlashcardState {
   known: number[]
 }
 
 function loadState(key: string): FlashcardState {
-  if (typeof window === "undefined") return { known: [] }
   try {
     const raw = localStorage.getItem(key)
     if (raw) return JSON.parse(raw)
@@ -20,160 +43,204 @@ function loadState(key: string): FlashcardState {
 }
 
 function saveState(key: string, s: FlashcardState) {
-  if (typeof window === "undefined") return
-  localStorage.setItem(key, JSON.stringify(s))
+  try {
+    localStorage.setItem(key, JSON.stringify(s))
+  } catch {}
 }
 
-export default function FlashcardsClient({ kanji, level = "n5" }: { kanji: string; level?: Level }) {
-  const all = getAll(level)
+export default function FlashcardsClient({ level, entry, index, total, prevKanji, nextKanji }: Props) {
   const storageKey = `${STORAGE_KEY}_${level}`
   const [state, setState] = useState<FlashcardState>({ known: [] })
   const [flipped, setFlipped] = useState(false)
+  const [leaving, setLeaving] = useState<"left" | "right" | null>(null)
+  const touchX = useRef<number | null>(null)
+  const prefix = `/${level}`
 
   useEffect(() => {
     setState(loadState(storageKey))
   }, [storageKey])
 
-  const k = getByKanji(kanji, level)
+  const go = useCallback(
+    (kanji: string | null, dir: "left" | "right") => {
+      if (!kanji) return
+      setLeaving(dir)
+      // let the card slide out before the view transition takes over
+      setTimeout(() => navigate(`${prefix}/flashcards/${kanji}/`), 160)
+    },
+    [prefix]
+  )
 
-  const idx = all.findIndex((x) => x.kanji === kanji)
-  const prev = idx > 0 ? all[idx - 1] : null
-  const next = idx < all.length - 1 ? all[idx + 1] : null
+  const mark = useCallback(
+    (know: boolean) => {
+      setState((prev) => {
+        const known = know
+          ? prev.known.includes(entry.id)
+            ? prev.known
+            : [...prev.known, entry.id]
+          : prev.known.filter((x) => x !== entry.id)
+        const nextState = { known }
+        saveState(storageKey, nextState)
+        return nextState
+      })
+      if (nextKanji) go(nextKanji, "right")
+    },
+    [entry.id, nextKanji, storageKey, go]
+  )
 
-  const navigate = (path: string) => {
-    setFlipped(false)
-    if (typeof window !== "undefined") window.location.href = path
-  }
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === " " || e.key === "Enter") {
+        e.preventDefault()
+        setFlipped((f) => !f)
+      } else if (e.key === "ArrowRight") {
+        go(nextKanji, "right")
+      } else if (e.key === "ArrowLeft") {
+        go(prevKanji, "left")
+      } else if (e.key === "1" || e.key.toLowerCase() === "a") {
+        mark(false)
+      } else if (e.key === "2" || e.key.toLowerCase() === "k") {
+        mark(true)
+      }
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [go, mark, nextKanji, prevKanji])
 
-  const handleKnow = useCallback(() => {
-    setFlipped(false)
-    setState((prev) => {
-      const known = prev.known.includes(k!.id) ? prev.known : [...prev.known, k!.id]
-      const nextState = { ...prev, known }
-      saveState(storageKey, nextState)
-      return nextState
-    })
-    if (next) navigate(`/${level}/flashcards/${next.kanji}/`)
-  }, [k, next, level, storageKey])
-
-  const handleAgain = useCallback(() => {
-    setFlipped(false)
-    setState((prev) => {
-      const known = prev.known.filter((x) => x !== k!.id)
-      const nextState = { ...prev, known }
-      saveState(storageKey, nextState)
-      return nextState
-    })
-    if (next) navigate(`/${level}/flashcards/${next.kanji}/`)
-  }, [k, next, level, storageKey])
-
-  if (!k) return null
-
+  const isKnown = state.known.includes(entry.id)
   const knownCount = state.known.length
-  const prefix = `/${level}`
+  const pct = Math.round(((index + 1) / total) * 100)
 
   return (
-    <div className="max-w-xl mx-auto px-4 py-6">
-      <div className="flex items-center justify-between mb-6">
+    <div className="max-w-xl mx-auto px-4 py-6 sm:py-8">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-5 animate-fade-up">
         <div>
           <h1 className="text-xl font-black text-ink">Flashcards</h1>
-          <p className="text-sm text-ink/60">{knownCount} / {all.length} known</p>
+          <p className="text-xs text-ink/55 mt-0.5">
+            Card {index + 1} of {total} · {knownCount} known
+          </p>
         </div>
-        <a
-          href={`${prefix}/`}
-          className="text-sm text-ink/60 hover:text-ink transition-colors"
-        >
-          Back to {level.toUpperCase()}
+        <a href={`${prefix}/flashcards/`} className="btn btn-ghost h-9 px-3.5 text-xs">
+          All cards
         </a>
       </div>
 
+      {/* Card */}
       <div
-        className="bg-ink/5 border border-ink/20 rounded-xl min-h-[280px] sm:min-h-[340px] flex flex-col items-center justify-center cursor-pointer select-none"
-        onClick={() => setFlipped((f) => !f)}
+        className="perspective-1200 select-none"
+        onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
+        onTouchEnd={(e) => {
+          if (touchX.current === null) return
+          const dx = e.changedTouches[0].clientX - touchX.current
+          touchX.current = null
+          if (dx < -60) go(nextKanji, "right")
+          else if (dx > 60) go(prevKanji, "left")
+        }}
       >
-        {!flipped ? (
-          <>
-            <span className="text-7xl font-black text-ink mb-2 leading-none">
-              {k.kanji}
+        <div
+          role="button"
+          tabIndex={0}
+          aria-label={flipped ? "Show kanji" : "Reveal readings and meanings"}
+          onClick={() => setFlipped((f) => !f)}
+          className={`relative w-full min-h-[320px] sm:min-h-[380px] preserve-3d cursor-pointer transition-all duration-500 [transition-timing-function:cubic-bezier(0.34,1.3,0.5,1)] ${
+            flipped ? "rotate-y-180" : ""
+          } ${
+            leaving === "right"
+              ? "translate-x-8 opacity-0"
+              : leaving === "left"
+                ? "-translate-x-8 opacity-0"
+                : ""
+          }`}
+        >
+          {/* Front */}
+          <div className="absolute inset-0 backface-hidden card flex flex-col items-center justify-center shadow-lg shadow-ink/5">
+            <div className="absolute top-4 left-4 chip">#{entry.id}</div>
+            {isKnown && (
+              <div className="absolute top-4 right-4 chip bg-emerald-500/10 text-emerald-600 animate-pop">
+                ✓ known
+              </div>
+            )}
+            <span className="text-8xl sm:text-9xl font-jp font-black text-ink leading-none animate-ink-in">
+              {entry.kanji}
             </span>
-            <span className="text-sm text-ink/50">tap to flip</span>
-          </>
-        ) : (
-          <div className="w-full px-6 py-4 space-y-4">
-            <div>
-              <span className="text-sm font-bold text-ink/50 uppercase tracking-wider">Readings</span>
-              <div className="flex flex-wrap gap-2 mt-1">
-                {k.kun.length > 0 && (
-                  <span className="text-xs bg-ink/10 text-ink/70 px-2 py-0.5 rounded-md">kun: {k.kun.join(", ")}</span>
+            <span className="mt-6 text-xs text-ink/40">tap to flip · swipe to move</span>
+          </div>
+
+          {/* Back */}
+          <div className="absolute inset-0 backface-hidden rotate-y-180 card overflow-y-auto shadow-lg shadow-ink/5">
+            <div className="p-5 sm:p-6 space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="font-jp text-3xl font-black text-ink">{entry.kanji}</span>
+                <span className="text-base font-bold text-ink">{entry.meanings.join(", ")}</span>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {entry.kun.length > 0 && (
+                  <span className="chip">kun: {entry.kun.join("、")}</span>
                 )}
-                {k.on.length > 0 && (
-                  <span className="text-xs bg-ink/10 text-ink/70 px-2 py-0.5 rounded-md">on: {k.on.join(", ")}</span>
+                {entry.on.length > 0 && (
+                  <span className="chip">on: {entry.on.join("、")}</span>
                 )}
               </div>
-            </div>
-            <div>
-              <span className="text-sm font-bold text-ink/50 uppercase tracking-wider">Meanings</span>
-              <p className="text-base text-ink font-bold">{k.meanings.join(", ")}</p>
-            </div>
-            <hr className="border-t border-ink/10" />
-            <div>
-              <span className="text-sm font-bold text-ink/50 uppercase tracking-wider">Examples</span>
-              {k.examples.slice(0, 2).map((ex, i) => (
-                <div key={i} className="mt-2 p-3 border border-ink/10 rounded-lg text-sm">
-                  <div className="flex items-baseline gap-2">
-                    <span className="font-bold text-ink">{ex.word}</span>
-                    <span className="text-ink/50">— {ex.reading}</span>
-                    <span className="text-ink/40">({ex.english})</span>
+              <hr className="border-ink/8" />
+              <div className="space-y-2.5">
+                {entry.examples.slice(0, 2).map((ex, i) => (
+                  <div key={i} className="rounded-xl bg-ink/[0.03] border border-ink/8 px-3.5 py-3 text-sm">
+                    <div className="flex items-baseline gap-2 flex-wrap">
+                      <span className="font-jp font-bold text-ink">{ex.word}</span>
+                      <span className="text-ink/55 text-xs">{ex.reading}</span>
+                      <span className="text-ink/45 text-xs">· {ex.english}</span>
+                    </div>
+                    {ex.sentence && <p className="mt-1.5 text-[13px] text-ink/70 font-jp leading-relaxed">{ex.sentence}</p>}
+                    {ex.sentenceEnglish && <p className="text-ink/45 text-[11px] mt-0.5">{ex.sentenceEnglish}</p>}
                   </div>
-                  <p className="mt-1 text-ink/60">{ex.sentence}</p>
-                  <p className="text-ink/40 text-xs italic">{ex.sentenceEnglish}</p>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
-        )}
-      </div>
-
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between mt-6 gap-2 sm:gap-3">
-        <div className="flex gap-2">
-          {prev && (
-            <button
-              className="h-11 px-4 text-sm border border-ink/20 rounded-lg text-ink/60 hover:text-ink hover:border-ink/40 transition-colors"
-              onClick={() => navigate(`/${level}/flashcards/${prev.kanji}/`)}
-            >
-              ← {prev.kanji}
-            </button>
-          )}
-          {next && (
-            <button
-              className="h-11 px-4 text-sm border border-ink/20 rounded-lg text-ink/60 hover:text-ink hover:border-ink/40 transition-colors"
-              onClick={() => navigate(`/${level}/flashcards/${next.kanji}/`)}
-            >
-              {next.kanji} →
-            </button>
-          )}
-        </div>
-        <div className="flex gap-2">
-          <button
-            className="h-11 px-5 text-sm border border-ink/30 rounded-lg font-bold text-ink hover:bg-ink/5 transition-colors"
-            onClick={handleAgain}
-          >
-            Again
-          </button>
-          <button
-            className="h-11 px-5 text-sm bg-ink text-white rounded-lg font-bold hover:bg-ink/90 transition-colors"
-            onClick={handleKnow}
-          >
-            Know it
-          </button>
         </div>
       </div>
 
-      <div className="mt-6 bg-ink/5 rounded-full h-2 overflow-hidden">
-        <div
-          className="bg-ink h-full rounded-full transition-all duration-300"
-          style={{ width: `${(knownCount / all.length) * 100}%` }}
-        />
+      {/* Know / Again */}
+      <div className="grid grid-cols-2 gap-2.5 mt-5">
+        <button className="btn btn-ghost h-12 text-sm" onClick={() => mark(false)}>
+          ↻ Again
+        </button>
+        <button className="btn h-12 text-sm text-white bg-emerald-500 hover:bg-emerald-600 hover:shadow-lg hover:shadow-emerald-500/30" onClick={() => mark(true)}>
+          ✓ Know it
+        </button>
+      </div>
+
+      {/* Prev / next */}
+      <div className="flex items-center justify-between mt-3">
+        <button
+          className={`btn btn-ghost h-10 px-4 text-sm font-jp ${!prevKanji ? "opacity-30 pointer-events-none" : ""}`}
+          onClick={() => go(prevKanji, "left")}
+          disabled={!prevKanji}
+        >
+          ← {prevKanji ?? ""}
+        </button>
+        <span className="text-[11px] text-ink/35 hidden sm:block">space = flip · ←/→ = move · K = know</span>
+        <button
+          className={`btn btn-ghost h-10 px-4 text-sm font-jp ${!nextKanji ? "opacity-30 pointer-events-none" : ""}`}
+          onClick={() => go(nextKanji, "right")}
+          disabled={!nextKanji}
+        >
+          {nextKanji ?? ""} →
+        </button>
+      </div>
+
+      {/* Deck progress */}
+      <div className="mt-6">
+        <div className="flex justify-between text-[11px] text-ink/40 mb-1.5">
+          <span>deck progress</span>
+          <span className="tabular-nums">{pct}%</span>
+        </div>
+        <div className="bg-ink/5 rounded-full h-2 overflow-hidden">
+          <div
+            className="bg-gradient-to-r from-vermilion to-orange-400 h-full rounded-full transition-all duration-500"
+            style={{ width: `${pct}%` }}
+          />
+        </div>
       </div>
     </div>
   )

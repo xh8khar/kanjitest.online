@@ -1,45 +1,61 @@
 ---
+import { LEVELS, LEVEL_IDS } from "@/lib/levels"
 import { siteUrl } from "@/lib/seo"
 
-const LEVELS = [
-  { label: "N5", prefix: "/n5", exists: true },
-  { label: "N4", prefix: "/n4", exists: true },
-  { label: "N3", prefix: "/n3", exists: true },
-  { label: "N2", prefix: "/n2", exists: true },
-  { label: "N1", prefix: "/n1", exists: true },
-] as const
+const SUB_LINKS = [
+  { id: "study", label: "Study" },
+  { id: "flashcards", label: "Flashcards" },
+  { id: "vocabulary", label: "Vocabulary" },
+  { id: "sets", label: "Tests" },
+]
 ---
 
-<footer class="border-t border-ink/20 mt-auto">
-  <div class="max-w-6xl mx-auto px-4 py-8 sm:py-10">
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-5">
-      {LEVELS.map((lv) => (
-        <div>
-          <a
-            href={`${lv.prefix}/`}
-            class="text-sm font-semibold text-ink hover:text-ink/80 transition-all"
-          >
-            {lv.label}
-          </a>
-          {lv.exists ? (
-            <div class="flex flex-col gap-0.5 mt-1.5">
-              <a href={`${lv.prefix}/study/`} class="text-xs sm:text-sm text-ink/60 hover:text-ink transition-colors">Study</a>
-              <a href={`${lv.prefix}/flashcards/`} class="text-xs sm:text-sm text-ink/60 hover:text-ink transition-colors">Flashcards</a>
-              <a href={`${lv.prefix}/vocabulary/`} class="text-xs sm:text-sm text-ink/60 hover:text-ink transition-colors">Vocabulary</a>
-              <a href={`${lv.prefix}/sets/`} class="text-xs sm:text-sm text-ink/60 hover:text-ink transition-colors">Test</a>
+<footer class="relative bg-ink text-white/80 mt-auto overflow-hidden">
+  <span aria-hidden="true" class="absolute -right-8 -bottom-16 text-[16rem] leading-none font-jp font-black text-white/[0.04] select-none pointer-events-none">
+    漢字
+  </span>
+
+  <div class="relative max-w-6xl mx-auto px-4 py-12 sm:py-16">
+    <div class="grid gap-10 md:grid-cols-[1.2fr_2fr]">
+      <div>
+        <a href="/" class="inline-flex items-center gap-2.5 group">
+          <span class="hanko w-9 h-9 text-lg transition-transform duration-300 group-hover:rotate-[8deg]">漢</span>
+          <span class="text-lg font-black text-white tracking-tight">KanjiTest<span class="text-vermilion">.online</span></span>
+        </a>
+        <p class="text-sm text-white/50 mt-3 max-w-xs leading-relaxed">
+          Free JLPT kanji study, flashcards, vocabulary, and practice tests. Every level, no account, forever free.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
+        {LEVEL_IDS.map((id) => {
+          const lv = LEVELS[id]
+          return (
+            <div>
+              <a href={`/${id}/`} class="inline-flex items-center gap-1.5 text-sm font-bold text-white hover:text-vermilion transition-colors">
+                <span class={`w-1.5 h-1.5 rounded-full ${lv.accentBg}`} />
+                {lv.label}
+              </a>
+              <div class="flex flex-col gap-1.5 mt-2.5">
+                {SUB_LINKS.map((s) => (
+                  <a href={`/${id}/${s.id}/`} class="text-[13px] text-white/45 hover:text-white transition-colors w-fit">
+                    {s.label}
+                  </a>
+                ))}
+              </div>
             </div>
-          ) : (
-            <p class="text-xs sm:text-sm text-ink/40 mt-1.5">Coming soon</p>
-          )}
-        </div>
-      ))}
+          )
+        })}
+      </div>
     </div>
 
-    <div class="flex flex-wrap items-center justify-center gap-x-4 sm:gap-x-5 gap-y-1 text-xs sm:text-sm mt-6 sm:mt-8 pt-4 sm:pt-5 border-t border-ink/10">
-      <a href="/about/" class="text-ink/60 hover:text-ink transition-colors">About</a>
-      <a href="/privacy/" class="text-ink/60 hover:text-ink transition-colors">Privacy</a>
-      <a href="/terms/" class="text-ink/60 hover:text-ink transition-colors">Terms</a>
-      <span class="text-[11px] sm:text-xs text-ink/40">&copy; 2026 {siteUrl().replace("https://", "")}</span>
+    <div class="flex flex-wrap items-center justify-between gap-x-5 gap-y-2 text-[13px] mt-10 pt-6 border-t border-white/10">
+      <div class="flex gap-5">
+        <a href="/about/" class="text-white/45 hover:text-white transition-colors">About</a>
+        <a href="/privacy/" class="text-white/45 hover:text-white transition-colors">Privacy</a>
+        <a href="/terms/" class="text-white/45 hover:text-white transition-colors">Terms</a>
+      </div>
+      <span class="text-xs text-white/35">&copy; 2026 {siteUrl().replace("https://", "")} — がんばって 🌸</span>
     </div>
   </div>
 </footer>
