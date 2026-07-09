@@ -12,7 +12,8 @@
     "preview": "astro preview",
     "lint": "eslint",
     "fetch-data": "node scripts/fetch-data.mjs",
-    "astro": "astro"
+    "astro": "astro",
+    "deploy": "bash scripts/deploy-pages.sh"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.1",

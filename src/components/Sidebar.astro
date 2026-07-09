@@ -43,14 +43,7 @@ const tools = [
 
   <div class="space-y-1">
     {tools.map((t) => (
-      <a
-        href={t.href}
-        class={`flex items-center gap-2.5 px-3 h-10 rounded-xl text-sm transition-all duration-200 ${
-          isActive(t.href)
-            ? "bg-ink text-white font-semibold shadow-md shadow-ink/20"
-            : "text-ink/65 hover:text-ink hover:bg-ink/5 hover:translate-x-0.5"
-        }`}
-      >
+      <a href={t.href} class:list={["sb-tool", { on: isActive(t.href) }]}>
         <span class="text-base">{t.icon}</span>
         {t.label}
       </a>
@@ -58,25 +51,11 @@ const tools = [
   </div>
 
   <div>
-    <p class="text-[11px] font-bold uppercase tracking-widest text-ink/40 px-1 mb-2">
-      {currentIdx === -1 ? "Jump to kanji" : "Nearby kanji"}
-    </p>
+    <p class="sb-head">{currentIdx === -1 ? "Jump to kanji" : "Nearby kanji"}</p>
     <div class="grid grid-cols-6 gap-1">
-      {windowed.map((k) => {
-        const isCurrent = currentIdx !== -1 && all[currentIdx].kanji === k.kanji
-        return (
-          <a
-            href={`${prefix}/study/${k.kanji}/`}
-            class={`w-8 h-8 rounded-lg flex items-center justify-center text-[13px] font-jp transition-all duration-200 ${
-              isCurrent
-                ? "bg-vermilion text-white shadow-md shadow-vermilion/30 scale-105"
-                : "text-ink/60 hover:bg-ink/8 hover:text-ink hover:scale-110"
-            }`}
-          >
-            {k.kanji}
-          </a>
-        )
-      })}
+      {windowed.map((k, i) => (
+        <a href={`${prefix}/study/${k.kanji}/`} class:list={["sb-k", { on: start + i === currentIdx }]}>{k.kanji}</a>
+      ))}
     </div>
     {all.length > WINDOW && (
       <a href={`${prefix}/`} class="inline-flex items-center gap-1 mt-2.5 px-1 text-[11px] font-semibold text-ink/45 hover:text-vermilion transition-colors">
@@ -86,20 +65,88 @@ const tools = [
   </div>
 
   <div>
-    <p class="text-[11px] font-bold uppercase tracking-widest text-ink/40 px-1 mb-2">Test sets</p>
+    <p class="sb-head">Test sets</p>
     <div class="grid grid-cols-5 gap-1">
       {Array.from({ length: SETS_PER_LEVEL }, (_, i) => i + 1).map((n) => (
-        <a
-          href={`${prefix}/sets/${n}/`}
-          class={`h-8 rounded-lg text-xs font-semibold flex items-center justify-center transition-all duration-200 ${
-            isActive(`${prefix}/sets/${n}/`)
-              ? "bg-ink text-white shadow-md shadow-ink/20"
-              : "text-ink/50 hover:bg-ink/8 hover:text-ink"
-          }`}
-        >
-          {n}
-        </a>
+        <a href={`${prefix}/sets/${n}/`} class:list={["sb-set", { on: isActive(`${prefix}/sets/${n}/`) }]}>{n}</a>
       ))}
     </div>
   </div>
 </div>
+
+<style>
+  .sb-head {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: color-mix(in srgb, var(--color-ink) 40%, transparent);
+    padding: 0 0.25rem;
+    margin-bottom: 0.5rem;
+  }
+  .sb-tool {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0 0.75rem;
+    height: 2.5rem;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    color: color-mix(in srgb, var(--color-ink) 65%, transparent);
+    transition: all 0.2s ease;
+  }
+  .sb-tool:hover {
+    color: var(--color-ink);
+    background: color-mix(in srgb, var(--color-ink) 5%, transparent);
+    translate: 2px 0;
+  }
+  .sb-tool.on {
+    background: var(--color-ink);
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 4px 12px -2px color-mix(in srgb, var(--color-ink) 20%, transparent);
+  }
+  .sb-k {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-family: var(--font-jp);
+    color: color-mix(in srgb, var(--color-ink) 60%, transparent);
+    transition: all 0.2s ease;
+  }
+  .sb-k:hover {
+    background: color-mix(in srgb, var(--color-ink) 8%, transparent);
+    color: var(--color-ink);
+    scale: 1.1;
+  }
+  .sb-k.on {
+    background: var(--color-vermilion);
+    color: #fff;
+    scale: 1.05;
+    box-shadow: 0 4px 12px -2px color-mix(in srgb, var(--color-vermilion) 30%, transparent);
+  }
+  .sb-set {
+    height: 2rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: color-mix(in srgb, var(--color-ink) 50%, transparent);
+    transition: all 0.2s ease;
+  }
+  .sb-set:hover {
+    background: color-mix(in srgb, var(--color-ink) 8%, transparent);
+    color: var(--color-ink);
+  }
+  .sb-set.on {
+    background: var(--color-ink);
+    color: #fff;
+    box-shadow: 0 4px 12px -2px color-mix(in srgb, var(--color-ink) 20%, transparent);
+  }
+</style>

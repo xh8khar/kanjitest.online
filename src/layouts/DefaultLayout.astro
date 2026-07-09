@@ -84,30 +84,13 @@ const subLinks = [
         <div class="max-w-6xl mx-auto">
           <div class="lg:hidden overflow-x-auto px-4 py-2.5 scrollbar-none">
             <div class="flex gap-2 pb-0.5">
-              {subLinks.map((s) => {
-                const active = path.startsWith(`${prefix}/${s.id}/`)
-                return (
-                  <a
-                    href={`${prefix}/${s.id}/`}
-                    class={`shrink-0 h-9 px-3.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all ${
-                      active
-                        ? "bg-ink text-white shadow-md shadow-ink/20"
-                        : "bg-white border border-ink/15 text-ink/70 hover:border-ink/35"
-                    }`}
-                  >
-                    <span class="text-sm">{s.icon}</span>
-                    {s.label}
-                  </a>
-                )
-              })}
-              <a
-                href={`${prefix}/`}
-                class={`shrink-0 h-9 px-3.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all ${
-                  path === `${prefix}/`
-                    ? "bg-ink text-white shadow-md shadow-ink/20"
-                    : "bg-white border border-ink/15 text-ink/70 hover:border-ink/35"
-                }`}
-              >
+              {subLinks.map((s) => (
+                <a href={`${prefix}/${s.id}/`} class:list={["pill", { on: path.startsWith(`${prefix}/${s.id}/`) }]}>
+                  <span class="text-sm">{s.icon}</span>
+                  {s.label}
+                </a>
+              ))}
+              <a href={`${prefix}/`} class:list={["pill", { on: path === `${prefix}/` }]}>
                 <span class="text-sm">⛩️</span>
                 Hub
               </a>
@@ -131,6 +114,33 @@ const subLinks = [
       )}
     </main>
     <Footer />
+
+    <style>
+      .pill {
+        flex-shrink: 0;
+        height: 2.25rem;
+        padding: 0 0.875rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+        background: #fff;
+        border: 1px solid color-mix(in srgb, var(--color-ink) 15%, transparent);
+        color: color-mix(in srgb, var(--color-ink) 70%, transparent);
+        transition: all 0.2s ease;
+      }
+      .pill:hover {
+        border-color: color-mix(in srgb, var(--color-ink) 35%, transparent);
+      }
+      .pill.on {
+        background: var(--color-ink);
+        border-color: var(--color-ink);
+        color: #fff;
+        box-shadow: 0 4px 12px -2px color-mix(in srgb, var(--color-ink) 20%, transparent);
+      }
+    </style>
 
     <script>
       // Scroll-reveal: elements with .reveal slide in as they enter the viewport.

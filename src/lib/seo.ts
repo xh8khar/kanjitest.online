@@ -74,11 +74,16 @@ export function webPageSchema(name: string, description: string) {
   }
 }
 
+// Capped: search engines don't need thousands of entries, and uncapped
+// lists added megabytes to the N1/N2 index pages.
+const ITEM_LIST_MAX = 100
+
 export function itemListSchema(items: { name: string; url: string }[]) {
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    itemListElement: items.map((item, i) => ({
+    numberOfItems: items.length,
+    itemListElement: items.slice(0, ITEM_LIST_MAX).map((item, i) => ({
       "@type": "ListItem",
       position: i + 1,
       name: item.name,
