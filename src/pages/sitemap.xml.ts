@@ -45,7 +45,7 @@ export const GET: APIRoute = () => {
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${entries.map((e) => `  <url><loc>${e.loc}</loc><lastmod>${now}</lastmod><changefreq>${e.changefreq}</changefreq><priority>${e.priority}</priority></url>`).join("\n")}
+${entries.map((e) => `  <url><loc>${encodeURI(e.loc)}</loc><lastmod>${now}</lastmod><changefreq>${e.changefreq}</changefreq><priority>${e.priority}</priority></url>`).join("\n")}
 </urlset>`
 
   return new Response(sitemap, {
