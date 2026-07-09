@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro"
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
 import { getByKanji, getAll } from "@/lib/kanji"
 import FlashcardsClient from "@/components/FlashcardsClient"
 
@@ -21,6 +21,6 @@ const title = `Flashcard: ${k.kanji} (${k.meanings[0]}) — JLPT N3`
 const description = `Flashcard for JLPT N3 kanji ${k.kanji} (${k.meanings[0]}). Flip to see readings, meanings, and example words.`
 ---
 
-<BaseLayout {title} {description}>
+<DefaultLayout title={title} description={description} level="n3">
   <FlashcardsClient kanji={decoded} level={level} client:load />
-</BaseLayout>
+</DefaultLayout>

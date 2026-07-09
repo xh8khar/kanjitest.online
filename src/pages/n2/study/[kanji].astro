@@ -1,6 +1,5 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro"
-import LevelLayout from "@/layouts/LevelLayout.astro"
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
 import { getByKanji, getPrevNext, getAll, getSetForKanji } from "@/lib/kanji"
 import { breadcrumbSchema, definedTermSchema } from "@/lib/seo"
 
@@ -35,8 +34,7 @@ const title = `${k.kanji} (${k.meanings[0]}) — JLPT N2 Kanji`
 const description = `Learn the JLPT N2 kanji ${k.kanji} (${k.meanings[0]}). Example: ${example?.word} (${example?.reading}) — ${example?.english}.`
 ---
 
-<BaseLayout {title} {description}>
-  <LevelLayout {level}>
+<DefaultLayout title={title} description={description} level={level}>
     <script set:html={JSON.stringify(breadSchema)} type="application/ld+json" />
     <script set:html={JSON.stringify(termSchema)} type="application/ld+json" />
 
@@ -123,5 +121,4 @@ const description = `Learn the JLPT N2 kanji ${k.kanji} (${k.meanings[0]}). Exam
         ) : <div class="flex-1" />}
       </div>
     </div>
-  </LevelLayout>
-</BaseLayout>
+</DefaultLayout>

@@ -1,6 +1,5 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro"
-import LevelLayout from "@/layouts/LevelLayout.astro"
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
 import { getVocabulary } from "@/lib/kanji"
 
 export function getStaticPaths() {
@@ -26,8 +25,7 @@ const title = `${vocab.word} (${vocab.reading}) — JLPT N4 Vocabulary`
 const description = `${vocab.word} (${vocab.reading}) — ${vocab.english}. Example sentences and associated kanji for JLPT N4.`
 ---
 
-<BaseLayout {title} {description}>
-  <LevelLayout {level}>
+<DefaultLayout title={title} description={description} level={level}>
     <div class="px-4 py-6 sm:py-8">
       <a href={`/${level}/vocabulary/`} class="text-xs text-ink/60 hover:text-ink transition-colors">&larr; All Vocabulary</a>
 
@@ -76,5 +74,4 @@ const description = `${vocab.word} (${vocab.reading}) — ${vocab.english}. Exam
         ) : <div />}
       </div>
     </div>
-  </LevelLayout>
-</BaseLayout>
+  </DefaultLayout>

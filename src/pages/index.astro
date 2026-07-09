@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro"
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
 import { siteUrl, collectionPageSchema } from "@/lib/seo"
 
 const levels = [
@@ -17,7 +17,7 @@ const jsonLd = collectionPageSchema(
 )
 ---
 
-<BaseLayout
+<DefaultLayout
   title="Free JLPT Kanji Study, Quiz & Test — N5, N4, N3, N2 & N1"
   description="Master JLPT N5, N4, N3, N2, and N1 kanji with KanjiTest.Online — study with example words, flip flashcards, test your knowledge. Free forever."
 >
@@ -41,19 +41,19 @@ const jsonLd = collectionPageSchema(
     </div>
 
     <!-- Level quick-nav -->
-    <div class="flex justify-center gap-2 sm:gap-3 mb-12 sm:mb-16">
+    <div class="flex flex-wrap justify-center gap-1.5 sm:gap-3 mb-12 sm:mb-16 px-2">
       {levels.map((l) => (
         <a
           key={l.id}
           href={`#${l.id}`}
-          class="h-12 sm:h-14 px-6 sm:px-8 bg-ink text-white rounded-xl text-sm sm:text-base font-bold flex items-center hover:bg-ink/80 transition-all"
+          class="h-10 sm:h-14 px-3 sm:px-8 bg-ink text-white rounded-xl text-xs sm:text-base font-bold flex items-center hover:bg-ink/80 transition-all shrink-0"
         >
           Kanji {l.label}
         </a>
       ))}
       <a
         href="#why"
-        class="h-12 sm:h-14 px-6 sm:px-8 border border-ink/20 rounded-xl text-sm sm:text-base font-medium text-ink/70 flex items-center hover:border-ink/40 transition-all"
+        class="h-10 sm:h-14 px-3 sm:px-8 border border-ink/20 rounded-xl text-xs sm:text-base font-medium text-ink/70 flex items-center hover:border-ink/40 transition-all shrink-0"
       >
         Why?
       </a>
@@ -167,4 +167,4 @@ const jsonLd = collectionPageSchema(
       </div>
     </section>
   </div>
-</BaseLayout>
+</DefaultLayout>

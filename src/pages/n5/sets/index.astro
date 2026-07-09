@@ -1,16 +1,14 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro"
-import LevelLayout from "@/layouts/LevelLayout.astro"
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
 import { siteUrl, collectionPageSchema, keywords as kw } from "@/lib/seo"
 
 const pageSchema = collectionPageSchema("JLPT N5 Kanji Tests — 20 Practice Quizzes", "20 test sets of 20 questions each for JLPT N5 kanji.", "/n5/sets")
 ---
 
-<BaseLayout
+<DefaultLayout
   title="JLPT N5 Kanji Tests — 20 Practice Quizzes"
   description="20 test sets of 20 questions each. Practice reading and meaning recognition for JLPT N5 kanji with real sentence context."
->
-  <LevelLayout level="n5">
+  level="n5">
     <script type="application/ld+json" set:html={JSON.stringify(pageSchema)} />
 
     <div class="px-4 py-6 sm:py-8">
@@ -33,5 +31,4 @@ const pageSchema = collectionPageSchema("JLPT N5 Kanji Tests — 20 Practice Qui
         ))}
       </div>
     </div>
-  </LevelLayout>
-</BaseLayout>
+</DefaultLayout>

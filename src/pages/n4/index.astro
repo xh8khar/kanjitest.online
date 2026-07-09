@@ -1,6 +1,5 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro"
-import LevelLayout from "@/layouts/LevelLayout.astro"
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
 import { getAll, getVocabulary } from "@/lib/kanji"
 import { collectionPageSchema, itemListSchema } from "@/lib/seo"
 
@@ -14,8 +13,7 @@ const title = `JLPT N4 Kanji — All ${all.length} Characters`
 const description = `Browse all ${all.length} JLPT N4 kanji with kun/on readings, example words, and daily-life sentences. Study, flashcard, and test yourself.`
 ---
 
-<BaseLayout {title} {description}>
-  <LevelLayout {level}>
+<DefaultLayout title={title} description={description} level={level}>
     <script set:html={JSON.stringify(pageSchema)} type="application/ld+json" />
     <script set:html={JSON.stringify(listSchema)} type="application/ld+json" />
 
@@ -61,5 +59,4 @@ const description = `Browse all ${all.length} JLPT N4 kanji with kun/on readings
         ))}
       </div>
     </div>
-  </LevelLayout>
-</BaseLayout>
+  </DefaultLayout>

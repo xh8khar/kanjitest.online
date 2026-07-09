@@ -1,6 +1,5 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro"
-import LevelLayout from "@/layouts/LevelLayout.astro"
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
 import { getVocabulary } from "@/lib/kanji"
 import { siteUrl, collectionPageSchema, itemListSchema, keywords as kw } from "@/lib/seo"
 
@@ -11,11 +10,10 @@ const pageSchema = collectionPageSchema("JLPT N5 Vocabulary — 219 Words with R
 const listSchema = itemListSchema(items)
 ---
 
-<BaseLayout
+<DefaultLayout
   title="JLPT N5 Vocabulary — 219 Words with Readings"
   description="Complete JLPT N5 vocabulary list with readings, meanings, and associated kanji. Browse 219 essential Japanese words for beginners."
->
-  <LevelLayout level="n5">
+  level="n5">
     <script type="application/ld+json" set:html={JSON.stringify(pageSchema)} />
     <script type="application/ld+json" set:html={JSON.stringify(listSchema)} />
 
@@ -52,5 +50,4 @@ const listSchema = itemListSchema(items)
         ))}
       </div>
     </div>
-  </LevelLayout>
-</BaseLayout>
+</DefaultLayout>

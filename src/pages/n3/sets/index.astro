@@ -1,6 +1,5 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro"
-import LevelLayout from "@/layouts/LevelLayout.astro"
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
 import { collectionPageSchema } from "@/lib/seo"
 
 const level = "n3"
@@ -9,8 +8,7 @@ const title = `JLPT N3 Kanji Tests — 20 Practice Quizzes`
 const description = `20 test sets of 20 questions each. Practice reading and meaning recognition for JLPT N3 kanji with real sentence context.`
 ---
 
-<BaseLayout {title} {description}>
-  <LevelLayout {level}>
+<DefaultLayout title={title} description={description} level="n3">
     <script set:html={JSON.stringify(pageSchema)} type="application/ld+json" />
 
     <div class="px-4 py-6 sm:py-8">
@@ -33,5 +31,4 @@ const description = `20 test sets of 20 questions each. Practice reading and mea
         ))}
       </div>
     </div>
-  </LevelLayout>
-</BaseLayout>
+</DefaultLayout>
