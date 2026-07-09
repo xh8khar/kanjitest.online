@@ -4,7 +4,7 @@ import react from "@astrojs/react"
 import tailwindcss from "@tailwindcss/vite"
 
 export default defineConfig({
-  site: "https://www.kanjitest.online",
+  site: "https://kanjitest.online",
   trailingSlash: "always",
   output: "static",
   integrations: [react()],
