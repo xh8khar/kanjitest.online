@@ -29,6 +29,7 @@
   },
   "allowScripts": {
     "esbuild": true,
-    "sharp": true
+    "sharp": true,
+    "workerd@1.20260708.1": true
   }
 }
