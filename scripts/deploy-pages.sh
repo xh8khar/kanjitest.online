@@ -11,6 +11,8 @@ touch dist/.nojekyll   # keep Pages from running Jekyll (it would drop _astro/)
 cd dist
 rm -rf .git
 git init -q -b gh-pages
+git config user.name "xh8khar"
+git config user.email "mail.yosintv@gmail.com"
 git add -A
 git commit -qm "deploy $(date -u +%Y-%m-%dT%H:%M:%SZ)"
 git push -f https://github.com/xh8khar/kanjitest.online.git gh-pages
