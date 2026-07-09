@@ -1,13 +1,30 @@
 ---
 import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import { getAll, getVocabulary } from "@/lib/kanji"
 import { siteUrl, collectionPageSchema } from "@/lib/seo"
 
 const levels = [
-  { id: "n5", label: "N5", kanji: 79, vocab: 219, desc: "Basic Japanese characters for beginners" },
-  { id: "n4", label: "N4", kanji: 171, vocab: 473, desc: "Intermediate Japanese characters" },
-  { id: "n3", label: "N3", kanji: 367, vocab: 935, desc: "Upper-intermediate Japanese characters" },
-  { id: "n2", label: "N2", kanji: 984, vocab: 3432, desc: "Advanced Japanese characters" },
-  { id: "n1", label: "N1", kanji: 2215, vocab: 9250, desc: "Master-level Japanese characters" },
+  { id: "n5", label: "N5", kanji: 79, vocab: 219, color: "bg-emerald-500", desc: "Foundations" },
+  { id: "n4", label: "N4", kanji: 171, vocab: 473, color: "bg-sky-500", desc: "Building" },
+  { id: "n3", label: "N3", kanji: 367, vocab: 935, color: "bg-violet-500", desc: "Confidence" },
+  { id: "n2", label: "N2", kanji: 984, vocab: 3432, color: "bg-orange-500", desc: "Advanced" },
+  { id: "n1", label: "N1", kanji: 2215, vocab: 9250, color: "bg-rose-500", desc: "Mastery" },
+]
+
+const sampleKanji = [
+  { char: "学", meaning: "study", level: "N5", url: "/n5/study/%E5%AD%A6/" },
+  { char: "食", meaning: "eat", level: "N5", url: "/n5/study/%E9%A3%9F/" },
+  { char: "時", meaning: "time", level: "N5", url: "/n5/study/%E6%99%82/" },
+  { char: "物", meaning: "thing", level: "N4", url: "/n4/study/%E7%89%A9/" },
+  { char: "病", meaning: "sick", level: "N4", url: "/n4/study/%E7%97%85/" },
+  { char: "美", meaning: "beauty", level: "N3", url: "/n3/study/%E7%BE%8E/" },
+]
+
+const features = [
+  { icon: "📖", title: "Study", desc: "Browse kanji with kun/on readings, meanings, and real example sentences.", url: "/n5/study/" },
+  { icon: "🃏", title: "Flashcards", desc: "Flip through kanji cards. Mark 'Know it' or 'Again' to track your progress.", url: "/n5/flashcards/" },
+  { icon: "📝", title: "Vocabulary", desc: "Learn words with readings, kanji breakdowns, and example sentences.", url: "/n5/vocabulary/" },
+  { icon: "✍️", title: "Practice Tests", desc: "20 sets per level, 20 questions each. Kanji → reading and reading → kanji.", url: "/n5/sets/1/" },
 ]
 
 const jsonLd = collectionPageSchema(
@@ -21,150 +38,159 @@ const jsonLd = collectionPageSchema(
   title="Free JLPT Kanji Study, Quiz & Test — N5, N4, N3, N2 & N1"
   description="Master JLPT N5, N4, N3, N2, and N1 kanji with KanjiTest.Online — study with example words, flip flashcards, test your knowledge. Free forever."
 >
-  <div class="max-w-4xl mx-auto px-4 py-8 sm:py-12">
-    <script
-      type="application/ld+json"
-      set:html={JSON.stringify(jsonLd)}
-    />
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
-    <!-- Hero -->
-    <div class="text-center mb-10 sm:mb-14">
-      <h1 class="text-3xl sm:text-5xl font-black text-ink leading-tight">
-        Free JLPT Kanji <span class="text-blue-500">Test</span> Online
+  <!-- Hero -->
+  <section class="relative overflow-hidden">
+    <div class="max-w-5xl mx-auto px-4 pt-10 sm:pt-16 pb-14 sm:pb-20 text-center">
+      <div class="inline-flex items-center gap-1.5 bg-ink/5 text-ink/60 text-xs sm:text-sm rounded-full px-3.5 py-1.5 mb-5 sm:mb-6 font-medium">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+        Completely free — no account needed
+      </div>
+      <h1 class="text-4xl sm:text-6xl font-black text-ink leading-[1.1] tracking-tight">
+        Master JLPT Kanji<br />
+        <span class="text-blue-500">Free &amp; Online</span>
       </h1>
-      <p class="text-sm sm:text-lg text-ink/70 mt-2 sm:mt-3 font-medium">
-        N5 Kanji Test · N4 Kanji Test · N3 Kanji Test · N2 Kanji Test · N1 Kanji Test with answers
+      <p class="text-sm sm:text-lg text-ink/60 mt-3 sm:mt-4 max-w-xl mx-auto leading-relaxed">
+        Study kanji with readings and examples. Flip flashcards. Test your knowledge.
+        All JLPT levels — N5 through N1 — completely free, forever.
       </p>
-      <p class="text-xs sm:text-sm text-ink/50 mt-1.5 sm:mt-2">
-        Study, Flashcards, Vocabulary & Practice Quizzes — Free forever
-      </p>
-    </div>
 
-    <!-- Level quick-nav -->
-    <div class="flex flex-wrap justify-center gap-1.5 sm:gap-3 mb-12 sm:mb-16 px-2">
-      {levels.map((l) => (
-        <a
-          key={l.id}
-          href={`#${l.id}`}
-          class="h-10 sm:h-14 px-3 sm:px-8 bg-ink text-white rounded-xl text-xs sm:text-base font-bold flex items-center hover:bg-ink/80 transition-all shrink-0"
-        >
-          Kanji {l.label}
+      <!-- CTA buttons -->
+      <div class="flex flex-wrap justify-center gap-3 mt-7 sm:mt-9">
+        <a href="/n5/study/" class="h-11 sm:h-13 px-6 sm:px-8 bg-ink text-white text-sm sm:text-base font-bold rounded-xl flex items-center gap-2 hover:bg-ink/80 transition-all shadow-sm">
+          Start Studying
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
         </a>
-      ))}
-      <a
-        href="#why"
-        class="h-10 sm:h-14 px-3 sm:px-8 border border-ink/20 rounded-xl text-xs sm:text-base font-medium text-ink/70 flex items-center hover:border-ink/40 transition-all shrink-0"
-      >
-        Why?
-      </a>
+        <a href="#levels" class="h-11 sm:h-13 px-6 sm:px-8 border border-ink/20 text-sm sm:text-base font-medium rounded-xl flex items-center text-ink/70 hover:text-ink hover:border-ink/40 transition-all">
+          Browse Levels
+        </a>
+      </div>
+
+      <!-- Sample kanji preview -->
+      <div class="mt-10 sm:mt-14 flex flex-wrap justify-center gap-3 sm:gap-4">
+        {sampleKanji.map((k) => (
+          <a
+            key={k.char}
+            href={k.url}
+            class="group bg-white border border-ink/10 rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-4 hover:border-ink/30 hover:shadow-sm transition-all text-center min-w-[80px] sm:min-w-[100px]"
+          >
+            <div class="text-2xl sm:text-3xl font-black text-ink group-hover:scale-110 transition-transform">{k.char}</div>
+            <div class="text-[10px] sm:text-xs text-ink/50 mt-1">{k.meaning}</div>
+            <div class="text-[10px] text-ink/30">{k.level}</div>
+          </a>
+        ))}
+      </div>
     </div>
+  </section>
 
-    <!-- Per-level sections -->
-    {levels.map((l) => (
-      <section key={l.id} id={l.id} class="mb-10 sm:mb-12 scroll-mt-20">
-        <div class="border border-ink/20 rounded-2xl bg-white overflow-hidden">
-          <div class="px-5 sm:px-7 py-5 sm:py-6 border-b border-ink/10">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-              <div>
-                <h2 class="text-xl sm:text-2xl font-black text-ink">JLPT {l.label} Kanji Test</h2>
-                <p class="text-xs sm:text-sm text-ink/60 mt-0.5">{l.kanji} kanji · {l.vocab} words · 20 tests</p>
+  <!-- How it works -->
+  <section class="border-t border-ink/10">
+    <div class="max-w-5xl mx-auto px-4 py-14 sm:py-20">
+      <h2 class="text-2xl sm:text-3xl font-black text-ink text-center">How It Works</h2>
+      <p class="text-sm sm:text-base text-ink/60 text-center mt-2 max-w-xl mx-auto">Four simple tools to take you from beginner to mastery.</p>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mt-8 sm:mt-10">
+        {features.map((f) => (
+          <a
+            key={f.title}
+            href={f.url}
+            class="border border-ink/10 rounded-2xl p-5 sm:p-6 bg-white hover:border-ink/30 hover:shadow-sm transition-all group"
+          >
+            <span class="text-2xl sm:text-3xl">{f.icon}</span>
+            <h3 class="text-sm sm:text-base font-bold text-ink mt-3 group-hover:text-blue-600 transition-colors">{f.title}</h3>
+            <p class="text-xs sm:text-sm text-ink/60 mt-1.5 leading-relaxed">{f.desc}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Levels -->
+  <section id="levels" class="border-t border-ink/10">
+    <div class="max-w-5xl mx-auto px-4 py-14 sm:py-20">
+      <h2 class="text-2xl sm:text-3xl font-black text-ink text-center">Choose Your Level</h2>
+      <p class="text-sm sm:text-base text-ink/60 text-center mt-2 max-w-xl mx-auto">Every level includes study guides, flashcards, vocabulary, and 20 practice tests.</p>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 mt-8 sm:mt-10">
+        {levels.map((l) => (
+          <a
+            key={l.id}
+            href={`/${l.id}/`}
+            class="border border-ink/10 rounded-2xl bg-white hover:border-ink/30 hover:shadow-sm transition-all overflow-hidden group"
+          >
+            <div class="h-1.5 {l.color}" />
+            <div class="p-5 sm:p-6">
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-lg sm:text-xl font-black text-ink">{l.label}</span>
+                <span class="text-[11px] sm:text-xs text-ink/50 bg-ink/5 rounded-full px-2.5 py-0.5 font-medium">{l.desc}</span>
               </div>
-              <p class="text-xs sm:text-sm text-ink/50 italic">{l.desc}</p>
+              <div class="flex gap-3 sm:gap-4 text-xs sm:text-sm text-ink/70">
+                <span><strong class="text-ink font-semibold">{l.kanji}</strong> kanji</span>
+                <span><strong class="text-ink font-semibold">{l.vocab}</strong> words</span>
+                <span><strong class="text-ink font-semibold">20</strong> tests</span>
+              </div>
+              <div class="mt-4 pt-3 border-t border-ink/10 flex items-center justify-between">
+                <span class="text-xs text-ink/50">Start learning</span>
+                <span class="text-ink/30 group-hover:text-ink/60 transition-colors text-sm">&rarr;</span>
+              </div>
             </div>
-          </div>
-
-          <div class="px-5 sm:px-7 py-4 sm:py-5 border-b border-ink/10">
-            <div class="flex flex-wrap gap-1.5 sm:gap-2">
-              <a href={`/${l.id}/study/`} class="h-9 sm:h-10 px-3 sm:px-4 bg-ink/10 text-ink rounded-lg text-xs sm:text-sm font-medium flex items-center gap-1.5 hover:bg-ink/20 transition-all">
-                📖 Study
-              </a>
-              <a href={`/${l.id}/flashcards/`} class="h-9 sm:h-10 px-3 sm:px-4 bg-ink/10 text-ink rounded-lg text-xs sm:text-sm font-medium flex items-center gap-1.5 hover:bg-ink/20 transition-all">
-                🃏 Flashcards
-              </a>
-              <a href={`/${l.id}/vocabulary/`} class="h-9 sm:h-10 px-3 sm:px-4 bg-ink/10 text-ink rounded-lg text-xs sm:text-sm font-medium flex items-center gap-1.5 hover:bg-ink/20 transition-all">
-                📝 Vocabulary
-              </a>
-            </div>
-          </div>
-
-          <div class="px-5 sm:px-7 py-4 sm:py-5">
-            <p class="text-xs font-medium uppercase tracking-widest text-ink/50 mb-3">Practice Tests (10 minutes each)</p>
-            <div class="flex flex-wrap gap-2">
-              {Array.from({ length: 20 }, (_, i) => i + 1).map((n) => (
-                <a
-                  key={n}
-                  href={`/${l.id}/sets/${n}/`}
-                  class="inline-flex items-center gap-1.5 h-9 sm:h-10 px-3 sm:px-4 border border-ink/20 rounded-lg text-xs sm:text-sm text-ink/70 hover:border-ink/40 hover:text-ink transition-all bg-white"
-                >
-                  Test {n}
-                  <span class="text-[10px] text-ink/40">&rarr;</span>
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-    ))}
-
-    <!-- Why Learn Kanji -->
-    <section id="why" class="mb-10 sm:mb-12 scroll-mt-20">
-      <div class="border-t border-ink/20 pt-8 sm:pt-10">
-        <h2 class="text-lg sm:text-xl font-bold text-ink mb-4">Why You Should Learn Kanji</h2>
-        <p class="text-xs sm:text-sm text-ink/70 leading-relaxed mb-5">
-          In Japanese, there are about 2,000 common kanji characters. Kanji is arguably the most prominent part
-          of the Japanese writing system. The elegant characters, originally adapted from Chinese, make up most
-          of written Japanese. You can see them in books, magazines, on signs, and everywhere. Understanding
-          kanji is essential to fully comprehend the Japanese language and culture.
-        </p>
+          </a>
+        ))}
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Kanji by JLPT Level -->
-    <section class="mb-10 sm:mb-12">
-      <div class="border-t border-ink/20 pt-8 sm:pt-10">
-        <h2 class="text-lg sm:text-xl font-bold text-ink mb-4">Kanji by JLPT Level</h2>
-        <p class="text-xs sm:text-sm text-ink/70 leading-relaxed mb-5">
-          The Japanese-Language Proficiency Test (JLPT) is the main standardized test of Japanese ability for
-          non-native speakers. It is composed of 5 levels, from N5 (most basic) to N1 (most advanced).
-        </p>
-        <div class="space-y-2.5">
-          <div class="flex items-center gap-3 sm:gap-4">
-            <span class="w-8 sm:w-10 shrink-0 text-sm sm:text-base font-bold text-ink">N5</span>
-            <div class="flex-1 h-2 sm:h-2.5 bg-ink/10 rounded-full overflow-hidden">
-              <div class="h-full bg-ink rounded-full" style="width: 4%" />
-            </div>
-            <span class="w-24 sm:w-32 shrink-0 text-[11px] sm:text-xs text-ink/60 text-right">~100 kanji</span>
-          </div>
-          <div class="flex items-center gap-3 sm:gap-4">
-            <span class="w-8 sm:w-10 shrink-0 text-sm sm:text-base font-bold text-ink">N4</span>
-            <div class="flex-1 h-2 sm:h-2.5 bg-ink/10 rounded-full overflow-hidden">
-              <div class="h-full bg-ink rounded-full" style="width: 15%" />
-            </div>
-            <span class="w-24 sm:w-32 shrink-0 text-[11px] sm:text-xs text-ink/60 text-right">~300 kanji</span>
-          </div>
-          <div class="flex items-center gap-3 sm:gap-4">
-            <span class="w-8 sm:w-10 shrink-0 text-sm sm:text-base font-bold text-ink">N3</span>
-            <div class="flex-1 h-2 sm:h-2.5 bg-ink/10 rounded-full overflow-hidden">
-              <div class="h-full bg-ink rounded-full" style="width: 33%" />
-            </div>
-            <span class="w-24 sm:w-32 shrink-0 text-[11px] sm:text-xs text-ink/60 text-right">~650 kanji</span>
-          </div>
-          <div class="flex items-center gap-3 sm:gap-4">
-            <span class="w-8 sm:w-10 shrink-0 text-sm sm:text-base font-bold text-ink">N2</span>
-            <div class="flex-1 h-2 sm:h-2.5 bg-ink/10 rounded-full overflow-hidden">
-              <div class="h-full bg-ink rounded-full" style="width: 50%" />
-            </div>
-            <span class="w-24 sm:w-32 shrink-0 text-[11px] sm:text-xs text-ink/60 text-right">~1,000 kanji</span>
-          </div>
-          <div class="flex items-center gap-3 sm:gap-4">
-            <span class="w-8 sm:w-10 shrink-0 text-sm sm:text-base font-bold text-ink">N1</span>
-            <div class="flex-1 h-2 sm:h-2.5 bg-ink/10 rounded-full overflow-hidden">
-              <div class="h-full bg-ink rounded-full" style="width: 100%" />
-            </div>
-            <span class="w-24 sm:w-32 shrink-0 text-[11px] sm:text-xs text-ink/60 text-right">~2,000 kanji</span>
-          </div>
-        </div>
+  <!-- Quick action: jump straight to a test -->
+  <section class="bg-ink text-white">
+    <div class="max-w-5xl mx-auto px-4 py-14 sm:py-20 text-center">
+      <h2 class="text-2xl sm:text-3xl font-black">Ready to Test Yourself?</h2>
+      <p class="text-sm sm:text-base text-white/60 mt-2 max-w-lg mx-auto">Jump straight into a practice quiz. Pick a set from any level — no sign-up required.</p>
+      <div class="flex flex-wrap justify-center gap-2 sm:gap-3 mt-6 sm:mt-8">
+        {levels.map((l) => (
+          <a
+            key={l.id}
+            href={`/${l.id}/sets/1/`}
+            class="h-10 sm:h-12 px-4 sm:px-6 bg-white/10 hover:bg-white/20 rounded-xl text-xs sm:text-sm font-bold text-white flex items-center gap-2 transition-all"
+          >
+            {l.label} Test 1
+            <svg class="w-3 h-3 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+          </a>
+        ))}
       </div>
-    </section>
-  </div>
+    </div>
+  </section>
+
+  <!-- JLPT Levels overview -->
+  <section class="border-t border-ink/10">
+    <div class="max-w-5xl mx-auto px-4 py-14 sm:py-20">
+      <h2 class="text-2xl sm:text-3xl font-black text-ink text-center">Kanji by JLPT Level</h2>
+      <p class="text-sm sm:text-base text-ink/60 text-center mt-2 max-w-xl mx-auto">The JLPT spans 5 levels, from N5 (easiest) to N1 (most advanced). Each level progressively adds more kanji.</p>
+
+      <div class="mt-8 sm:mt-10 max-w-2xl mx-auto space-y-3 sm:space-y-4">
+        {levels.map((l) => {
+          const pct = l.id === "n5" ? 4 : l.id === "n4" ? 10 : l.id === "n3" ? 25 : l.id === "n2" ? 50 : 100
+          return (
+            <div key={l.id} class="flex items-center gap-3 sm:gap-4">
+              <span class="w-8 sm:w-10 shrink-0 text-sm sm:text-base font-bold text-ink">{l.label}</span>
+              <div class="flex-1 h-3 sm:h-4 bg-ink/10 rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full transition-all" style={{ width: `${pct}%` }} />
+              </div>
+              <div class="flex gap-2 sm:gap-3 shrink-0 text-[11px] sm:text-xs text-ink/60">
+                <span>{l.kanji} kanji</span>
+                <span class="hidden sm:inline">{l.vocab} words</span>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      <div class="flex justify-center mt-8 sm:mt-10">
+        <a href="/about/" class="h-11 sm:h-12 px-6 sm:px-8 border border-ink/20 rounded-xl text-sm font-medium text-ink/70 hover:text-ink hover:border-ink/40 transition-all flex items-center gap-2">
+          Learn more about the platform
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+        </a>
+      </div>
+    </div>
+  </section>
 </DefaultLayout>
