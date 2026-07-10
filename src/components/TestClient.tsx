@@ -406,16 +406,27 @@ export default function TestClient({ level, setNum, questions }: Props) {
         {/* Feedback + next */}
         {isAnswered && (
           <div className="mt-4 animate-fade-up">
-            <div className="rounded-xl bg-ink/[0.03] border border-ink/8 px-4 py-3 text-[13px] text-ink/70 flex items-start justify-between gap-3">
-              <span>
-                {q.sentenceEnglish}
-                <a
-                  href={`${prefix}/study/${q.kanji}/`}
-                  className="ml-2 text-vermilion font-semibold hover:underline whitespace-nowrap"
-                >
-                  study {q.kanji} →
-                </a>
-              </span>
+            <div className="rounded-xl bg-ink/[0.03] border border-ink/8 px-4 py-3.5 text-[13px]">
+              <p className="font-semibold text-ink">
+                {selected === q.correct ? (
+                  <>✓ Nicely done!</>
+                ) : (
+                  <>The answer was <span className="font-jp">{q.correct}</span> — no worries, that's how we learn.</>
+                )}
+              </p>
+              <p className="text-ink/60 italic mt-1.5">“{q.sentenceEnglish}”</p>
+              <a
+                href={`${prefix}/study/${q.kanji}/`}
+                className="mt-3 inline-flex items-center gap-2 rounded-full border border-vermilion/25 bg-white pl-1.5 pr-3.5 py-1.5 font-semibold text-vermilion transition-all duration-200 hover:bg-vermilion hover:text-white hover:border-vermilion hover:shadow-md hover:shadow-vermilion/25"
+              >
+                <span className="w-7 h-7 rounded-full bg-vermilion/10 flex items-center justify-center font-jp text-base font-bold">
+                  {q.kanji}
+                </span>
+                {selected === q.correct
+                  ? "See what else this kanji can do"
+                  : "Meet this kanji — readings & examples"}
+                <span aria-hidden="true">→</span>
+              </a>
             </div>
             <button
               onClick={advance}
