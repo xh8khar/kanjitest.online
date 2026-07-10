@@ -109,9 +109,13 @@ export default function FlashcardsClient({ level, entry, index, total, prevKanji
         saveState(storageKey, nextState)
         return nextState
       })
+      if (know) {
+        const emojis = ["🌟", "✨", "🎉", "⭐", "💯", "👏", "🌸"]
+        setReaction({ emoji: emojis[Math.floor(Math.random() * emojis.length)], key: index })
+      }
       if (nextKanji) go(nextKanji, "right")
     },
-    [entry.id, nextKanji, storageKey, go]
+    [entry.id, nextKanji, storageKey, go, index]
   )
 
   useEffect(() => {
@@ -140,16 +144,22 @@ export default function FlashcardsClient({ level, entry, index, total, prevKanji
   const isKnown = state.known.includes(entry.id)
   const knownCount = state.known.length
   const pct = Math.round(((index + 1) / total) * 100)
+  const [reaction, setReaction] = useState<{ emoji: string; key: number } | null>(null)
 
   return (
     <div className="max-w-xl mx-auto px-4 py-6 sm:py-8">
       {/* Header */}
       <div className="flex items-center justify-between mb-5 animate-fade-up">
-        <div>
-          <h1 className="text-xl font-black text-ink">Flashcards</h1>
-          <p className="text-xs text-ink/55 mt-0.5">
-            Card {index + 1} of {total} · {knownCount} known
-          </p>
+        <div className="flex items-center gap-3">
+          <div>
+            <h1 className="text-xl font-black text-ink">Flashcards</h1>
+            <p className="text-xs text-ink/55 mt-0.5">
+              Card {index + 1} of {total} · {knownCount} known
+            </p>
+          </div>
+          {reaction && reaction.key === index && (
+            <span key={reaction.key} className="text-2xl animate-pop">{reaction.emoji}</span>
+          )}
         </div>
         <div className="flex items-center gap-2">
           <button onClick={() => { setShowJump(true); setSearch("") }} className="btn btn-ghost h-9 px-3 text-xs">
