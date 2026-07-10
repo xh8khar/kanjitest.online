@@ -19,7 +19,7 @@ export interface Props {
 
 const { title, description, noIndex, level, ogImage, keywords: kw } = Astro.props
 const prefix = level ? `/${level}` : ""
-const canonical = Astro.url.pathname.endsWith("/") ? Astro.url.pathname : `${Astro.url.pathname}/`
+const canonical = (Astro.url.pathname.endsWith("/") ? Astro.url.pathname : `${Astro.url.pathname}/`).split("/").map(decodeURIComponent).join("/")
 const finalTitle = title
   ? title.includes("KanjiTest.Online") || title.includes("Kanji Test Online")
     ? title
