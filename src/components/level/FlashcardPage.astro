@@ -18,19 +18,16 @@ const all = getAll(level)
 const idx = all.findIndex((x) => x.kanji === kanji)
 const k = all[idx]!
 
-// Only the current card's data crosses to the client — keeps N1 pages light.
-const entry = {
-  id: k.id,
-  kanji: k.kanji,
-  kun: k.kun,
-  on: k.on,
-  meanings: k.meanings,
-  strokes: k.strokes,
-  examples: k.examples.slice(0, 2),
-}
-
-// Lightweight list for the jump-to-kanji overlay
-const allKanji = all.map((x) => ({ kanji: x.kanji, id: x.id, meaning: x.meanings[0] }))
+// All cards are embedded as JSON so the client can navigate instantly
+const cards = all.map((x) => ({
+  id: x.id,
+  kanji: x.kanji,
+  kun: x.kun,
+  on: x.on,
+  meanings: x.meanings,
+  strokes: x.strokes,
+  examples: x.examples.slice(0, 2),
+}))
 
 const title = `Flashcard: ${k.kanji} (${k.meanings[0]}) — JLPT ${meta.label}`
 const description = `Flashcard for JLPT ${meta.label} kanji ${k.kanji} (${k.meanings[0]}). Flip to see readings, meanings, and example words.`
@@ -48,14 +45,5 @@ const breadSchema = breadcrumbSchema([
   <script type="application/ld+json" set:html={JSON.stringify(breadSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(termSchema)} />
   <h1 class="sr-only">{k.kanji} — Flashcard — JLPT {meta.label}</h1>
-  <FlashcardsClient
-    client:load
-    level={level}
-    entry={entry}
-    index={idx}
-    total={all.length}
-    prevKanji={idx > 0 ? all[idx - 1].kanji : null}
-    nextKanji={idx < all.length - 1 ? all[idx + 1].kanji : null}
-    allKanji={allKanji}
-  />
+  <FlashcardsClient client:load level={level} cards={cards} startIndex={idx} />
 </DefaultLayout>

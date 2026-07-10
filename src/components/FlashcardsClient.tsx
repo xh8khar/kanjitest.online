@@ -1,5 +1,4 @@
 import { useEffect, useState, useCallback, useRef, useMemo } from "react"
-import { navigate } from "astro:transitions/client"
 
 const STORAGE_KEY = "kanjitest_flashcards"
 
@@ -11,7 +10,7 @@ export interface CardExample {
   sentenceEnglish?: string
 }
 
-export interface CardEntry {
+export interface CardData {
   id: number
   kanji: string
   kun: string[]
@@ -21,20 +20,10 @@ export interface CardEntry {
   examples: CardExample[]
 }
 
-interface KanjiLight {
-  kanji: string
-  id: number
-  meaning: string
-}
-
 interface Props {
   level: string
-  entry: CardEntry
-  index: number
-  total: number
-  prevKanji: string | null
-  nextKanji: string | null
-  allKanji: KanjiLight[]
+  cards: CardData[]
+  startIndex: number
 }
 
 interface FlashcardState {
@@ -55,18 +44,43 @@ function saveState(key: string, s: FlashcardState) {
   } catch {}
 }
 
-export default function FlashcardsClient({ level, entry, index, total, prevKanji, nextKanji, allKanji }: Props) {
-  const storageKey = `${STORAGE_KEY}_${level}`
-  const [state, setState] = useState<FlashcardState>({ known: [] })
+const EMOJIS = ["🌟", "✨", "🎉", "⭐", "💯", "👏", "🌸"]
+
+export default function FlashcardsClient({ level, cards, startIndex }: Props) {
+  const prefix = `/${level}`
   const [mounted, setMounted] = useState(false)
+  const [currentIdx, setCurrentIdx] = useState(startIndex)
   const [flipped, setFlipped] = useState(false)
   const [leaving, setLeaving] = useState<"left" | "right" | null>(null)
   const [showJump, setShowJump] = useState(false)
   const [search, setSearch] = useState("")
   const touchX = useRef<number | null>(null)
-  useEffect(() => { setMounted(true) }, [])
   const searchRef = useRef<HTMLInputElement>(null)
-  const prefix = `/${level}`
+  const [state, setState] = useState<FlashcardState>({ known: [] })
+  const [reaction, setReaction] = useState<{ emoji: string; key: number } | null>(null)
+
+  useEffect(() => { setMounted(true) }, [])
+
+  const storageKey = `${STORAGE_KEY}_${level}`
+  useEffect(() => { setState(loadState(storageKey)) }, [storageKey])
+
+  // Sync URL without navigation
+  useEffect(() => {
+    const c = cards[currentIdx]
+    if (c) {
+      const url = `${prefix}/flashcards/${c.kanji}/`
+      window.history.replaceState(null, "", url)
+    }
+  }, [currentIdx, cards, prefix])
+
+  const entry = cards[currentIdx]
+  const nextKanji = currentIdx < cards.length - 1 ? cards[currentIdx + 1].kanji : null
+  const prevKanji = currentIdx > 0 ? cards[currentIdx - 1].kanji : null
+
+  const allKanji = useMemo(
+    () => cards.map((c) => ({ kanji: c.kanji, id: c.id, meaning: c.meanings[0] })),
+    [cards]
+  )
 
   const filtered = useMemo(() => {
     if (!search.trim()) return allKanji
@@ -80,25 +94,23 @@ export default function FlashcardsClient({ level, entry, index, total, prevKanji
     if (showJump && searchRef.current) searchRef.current.focus()
   }, [showJump])
 
-  useEffect(() => {
-    setState(loadState(storageKey))
-  }, [storageKey])
-
   const go = useCallback(
-    (kanji: string | null, dir: "left" | "right") => {
-      if (!kanji) return
-      // snap back to the front so the answer side never carries over
-      // into the transition to the next card
+    (dir: "left" | "right") => {
+      const target = dir === "right" ? currentIdx + 1 : currentIdx - 1
+      if (target < 0 || target >= cards.length) return
       setFlipped(false)
       setLeaving(dir)
-      // let the card fade out before the view transition takes over
-      setTimeout(() => navigate(`${prefix}/flashcards/${kanji}/`), 160)
+      setTimeout(() => {
+        setCurrentIdx(target)
+        setLeaving(null)
+      }, 140)
     },
-    [prefix]
+    [currentIdx, cards.length]
   )
 
   const mark = useCallback(
     (know: boolean) => {
+      if (!entry) return
       setState((prev) => {
         const known = know
           ? prev.known.includes(entry.id)
@@ -110,12 +122,24 @@ export default function FlashcardsClient({ level, entry, index, total, prevKanji
         return nextState
       })
       if (know) {
-        const emojis = ["🌟", "✨", "🎉", "⭐", "💯", "👏", "🌸"]
-        setReaction({ emoji: emojis[Math.floor(Math.random() * emojis.length)], key: index })
+        setReaction({ emoji: EMOJIS[Math.floor(Math.random() * EMOJIS.length)], key: currentIdx })
       }
-      if (nextKanji) go(nextKanji, "right")
+      const next = know ? "right" : "left"
+      const target = next === "right" ? currentIdx + 1 : currentIdx - 1
+      if (target >= 0 && target < cards.length) go(next)
     },
-    [entry.id, nextKanji, storageKey, go, index]
+    [entry, currentIdx, cards.length, storageKey, go]
+  )
+
+  const jumpTo = useCallback(
+    (kanji: string) => {
+      const idx = cards.findIndex((c) => c.kanji === kanji)
+      if (idx === -1) return
+      setShowJump(false)
+      setFlipped(false)
+      setCurrentIdx(idx)
+    },
+    [cards]
   )
 
   useEffect(() => {
@@ -127,10 +151,10 @@ export default function FlashcardsClient({ level, entry, index, total, prevKanji
       if (e.key === " " || e.key === "Enter") {
         e.preventDefault()
         setFlipped((f) => !f)
-      } else if (e.key === "ArrowRight") {
-        go(nextKanji, "right")
       } else if (e.key === "ArrowLeft") {
-        go(prevKanji, "left")
+        go("left")
+      } else if (e.key === "ArrowRight") {
+        go("right")
       } else if (e.key === "1" || e.key.toLowerCase() === "a") {
         mark(false)
       } else if (e.key === "2" || e.key.toLowerCase() === "k") {
@@ -139,12 +163,13 @@ export default function FlashcardsClient({ level, entry, index, total, prevKanji
     }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
-  }, [go, mark, nextKanji, prevKanji, showJump])
+  }, [go, mark, showJump])
 
-  const isKnown = state.known.includes(entry.id)
+  const isKnown = entry ? state.known.includes(entry.id) : false
   const knownCount = state.known.length
-  const pct = Math.round(((index + 1) / total) * 100)
-  const [reaction, setReaction] = useState<{ emoji: string; key: number } | null>(null)
+  const pct = cards.length > 0 ? Math.round(((currentIdx + 1) / cards.length) * 100) : 0
+
+  if (!entry) return null
 
   return (
     <div className="max-w-xl mx-auto px-4 py-6 sm:py-8">
@@ -154,10 +179,10 @@ export default function FlashcardsClient({ level, entry, index, total, prevKanji
           <div>
             <h1 className="text-xl font-black text-ink">Flashcards</h1>
             <p className="text-xs text-ink/55 mt-0.5">
-              Card {index + 1} of {total} · {knownCount} known
+              Card {currentIdx + 1} of {cards.length} · {knownCount} known
             </p>
           </div>
-          {reaction && reaction.key === index && (
+          {reaction && reaction.key === currentIdx && (
             <span key={reaction.key} className="text-2xl animate-pop">{reaction.emoji}</span>
           )}
         </div>
@@ -171,15 +196,14 @@ export default function FlashcardsClient({ level, entry, index, total, prevKanji
         </div>
       </div>
 
-      {/* Card — outer wrapper handles the fast exit fade so the answer
-          side can never show through the page transition */}
+      {/* Card */}
       <div
         style={{ opacity: mounted ? 1 : 0 }}
         className={`perspective-1200 select-none transition-[opacity,transform] duration-150 ease-out ${
           leaving === "right"
-            ? "translate-x-6 opacity-0"
+            ? "translate-x-8 opacity-0"
             : leaving === "left"
-              ? "-translate-x-6 opacity-0"
+              ? "-translate-x-8 opacity-0"
               : ""
         }`}
         onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
@@ -187,8 +211,8 @@ export default function FlashcardsClient({ level, entry, index, total, prevKanji
           if (touchX.current === null) return
           const dx = e.changedTouches[0].clientX - touchX.current
           touchX.current = null
-          if (dx < -60) go(nextKanji, "right")
-          else if (dx > 60) go(prevKanji, "left")
+          if (dx < -60) go("right")
+          else if (dx > 60) go("left")
         }}
       >
         <div
@@ -262,7 +286,7 @@ export default function FlashcardsClient({ level, entry, index, total, prevKanji
       <div className="flex items-center justify-between mt-3">
         <button
           className={`btn btn-ghost h-10 px-4 text-sm font-jp ${!prevKanji ? "opacity-30 pointer-events-none" : ""}`}
-          onClick={() => go(prevKanji, "left")}
+          onClick={() => go("left")}
           disabled={!prevKanji}
         >
           ← {prevKanji ?? ""}
@@ -270,7 +294,7 @@ export default function FlashcardsClient({ level, entry, index, total, prevKanji
         <span className="text-[11px] text-ink/35 hidden sm:block">space = flip · ←/→ = move · K = know</span>
         <button
           className={`btn btn-ghost h-10 px-4 text-sm font-jp ${!nextKanji ? "opacity-30 pointer-events-none" : ""}`}
-          onClick={() => go(nextKanji, "right")}
+          onClick={() => go("right")}
           disabled={!nextKanji}
         >
           {nextKanji ?? ""} →
@@ -302,7 +326,6 @@ export default function FlashcardsClient({ level, entry, index, total, prevKanji
             className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl shadow-ink/20 border border-ink/10 max-h-[70vh] flex flex-col animate-pop"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Search header */}
             <div className="flex items-center gap-3 p-4 border-b border-ink/8">
               <input
                 ref={searchRef}
@@ -319,7 +342,6 @@ export default function FlashcardsClient({ level, entry, index, total, prevKanji
                 ✕
               </button>
             </div>
-            {/* Grid */}
             <div className="flex-1 overflow-y-auto p-4 scrollbar-none">
               {filtered.length === 0 ? (
                 <p className="text-sm text-ink/40 text-center py-8">No kanji match "{search}"</p>
@@ -328,11 +350,7 @@ export default function FlashcardsClient({ level, entry, index, total, prevKanji
                   {filtered.map((k) => (
                     <button
                       key={k.id}
-                      onClick={() => {
-                        setShowJump(false)
-                        setFlipped(false)
-                        navigate(`${prefix}/flashcards/${k.kanji}/`)
-                      }}
+                      onClick={() => jumpTo(k.kanji)}
                       className={`kanji-tile relative flex flex-col items-center justify-center py-2 px-1 cursor-pointer ${
                         k.id === entry.id
                           ? "ring-2 ring-vermilion bg-vermilion/5 border-vermilion/30"
