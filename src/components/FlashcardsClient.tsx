@@ -22,8 +22,10 @@ export interface CardData {
 
 interface Props {
   level: string
-  cards: CardData[]
+  /** the card this page was statically built for */
+  entry: CardData
   startIndex: number
+  total: number
 }
 
 interface FlashcardState {
@@ -44,12 +46,16 @@ function saveState(key: string, s: FlashcardState) {
   } catch {}
 }
 
-export default function FlashcardsClient({ level, cards, startIndex }: Props) {
+export default function FlashcardsClient({ level, entry: initialEntry, startIndex, total }: Props) {
   const prefix = `/${level}`
   const [mounted, setMounted] = useState(false)
+  // Pages embed one card; the full deck arrives from deck.json (one small
+  // cached fetch per level) and unlocks instant client-side navigation.
+  const [cards, setCards] = useState<CardData[] | null>(null)
   const [currentIdx, setCurrentIdx] = useState(startIndex)
   const [flipped, setFlipped] = useState(false)
   const [leaving, setLeaving] = useState<"left" | "right" | null>(null)
+  const [enterDir, setEnterDir] = useState<"left" | "right" | null>(null)
   const [showJump, setShowJump] = useState(false)
   const [search, setSearch] = useState("")
   const touchX = useRef<number | null>(null)
@@ -57,24 +63,35 @@ export default function FlashcardsClient({ level, cards, startIndex }: Props) {
   const [state, setState] = useState<FlashcardState>({ known: [] })
   useEffect(() => { setMounted(true) }, [])
 
+  useEffect(() => {
+    let alive = true
+    fetch(`${prefix}/flashcards/deck.json`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((deck: CardData[] | null) => {
+        if (alive && deck?.length) setCards(deck)
+      })
+      .catch(() => {})
+    return () => { alive = false }
+  }, [prefix])
+
   const storageKey = `${STORAGE_KEY}_${level}`
   useEffect(() => { setState(loadState(storageKey)) }, [storageKey])
 
+  const deckSize = cards?.length ?? total
+  const entry = cards ? cards[currentIdx] : initialEntry
+
   // Sync URL without navigation
   useEffect(() => {
-    const c = cards[currentIdx]
-    if (c) {
-      const url = `${prefix}/flashcards/${c.kanji}/`
-      window.history.replaceState(null, "", url)
+    if (entry) {
+      window.history.replaceState(null, "", `${prefix}/flashcards/${entry.kanji}/`)
     }
-  }, [currentIdx, cards, prefix])
+  }, [entry, prefix])
 
-  const entry = cards[currentIdx]
-  const nextKanji = currentIdx < cards.length - 1 ? cards[currentIdx + 1].kanji : null
-  const prevKanji = currentIdx > 0 ? cards[currentIdx - 1].kanji : null
+  const nextKanji = cards && currentIdx < cards.length - 1 ? cards[currentIdx + 1].kanji : null
+  const prevKanji = cards && currentIdx > 0 ? cards[currentIdx - 1].kanji : null
 
   const allKanji = useMemo(
-    () => cards.map((c) => ({ kanji: c.kanji, id: c.id, meaning: c.meanings[0] })),
+    () => (cards ?? []).map((c) => ({ kanji: c.kanji, id: c.id, meaning: c.meanings[0] })),
     [cards]
   )
 
@@ -92,16 +109,20 @@ export default function FlashcardsClient({ level, cards, startIndex }: Props) {
 
   const go = useCallback(
     (dir: "left" | "right") => {
+      if (!cards) return
       const target = dir === "right" ? currentIdx + 1 : currentIdx - 1
       if (target < 0 || target >= cards.length) return
-      setFlipped(false)
+      // phase 1: fade the old card out, phase 2: swap and slide the new
+      // card in from the direction of travel (keyed remount plays it)
       setLeaving(dir)
       setTimeout(() => {
+        setFlipped(false)
         setCurrentIdx(target)
         setLeaving(null)
+        setEnterDir(dir)
       }, 140)
     },
-    [currentIdx, cards.length]
+    [currentIdx, cards]
   )
 
   const mark = useCallback(
@@ -117,20 +138,21 @@ export default function FlashcardsClient({ level, cards, startIndex }: Props) {
         saveState(storageKey, nextState)
         return nextState
       })
-      const next = know ? "right" : "left"
-      const target = next === "right" ? currentIdx + 1 : currentIdx - 1
-      if (target >= 0 && target < cards.length) go(next)
+      // both answers continue forward — moving backwards was disorienting
+      if (cards && currentIdx < cards.length - 1) go("right")
     },
-    [entry, currentIdx, cards.length, storageKey, go]
+    [entry, currentIdx, cards, storageKey, go]
   )
 
   const jumpTo = useCallback(
     (kanji: string) => {
+      if (!cards) return
       const idx = cards.findIndex((c) => c.kanji === kanji)
       if (idx === -1) return
       setShowJump(false)
       setFlipped(false)
       setCurrentIdx(idx)
+      setEnterDir("right")
     },
     [cards]
   )
@@ -160,7 +182,7 @@ export default function FlashcardsClient({ level, cards, startIndex }: Props) {
 
   const isKnown = entry ? state.known.includes(entry.id) : false
   const knownCount = state.known.length
-  const pct = cards.length > 0 ? Math.round(((currentIdx + 1) / cards.length) * 100) : 0
+  const pct = deckSize > 0 ? Math.round(((currentIdx + 1) / deckSize) * 100) : 0
 
   if (!entry) return null
 
@@ -172,7 +194,7 @@ export default function FlashcardsClient({ level, cards, startIndex }: Props) {
           <div>
             <h1 className="text-xl font-black text-ink">Flashcards</h1>
             <p className="text-xs text-ink/55 mt-0.5">
-              Card {currentIdx + 1} of {cards.length} · {knownCount} known
+              Card {currentIdx + 1} of {deckSize} · {knownCount} known
             </p>
           </div>
         </div>
@@ -188,13 +210,9 @@ export default function FlashcardsClient({ level, cards, startIndex }: Props) {
 
       {/* Card */}
       <div
-        style={{ opacity: mounted ? 1 : 0 }}
-        className={`perspective-1200 select-none transition-[opacity,transform] duration-150 ease-out ${
-          leaving === "right"
-            ? "translate-x-8 opacity-0"
-            : leaving === "left"
-              ? "-translate-x-8 opacity-0"
-              : ""
+        style={{ opacity: mounted ? undefined : 0 }}
+        className={`perspective-1200 select-none transition-opacity duration-150 ease-out ${
+          leaving ? "opacity-0" : "opacity-100"
         }`}
         onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
         onTouchEnd={(e) => {
@@ -206,13 +224,14 @@ export default function FlashcardsClient({ level, cards, startIndex }: Props) {
         }}
       >
         <div
+          key={currentIdx}
           role="button"
           tabIndex={0}
           aria-label={flipped ? "Show kanji" : "Reveal readings and meanings"}
           onClick={() => setFlipped((f) => !f)}
           className={`relative w-full min-h-[320px] sm:min-h-[380px] preserve-3d cursor-pointer transition-transform duration-[280ms] [transition-timing-function:cubic-bezier(0.34,1.3,0.5,1)] ${
             flipped ? "rotate-y-180" : ""
-          }`}
+          } ${enterDir === "right" ? "animate-card-in-r" : enterDir === "left" ? "animate-card-in-l" : ""}`}
         >
           {/* Front */}
           <div className="absolute inset-0 backface-hidden card flex flex-col items-center justify-center shadow-lg shadow-ink/5">
@@ -262,15 +281,21 @@ export default function FlashcardsClient({ level, cards, startIndex }: Props) {
         </div>
       </div>
 
-      {/* Know / Again */}
+      {/* Don't know / Know it */}
       <div className="grid grid-cols-2 gap-2.5 mt-5">
-        <button className="btn btn-ghost h-12 text-sm" onClick={() => mark(false)}>
-          ↻ Again
+        <button
+          className="btn h-12 text-sm border border-vermilion/30 bg-vermilion/5 text-vermilion hover:bg-vermilion/10 hover:border-vermilion/50"
+          onClick={() => mark(false)}
+        >
+          ✗ Don't know
         </button>
         <button className="btn h-12 text-sm text-white bg-emerald-500 hover:bg-emerald-600 hover:shadow-lg hover:shadow-emerald-500/30" onClick={() => mark(true)}>
-          ✓ Know it
+          ✓ I know this
         </button>
       </div>
+      <p className="text-[11px] text-ink/40 text-center mt-2">
+        Be honest — either answer moves to the next card, and your progress saves automatically.
+      </p>
 
       {/* Prev / next */}
       <div className="flex items-center justify-between mt-3">
@@ -281,7 +306,7 @@ export default function FlashcardsClient({ level, cards, startIndex }: Props) {
         >
           ← {prevKanji ?? ""}
         </button>
-        <span className="text-[11px] text-ink/35 hidden sm:block">space = flip · ←/→ = move · K = know</span>
+        <span className="text-[11px] text-ink/35 hidden sm:block">space = flip · ←/→ = move · K = I know this</span>
         <button
           className={`btn btn-ghost h-10 px-4 text-sm font-jp ${!nextKanji ? "opacity-30 pointer-events-none" : ""}`}
           onClick={() => go("right")}
@@ -334,7 +359,9 @@ export default function FlashcardsClient({ level, cards, startIndex }: Props) {
             </div>
             <div className="flex-1 overflow-y-auto p-4 scrollbar-none">
               {filtered.length === 0 ? (
-                <p className="text-sm text-ink/40 text-center py-8">No kanji match "{search}"</p>
+                <p className="text-sm text-ink/40 text-center py-8">
+                  {cards ? `No kanji match "${search}"` : "Loading deck…"}
+                </p>
               ) : (
                 <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-1.5">
                   {filtered.map((k) => (

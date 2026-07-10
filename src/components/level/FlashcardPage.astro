@@ -3,6 +3,7 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
 import FlashcardsClient from "@/components/FlashcardsClient"
 import { getAll } from "@/lib/kanji"
 import type { Level } from "@/lib/kanji"
+import { toDeckCard } from "@/lib/deck"
 import { levelMeta } from "@/lib/levels"
 import { breadcrumbSchema, definedTermSchema } from "@/lib/seo"
 
@@ -18,16 +19,10 @@ const all = getAll(level)
 const idx = all.findIndex((x) => x.kanji === kanji)
 const k = all[idx]!
 
-// All cards are embedded as JSON so the client can navigate instantly
-const cards = all.map((x) => ({
-  id: x.id,
-  kanji: x.kanji,
-  kun: x.kun,
-  on: x.on,
-  meanings: x.meanings,
-  strokes: x.strokes,
-  examples: x.examples.slice(0, 2),
-}))
+// Each page embeds only its own card; the client fetches the full deck
+// once from deck.json (cached) for instant navigation. Embedding every
+// card in every page made N1 pages ~2MB each and the site 6GB.
+const entry = toDeckCard(k)
 
 const title = `Flashcard: ${k.kanji} (${k.meanings[0]}) — JLPT ${meta.label}`
 const description = `Flashcard for JLPT ${meta.label} kanji ${k.kanji} (${k.meanings[0]}). Flip to see readings, meanings, and example words.`
@@ -45,5 +40,5 @@ const breadSchema = breadcrumbSchema([
   <script type="application/ld+json" set:html={JSON.stringify(breadSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(termSchema)} />
   <h1 class="sr-only">{k.kanji} — Flashcard — JLPT {meta.label}</h1>
-  <FlashcardsClient client:load level={level} cards={cards} startIndex={idx} />
+  <FlashcardsClient client:load level={level} entry={entry} startIndex={idx} total={all.length} />
 </DefaultLayout>
