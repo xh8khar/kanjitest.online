@@ -58,11 +58,13 @@ function saveState(key: string, s: FlashcardState) {
 export default function FlashcardsClient({ level, entry, index, total, prevKanji, nextKanji, allKanji }: Props) {
   const storageKey = `${STORAGE_KEY}_${level}`
   const [state, setState] = useState<FlashcardState>({ known: [] })
+  const [mounted, setMounted] = useState(false)
   const [flipped, setFlipped] = useState(false)
   const [leaving, setLeaving] = useState<"left" | "right" | null>(null)
   const [showJump, setShowJump] = useState(false)
   const [search, setSearch] = useState("")
   const touchX = useRef<number | null>(null)
+  useEffect(() => { setMounted(true) }, [])
   const searchRef = useRef<HTMLInputElement>(null)
   const prefix = `/${level}`
 
@@ -162,6 +164,7 @@ export default function FlashcardsClient({ level, entry, index, total, prevKanji
       {/* Card — outer wrapper handles the fast exit fade so the answer
           side can never show through the page transition */}
       <div
+        style={{ opacity: mounted ? 1 : 0 }}
         className={`perspective-1200 select-none transition-[opacity,transform] duration-150 ease-out ${
           leaving === "right"
             ? "translate-x-6 opacity-0"
