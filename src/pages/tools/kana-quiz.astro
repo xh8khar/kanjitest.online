@@ -136,7 +136,7 @@ import ButtonGroup from "@/components/tools/ButtonGroup.astro"
     const answers = shuffle([current.answer, ...wrong])
 
     optionsEl.innerHTML = answers.map((a, oi) =>
-      `<button class="opt-btn relative w-full min-h-[48px] rounded-xl border border-ink/12 bg-white px-4 flex items-center gap-3 text-left transition-all duration-200 hover:border-ink/35 hover:-translate-y-0.5 hover:shadow-md hover:shadow-ink/5 active:scale-[0.98] cursor-pointer">
+      `<button class="opt-btn relative w-full min-h-[48px] rounded-xl border border-ink/12 bg-white px-4 flex items-center gap-3 text-left transition-all duration-200 hover:border-ink/35 hover:-translate-y-0.5 hover:shadow-md hover:shadow-ink/5 active:scale-[0.98] cursor-pointer" data-value="${a}">
         <span class="w-6 h-6 rounded-md text-[11px] font-bold flex items-center justify-center shrink-0 bg-ink/5 text-ink/45">${oi + 1}</span>
         <span class="text-sm sm:text-base">${a}</span>
       </button>`
@@ -147,19 +147,19 @@ import ButtonGroup from "@/components/tools/ButtonGroup.astro"
         if (showingAnswer) return
         showingAnswer = true
         answered++
-        const selected = (btn as HTMLElement).textContent?.trim()
+        const selected = (btn as HTMLElement).dataset.value!
         const isCorrect = selected === current!.answer
         if (isCorrect) correct++
         scoreEl.textContent = `${correct} correct`
 
-        optionsEl.querySelectorAll(".opt-btn").forEach((b, oi) => {
-          const txt = b.textContent?.trim()
+        optionsEl.querySelectorAll(".opt-btn").forEach((b) => {
+          const val = (b as HTMLElement).dataset.value!
           const span = b.querySelector("span")!
-          if (txt === current!.answer) {
+          if (val === current!.answer) {
             (b as HTMLElement).className = "opt-btn relative w-full min-h-[48px] rounded-xl border border-emerald-500 bg-emerald-500/10 px-4 flex items-center gap-3 text-left font-bold animate-pop"
             span.className = "w-6 h-6 rounded-md text-[11px] font-bold flex items-center justify-center shrink-0 bg-emerald-500 text-white"
             span.textContent = "✓"
-          } else if (txt === selected && !isCorrect) {
+          } else if (val === selected && !isCorrect) {
             (b as HTMLElement).className = "opt-btn relative w-full min-h-[48px] rounded-xl border border-vermilion bg-vermilion/5 px-4 flex items-center gap-3 text-left text-ink/70 animate-shake"
             span.className = "w-6 h-6 rounded-md text-[11px] font-bold flex items-center justify-center shrink-0 bg-vermilion text-white"
             span.textContent = "✕"
