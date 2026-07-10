@@ -1,0 +1,12 @@
+---
+import GrammarDetailPage from "@/components/level/GrammarDetailPage.astro"
+import { getGrammar } from "@/lib/grammar"
+
+export function getStaticPaths() {
+  return getGrammar("n3").map((g) => ({ params: { slug: g.id } }))
+}
+
+const slug = decodeURIComponent(Astro.params.slug!)
+---
+
+<GrammarDetailPage level="n3" id={slug} />

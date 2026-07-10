@@ -1,0 +1,480 @@
+import json, os
+
+data = [
+  # ===== N5 =====
+  {"id":"n5-desu","level":"n5","title":"〜です","meaning":"to be (polite copula)","formation":"Noun + です<br>い-Adjective + です<br>な-Adjective + です","usage":"The polite copula. Used to state that something IS something. In casual speech, だ is used instead. です does not change form for past tense — use でした for past.","examples":[
+    {"japanese":"私は学生です。","reading":"わたしはがくせいです。","english":"I am a student."},
+    {"japanese":"これは本です。","reading":"これはほんです。","english":"This is a book."},
+    {"japanese":"あの人は先生です。","reading":"あのひとはせんせいです。","english":"That person is a teacher."},
+    {"japanese":"東京は大きいです。","reading":"とうきょうはおおきいです。","english":"Tokyo is big."},
+    {"japanese":"ここは静かです。","reading":"ここはしずかです。","english":"This place is quiet."}],"related":["n5-janai"]},
+  {"id":"n5-janai","level":"n5","title":"〜じゃない","meaning":"to not be (negative copula)","formation":"Noun + じゃない／ではない<br>な-Adjective + じゃない／ではない<br>い-Adjective → replace い with くない","usage":"The negative form of です/だ. Use ではない in formal writing. For い-adjectives, replace the final い with くない.","examples":[
+    {"japanese":"これは本じゃないです。","reading":"これはほんじゃないです。","english":"This is not a book."},
+    {"japanese":"私は学生じゃない。","reading":"わたしはがくせいじゃない。","english":"I am not a student."},
+    {"japanese":"あの人は先生じゃない。","reading":"あのひとはせんせいじゃない。","english":"That person is not a teacher."},
+    {"japanese":"このりんごは赤くない。","reading":"このりんごはあかくない。","english":"This apple is not red."},
+    {"japanese":"ここは静かじゃない。","reading":"ここはしずかじゃない。","english":"This place is not quiet."}],"related":["n5-desu"]},
+  {"id":"n5-masu","level":"n5","title":"〜ます","meaning":"polite affirmative verb form","formation":"Verb (masu-stem) + ます<br>Group 1 (godan): 書く → 書きます<br>Group 2 (ichidan): 食べる → 食べます<br>Irregular: する → します, 来る → 来ます","usage":"The polite present/future affirmative verb form. Used in formal and polite situations. The masu-stem is found by taking the dictionary form and conjugating.","examples":[
+    {"japanese":"毎日日本語を勉強します。","reading":"まいにちにほんごをべんきょうします。","english":"I study Japanese every day."},
+    {"japanese":"明日学校へ行きます。","reading":"あしたがっこうへいきます。","english":"I will go to school tomorrow."},
+    {"japanese":"コーヒーを飲みます。","reading":"こーひーをのみます。","english":"I drink coffee."},
+    {"japanese":"電車で帰ります。","reading":"でんしゃでかえります。","english":"I will go home by train."},
+    {"japanese":"日本語を話します。","reading":"にほんごをはなします。","english":"I speak Japanese."}],"related":["n5-masen","n5-mashita"]},
+  {"id":"n5-masen","level":"n5","title":"〜ません","meaning":"polite negative verb form","formation":"Verb (masu-stem) + ません<br>Example: 書く → 書きます → 書きません","usage":"The polite negative form. Replace ます with ません to negate a verb politely. For past negative, use ませんでした.","examples":[
+    {"japanese":"タバコを吸いません。","reading":"たばこをすいません。","english":"I do not smoke."},
+    {"japanese":"今日は学校へ行きません。","reading":"きょうはがっこうへいきません。","english":"I will not go to school today."},
+    {"japanese":"肉を食べません。","reading":"にくをたべません。","english":"I do not eat meat."},
+    {"japanese":"日本語がわかりません。","reading":"にほんごがわかりません。","english":"I don't understand Japanese."},
+    {"japanese":"明日は働きません。","reading":"あしたははたらきません。","english":"I will not work tomorrow."}],"related":["n5-masu","n5-masen-deshita"]},
+  {"id":"n5-mashita","level":"n5","title":"〜ました","meaning":"polite past affirmative","formation":"Verb (masu-stem) + ました<br>Example: 書く → 書きます → 書きました","usage":"The polite past affirmative form. Replace ます with ました to express past actions politely.","examples":[
+    {"japanese":"昨日勉強しました。","reading":"きのうべんきょうしました。","english":"I studied yesterday."},
+    {"japanese":"先週映画を見ました。","reading":"せんしゅうえいがをみました。","english":"I watched a movie last week."},
+    {"japanese":"朝ごはんを食べました。","reading":"あさごはんをたべました。","english":"I ate breakfast."},
+    {"japanese":"友達に会いました。","reading":"ともだちにあいました。","english":"I met my friend."},
+    {"japanese":"新幹線で行きました。","reading":"しんかんせんでいきました。","english":"I went by Shinkansen."}],"related":["n5-masu","n5-masen-deshita"]},
+  {"id":"n5-masen-deshita","level":"n5","title":"〜ませんでした","meaning":"polite past negative","formation":"Verb (masu-stem) + ませんでした<br>Example: 書く → 書きます → 書きませんでした","usage":"The polite past negative form. Expresses that something did not happen in the past.","examples":[
+    {"japanese":"昨日勉強しませんでした。","reading":"きのうべんきょうしませんでした。","english":"I did not study yesterday."},
+    {"japanese":"朝ごはんを食べませんでした。","reading":"あさごはんをたべませんでした。","english":"I did not eat breakfast."},
+    {"japanese":"週末は働きませんでした。","reading":"しゅうまつははたらきませんでした。","english":"I did not work on the weekend."},
+    {"japanese":"友達に会いませんでした。","reading":"ともだちにあいませんでした。","english":"I did not meet my friend."},
+    {"japanese":"電話しませんでした。","reading":"でんわしませんでした。","english":"I did not call."}],"related":["n5-masen","n5-mashita"]},
+  {"id":"n5-te","level":"n5","title":"〜て形 (te-form)","meaning":"te-form — connecting/request form","formation":"Group 1: 書く→書いて, 泳ぐ→泳いで, 話す→話して, 待つ→待って, 死ぬ→死んで, 読む→読んで, 飛ぶ→飛んで, 歩く→歩いて<br>Group 2: 食べる→食べて<br>Irregular: する→して, 来る→来て","usage":"The te-form is a fundamental conjugation used for requests, connecting sentences, progressive actions, and more. It is the base for many grammar patterns like 〜てください, 〜ている, 〜てもいい.","examples":[
+    {"japanese":"漢字を書いてください。","reading":"かんじをかいてください。","english":"Please write kanji."},
+    {"japanese":"音楽を聞いて寝ます。","reading":"おんがくをきいてねます。","english":"I listen to music and sleep."},
+    {"japanese":"今勉強しています。","reading":"いまべんきょうしています。","english":"I am studying now."},
+    {"japanese":"ここに座ってもいいです。","reading":"ここにすわってもいいです。","english":"You may sit here."},
+    {"japanese":"宿題を忘れてしまいました。","reading":"しゅくだいをわすれてしまいました。","english":"I forgot my homework."}],"related":["n5-te-kudasai","n5-te-mo-ii","n5-te-wa-ikenai","n4-te-iru"]},
+  {"id":"n5-te-kudasai","level":"n5","title":"〜てください","meaning":"please do (request)","formation":"Verb (te-form) + ください<br>Example: 書いてください (please write)","usage":"A polite request. Use the te-form of a verb followed by ください to ask someone to do something. For negative requests, use 〜ないでください.","examples":[
+    {"japanese":"窓を開けてください。","reading":"まどをあけてください。","english":"Please open the window."},
+    {"japanese":"ここに名前を書いてください。","reading":"ここになまえをかいてください。","english":"Please write your name here."},
+    {"japanese":"コーヒーをください。","reading":"こーひーをください。","english":"Please give me coffee."},
+    {"japanese":"ゆっくり話してください。","reading":"ゆっくりはなしてください。","english":"Please speak slowly."},
+    {"japanese":"写真を撮ってください。","reading":"しゃしんをとってください。","english":"Please take a photo."}],"related":["n5-te","n5-te-wa-ikenai"]},
+  {"id":"n5-te-mo-ii","level":"n5","title":"〜てもいいです","meaning":"may do / allowed to","formation":"Verb (te-form) + もいいです<br>Example: 食べてもいいです (may eat)","usage":"Asks or gives permission. Raise the intonation to ask 'May I?' Simply state to give permission. The casual form is 〜ていい.","examples":[
+    {"japanese":"ここに座ってもいいですか。","reading":"ここにすわってもいいですか。","english":"May I sit here?"},
+    {"japanese":"写真を撮ってもいいですか。","reading":"しゃしんをとってもいいですか。","english":"May I take a photo?"},
+    {"japanese":"鉛筆を使ってもいいです。","reading":"えんぴつをつかってもいいです。","english":"You may use a pencil."},
+    {"japanese":"帰ってもいいですか。","reading":"かえってもいいですか。","english":"May I go home?"},
+    {"japanese":"水を飲んでもいいですか。","reading":"みずをのんでもいいですか。","english":"May I drink water?"}],"related":["n5-te-wa-ikenai"]},
+  {"id":"n5-te-wa-ikenai","level":"n5","title":"〜てはいけません","meaning":"must not / prohibited","formation":"Verb (te-form) + はいけません<br>Example: 食べてはいけません (must not eat)","usage":"Expresses prohibition. Used to say something is not allowed. In casual speech, ちゃいけない or じゃいけない is used.","examples":[
+    {"japanese":"ここでタバコを吸ってはいけません。","reading":"ここでたばこをすってはいけません。","english":"You must not smoke here."},
+    {"japanese":"授業中にスマホを使ってはいけません。","reading":"じゅぎょうちゅうにすまほをつかってはいけません。","english":"You must not use your phone during class."},
+    {"japanese":"図書館で大きい声で話してはいけません。","reading":"としょかんでおおきいこえではなしてはいけません。","english":"You must not speak loudly in the library."},
+    {"japanese":"廊下を走ってはいけません。","reading":"ろうかをはしってはいけません。","english":"You must not run in the hallway."},
+    {"japanese":"その花を取ってはいけません。","reading":"そのはなをとってはいけません。","english":"You must not pick that flower."}],"related":["n5-te-mo-ii"]},
+  {"id":"n5-kara","level":"n5","title":"〜から (reason)","meaning":"because / since","formation":"Sentence (plain) + から + Result<br>Example: 忙しいから行かない (Because I'm busy, I won't go)","usage":"Expresses a reason. Place から after the reason clause. The reason comes first, then the result. In casual speech, the result is often omitted when obvious.","examples":[
+    {"japanese":"明日は休みだから、映画を見ます。","reading":"あしたはやすみだから、えいがをみます。","english":"Because tomorrow is a holiday, I'll watch a movie."},
+    {"japanese":"おなかがすいたから、ごはんを食べましょう。","reading":"おなかがすいたから、ごはんをたべましょう。","english":"Since I'm hungry, let's eat."},
+    {"japanese":"高いから買いません。","reading":"たかいからかいません。","english":"Because it's expensive, I won't buy it."},
+    {"japanese":"日本語が好きだから、勉強しています。","reading":"にほんごがすきだから、べんきょうしています。","english":"Because I like Japanese, I'm studying."},
+    {"japanese":"時間がないから、タクシーで行きます。","reading":"じかんがないから、たくしーでいきます。","english":"Since I don't have time, I'll go by taxi."}],"related":["n5-node","n5-ga"]},
+  {"id":"n5-ga","level":"n5","title":"〜が (but/intro)","meaning":"but / however / soft introduction","formation":"Sentence + が + Sentence<br>Example: 勉強したが、テストは難しかった (I studied, but the test was difficult)","usage":"A conjunctive particle. Connects two clauses with a 'but' meaning. Also used as a softener when introducing a topic or making a request.","examples":[
+    {"japanese":"日本語は難しいですが、面白いです。","reading":"にほんごはむずかしいですが、おもしろいです。","english":"Japanese is difficult, but it's interesting."},
+    {"japanese":"天気が悪かったですが、楽しかったです。","reading":"てんきがわるかったですが、たのしかったです。","english":"The weather was bad, but I had fun."},
+    {"japanese":"安いですが、美味しいです。","reading":"やすいですが、おいしいです。","english":"It's cheap, but it's delicious."},
+    {"japanese":"毎日運動しますが、痩せません。","reading":"まいにちうんどうしますが、やせません。","english":"I exercise every day, but I don't lose weight."},
+    {"japanese":"すみませんが、駅はどこですか。","reading":"すみませんが、えきはどこですか。","english":"Excuse me, but where is the station?"}],"related":["n5-kara","n5-node"]},
+  {"id":"n5-wo","level":"n5","title":"〜を (object marker)","meaning":"direct object marker","formation":"Noun + を + Transitive Verb<br>Example: 本を読む (read a book)","usage":"Marks the direct object of a transitive verb. Indicates what is being acted upon. In casual speech, を is often dropped or reduced to just the noun.","examples":[
+    {"japanese":"毎日新聞を読みます。","reading":"まいにちしんぶんをよみます。","english":"I read the newspaper every day."},
+    {"japanese":"コーヒーを飲みました。","reading":"こーひーをのみました。","english":"I drank coffee."},
+    {"japanese":"りんごを食べます。","reading":"りんごをたべます。","english":"I eat an apple."},
+    {"japanese":"日本語を勉強しています。","reading":"にほんごをべんきょうしています。","english":"I am studying Japanese."},
+    {"japanese":"映画を見ました。","reading":"えいがをみました。","english":"I watched a movie."}],"related":[]},
+  {"id":"n5-ni-time","level":"n5","title":"〜に (time)","meaning":"at / in (specific time)","formation":"Time Expression + に<br>Example: 3時に (at 3 o'clock)<br>Exception: 今日, 昨日, 毎日, 去年 do NOT take に","usage":"Marks a specific point in time. Used with clock times, days of the week, months, and years. Relative time words like 今日, 昨日, 明日, 毎日 do not use に.","examples":[
+    {"japanese":"毎朝6時に起きます。","reading":"まいあさろくじにおきます。","english":"I wake up at 6 every morning."},
+    {"japanese":"日曜日に買い物に行きます。","reading":"にちようびにかいものにいきます。","english":"I will go shopping on Sunday."},
+    {"japanese":"4月に日本へ行きます。","reading":"しがつににほんへいきます。","english":"I will go to Japan in April."},
+    {"japanese":"2000年に生まれました。","reading":"2000ねんにうまれました。","english":"I was born in the year 2000."},
+    {"japanese":"会議は3時からです。","reading":"かいぎは3じからです。","english":"The meeting is from 3 o'clock."}],"related":[]},
+  {"id":"n5-he","level":"n5","title":"〜へ (direction)","meaning":"toward / to (direction particle)","formation":"Place + へ + Motion Verb<br>Example: 学校へ行く (go to school)","usage":"Marks the direction or destination of a movement. Pronounced 'e' (not 'he'). Can often be replaced by に for destinations, though へ emphasizes the direction more than the endpoint.","examples":[
+    {"japanese":"明日東京へ行きます。","reading":"あしたとうきょうへいきます。","english":"I will go to Tokyo tomorrow."},
+    {"japanese":"駅へ向かっています。","reading":"えきへむかっています。","english":"I am heading to the station."},
+    {"japanese":"日本へ留学します。","reading":"にほんへりゅうがくします。","english":"I will study abroad in Japan."},
+    {"japanese":"友達の家へ行きました。","reading":"ともだちのいへいきました。","english":"I went to my friend's house."},
+    {"japanese":"どこへ行きますか。","reading":"どこへいきますか。","english":"Where are you going?"}],"related":["n5-ni-indirect"]},
+  {"id":"n5-ni-indirect","level":"n5","title":"〜に (indirect object)","meaning":"to / for (indirect object)","formation":"Person/Entity + に + Verb<br>Example: 友達に手紙を書く (write a letter to a friend)","usage":"Marks the indirect object — the recipient of an action. Used with verbs of giving, receiving, telling, meeting, etc.","examples":[
+    {"japanese":"友達にプレゼントをあげます。","reading":"ともだちにぷれぜんとをあげます。","english":"I give a present to my friend."},
+    {"japanese":"先生に質問をします。","reading":"せんせいにしつもんをします。","english":"I ask the teacher a question."},
+    {"japanese":"母にメールを送りました。","reading":"ははにめーるをおくりました。","english":"I sent an email to my mother."},
+    {"japanese":"田中さんに本を借りました。","reading":"たなかさんにほんをかりました。","english":"I borrowed a book from Tanaka."},
+    {"japanese":"友達に会います。","reading":"ともだちにあいます。","english":"I meet a friend."}],"related":["n5-he"]},
+  {"id":"n5-de","level":"n5","title":"〜で (means/location)","meaning":"by / at / with / in","formation":"Noun + で + Verb<br>Example: 電車で行く (go by train), 図書館で勉強する (study at the library)","usage":"Indicates the means, instrument, or location of an action. Covers 'by means of', 'at a location', 'using a tool', and 'within a time frame'.","examples":[
+    {"japanese":"バスで学校へ行きます。","reading":"ばすでがっこうへいきます。","english":"I go to school by bus."},
+    {"japanese":"図書館で勉強します。","reading":"としょかんでべんきょうします。","english":"I study at the library."},
+    {"japanese":"はしでごはんを食べます。","reading":"はしでごはんをたべます。","english":"I eat with chopsticks."},
+    {"japanese":"鉛筆で書いてください。","reading":"えんぴつでかいてください。","english":"Please write with a pencil."},
+    {"japanese":"3時間でできます。","reading":"3じかんでできます。","english":"It can be done in 3 hours."}],"related":["n5-ni-time"]},
+  {"id":"n5-tai","level":"n5","title":"〜たい","meaning":"want to (do something)","formation":"Verb (masu-stem) + たい<br>Example: 食べる→食べたい (want to eat)","usage":"Expresses desire to do something. Conjugates like an い-adjective (e.g., 食べたくない, 食べたかった). For wanting a physical object, use 〜が欲しい.","examples":[
+    {"japanese":"日本へ行きたいです。","reading":"にほんへいきたいです。","english":"I want to go to Japan."},
+    {"japanese":"すしが食べたいです。","reading":"すしがたべたいです。","english":"I want to eat sushi."},
+    {"japanese":"新しいスマホが欲しいです。","reading":"あたらしいすまほがほしいです。","english":"I want a new smartphone."},
+    {"japanese":"何をしたいですか。","reading":"なにをしたいですか。","english":"What do you want to do?"},
+    {"japanese":"映画が見たいです。","reading":"えいががみたいです。","english":"I want to watch a movie."}],"related":["n5-hoshii"]},
+  {"id":"n5-hoshii","level":"n5","title":"〜が欲しい","meaning":"want (a thing)","formation":"Noun + が欲しい<br>Example: 本が欲しい (I want a book)","usage":"Expresses desire for a physical object or noun. Conjugates like an い-adjective. For wanting to DO something, use 〜たい. Do not use for requests to others (use 〜てほしい instead).","examples":[
+    {"japanese":"新しい車が欲しいです。","reading":"あたらしいくるまがほしいです。","english":"I want a new car."},
+    {"japanese":"彼女が欲しいです。","reading":"かのじょがほしいです。","english":"I want a girlfriend."},
+    {"japanese":"時間が欲しいです。","reading":"じかんがほしいです。","english":"I want time."},
+    {"japanese":"どんな仕事が欲しいですか。","reading":"どんなしごとがほしいですか。","english":"What kind of job do you want?"},
+    {"japanese":"平和が欲しいです。","reading":"へいわがほしいです。","english":"I want peace."}],"related":["n5-tai"]},
+  {"id":"n5-nai","level":"n5","title":"〜ない (plain negative)","meaning":"not (plain/casual negative)","formation":"Group 1: 書く→書かない<br>Group 2: 食べる→食べない<br>Irregular: する→しない, 来る→来ない","usage":"The plain/casual negative form of verbs. Used in informal speech and before certain grammar patterns like なければならない. For polite speech, use 〜ません.","examples":[
+    {"japanese":"学校に行かない。","reading":"がっこうにいかない。","english":"I won't go to school."},
+    {"japanese":"刺身を食べない。","reading":"さしみをたべない。","english":"I don't eat sashimi."},
+    {"japanese":"宿題をしない。","reading":"しゅくだいをしない。","english":"I don't do homework."},
+    {"japanese":"あの人を知らない。","reading":"あのひとをしらない。","english":"I don't know that person."},
+    {"japanese":"時間がない。","reading":"じかんがない。","english":"There's no time."}],"related":["n5-masen","n4-nakereba-naranai"]},
+  {"id":"n5-ta","level":"n5","title":"〜た (plain past)","meaning":"past tense (plain)","formation":"Same conjugation pattern as te-form, but replace て/で with た/だ<br>書く→書いて→書いた<br>食べる→食べて→食べた<br>する→して→した","usage":"The plain past affirmative. Used in casual speech and before grammar patterns like たことがある. The negative past plain is 〜なかった.","examples":[
+    {"japanese":"昨日映画を見た。","reading":"きのうえいがをみた。","english":"I watched a movie yesterday."},
+    {"japanese":"友達に会った。","reading":"ともだちにあった。","english":"I met a friend."},
+    {"japanese":"もう食べた。","reading":"もうたべた。","english":"I already ate."},
+    {"japanese":"宿題をした。","reading":"しゅくだいをした。","english":"I did my homework."},
+    {"japanese":"とても楽しかった。","reading":"とてもたのしかった。","english":"It was very fun."}],"related":["n5-mashita","n5-nai"]},
+  {"id":"n5-omou","level":"n5","title":"〜と思う","meaning":"I think that ~","formation":"Sentence (plain) + と思う<br>Example: 明日は晴れると思う (I think it will be sunny tomorrow)","usage":"Expresses the speaker's opinion or thought. The preceding clause must be in plain form. と思っている is also used for beliefs held over time.","examples":[
+    {"japanese":"この本は面白いと思います。","reading":"このほんはおもしろいとおもいます。","english":"I think this book is interesting."},
+    {"japanese":"明日は雨が降ると思います。","reading":"あしたはあめがふるとおもいます。","english":"I think it will rain tomorrow."},
+    {"japanese":"彼は日本人だと思います。","reading":"かれはにほんじんだとおもいます。","english":"I think he is Japanese."},
+    {"japanese":"試験は難しいと思います。","reading":"しけんはむずかしいとおもいます。","english":"I think the exam is difficult."},
+    {"japanese":"これは正しいと思います。","reading":"これはただしいとおもいます。","english":"I think this is correct."}],"related":[]},
+  {"id":"n5-koto-ga-dekiru","level":"n5","title":"〜ことができる","meaning":"can / able to (do)","formation":"Verb (dictionary form) + ことができる<br>Example: 泳ぐことができる (can swim)","usage":"Expresses ability or possibility. Equivalent to the potential form of verbs. More formal than the potential conjugation (〜える/〜られる).","examples":[
+    {"japanese":"日本語を話すことができます。","reading":"にほんごをはなすことができます。","english":"I can speak Japanese."},
+    {"japanese":"ここで写真を撮ることができます。","reading":"ここでしゃしんをとることができます。","english":"You can take photos here."},
+    {"japanese":"一人で旅行することができます。","reading":"ひとりでりょこうすることができます。","english":"I can travel alone."},
+    {"japanese":"自転車に乗ることができますか。","reading":"じてんしゃにのることができますか。","english":"Can you ride a bicycle?"},
+    {"japanese":"明日来ることができます。","reading":"あしたくることができます。","english":"I can come tomorrow."}],"related":["n4-rare"]},
+  {"id":"n5-iru","level":"n5","title":"〜がいる／ある","meaning":"there is (living / non-living)","formation":"Living thing + がいる<br>Non-living thing + がある<br>Place + に + Noun + がいる／ある<br>Example: 猫がいる (There is a cat), 本がある (There is a book)","usage":"Expresses existence. Use いる for living things (people, animals) and ある for non-living things (objects, plants). The location is marked with に. ある can also mean 'have' for possessions.","examples":[
+    {"japanese":"庭に猫がいます。","reading":"にわにねこがいます。","english":"There is a cat in the garden."},
+    {"japanese":"机の上に本があります。","reading":"つくえのうえにほんがあります。","english":"There is a book on the desk."},
+    {"japanese":"日本に友達がいます。","reading":"にほんにともだちがいます。","english":"I have friends in Japan."},
+    {"japanese":"お金がありますか。","reading":"おかねがありますか。","english":"Do you have money?"},
+    {"japanese":"教室に先生がいません。","reading":"きょうしつにせんせいがいません。","english":"There is no teacher in the classroom."}],"related":[]},
+  {"id":"n5-node","level":"n5","title":"〜ので","meaning":"because (polite/softer reason)","formation":"Sentence (plain/polite) + ので + Result<br>Example: 雨が降ったので、行きませんでした (Because it rained, I didn't go)","usage":"Gives a reason or cause. More polite and softer than から. Often used in formal situations or when giving an excuse. な-adjectives and nouns take なので, not なので.","examples":[
+    {"japanese":"天気がいいので、散歩しましょう。","reading":"てんきがいいので、さんぽしましょう。","english":"Since the weather is nice, let's take a walk."},
+    {"japanese":"おなかが痛いので、病院に行きます。","reading":"おなかがいたいので、びょういんにいきます。","english":"Because my stomach hurts, I'll go to the hospital."},
+    {"japanese":"時間がないので、急ぎましょう。","reading":"じかんがないので、いそぎましょう。","english":"Since there's no time, let's hurry."},
+    {"japanese":"安いので、買いました。","reading":"やすいので、かいました。","english":"Because it was cheap, I bought it."},
+    {"japanese":"試験があるので、勉強しています。","reading":"しけんがあるので、べんきょうしています。","english":"Because there's an exam, I'm studying."}],"related":["n5-kara"]},
+  {"id":"n5-adjective-forms","level":"n5","title":"い-Adjective & な-Adjective Forms","meaning":"adjective types and conjugations","formation":"い-Adjective: ends in い (e.g., 大きい, 美味しい) — conjugates directly (〜くない, 〜かった, 〜くて)<br>な-Adjective: ends in な when modifying nouns (e.g., 静かな, 元気な) — conjugates with だ/です (〜じゃない, 〜だった, 〜で)","usage":"Japanese has two types of adjectives. い-adjectives conjugate like verbs — they have their own negative (〜くない) and past (〜かった) forms. な-adjectives behave more like nouns — they use だ/です for conjugation and require な when modifying a noun.","examples":[
+    {"japanese":"大きい犬ですね。","reading":"おおきいいぬですね。","english":"That's a big dog."},
+    {"japanese":"静かな部屋が欲しいです。","reading":"しずかなへやがほしいです。","english":"I want a quiet room."},
+    {"japanese":"この料理は美味しいです。","reading":"このりょうりはおいしいです。","english":"This dish is delicious."},
+    {"japanese":"彼は元気な人です。","reading":"かれはげんきなひとです。","english":"He is an energetic person."},
+    {"japanese":"昨日は忙しかった。","reading":"きのうはいそがしかった。","english":"Yesterday was busy."}],"related":[]},
+  {"id":"n5-ni-naru","level":"n5","title":"〜になる","meaning":"become","formation":"Noun/な-Adjective + になる<br>い-Adjective (replace い with く) + なる<br>Example: 医者になる (become a doctor), 大きくなる (become big)","usage":"Expresses a change of state. Used with nouns, な-adjectives, and い-adjectives to indicate becoming something. The transitive counterpart 〜くする/〜にする means 'make something ~' or 'decide on ~'.","examples":[
+    {"japanese":"医者になりたいです。","reading":"いしゃになりたいです。","english":"I want to become a doctor."},
+    {"japanese":"日本語が上手になりました。","reading":"にほんごがじょうずになりました。","english":"I've become good at Japanese."},
+    {"japanese":"暗くなりましたね。","reading":"くらくなりましたね。","english":"It's gotten dark, hasn't it?"},
+    {"japanese":"子供は元気になった。","reading":"こどもはげんきになった。","english":"The child became energetic."},
+    {"japanese":"もう大人になりました。","reading":"もうおとなになりました。","english":"I've already become an adult."}],"related":["n4-you-ni-naru"]},
+  {"id":"n5-toki","level":"n5","title":"〜とき","meaning":"when / at the time of","formation":"Verb (plain/dictionary) + とき<br>い-Adjective + とき<br>Noun + の + とき<br>Example: 日本に行くとき (when going to Japan)","usage":"Expresses the time when something happens or happened. The tense of the verb before とき determines whether it refers to future/present or past.","examples":[
+    {"japanese":"子供のとき、よく遊びました。","reading":"こどものとき、よくあそびました。","english":"When I was a child, I often played."},
+    {"japanese":"日本に行くとき、パスポートが必要です。","reading":"にほんにいくとき、ぱすぽーとがひつようです。","english":"When going to Japan, you need a passport."},
+    {"japanese":"ごはんを食べるとき、「いただきます」と言います。","reading":"ごはんをたべるとき、「いただきます」といいます。","english":"When eating, we say 'itadakimasu'."},
+    {"japanese":"暇なとき、本を読みます。","reading":"ひまなとき、ほんをよみます。","english":"When I'm free, I read books."},
+    {"japanese":"寒いとき、コートを着ます。","reading":"さむいとき、こーとをきます。","english":"When it's cold, I wear a coat."}],"related":[]},
+  {"id":"n5-to","level":"n5","title":"〜と (and/with)","meaning":"and (together with)","formation":"Noun + と + Noun<br>Example: 本とペン (a book and a pen)","usage":"Connects two nouns or indicates togetherness. When listing complete actions, use te-form. Can mean 'and', 'with', or 'together with'.","examples":[
+    {"japanese":"日本語と英語を勉強しています。","reading":"にほんごとえいごをべんきょうしています。","english":"I study Japanese and English."},
+    {"japanese":"友達と映画を見ました。","reading":"ともだちとえいがをみました。","english":"I watched a movie with my friend."},
+    {"japanese":"家族と住んでいます。","reading":"かぞくとすんでいます。","english":"I live with my family."},
+    {"japanese":"猫と犬がいます。","reading":"ねこといぬがいます。","english":"There are a cat and a dog."},
+    {"japanese":"先生と話しました。","reading":"せんせいとはなしました。","english":"I talked with the teacher."}],"related":[]},
+  {"id":"n5-mo","level":"n5","title":"〜も (also)","meaning":"also / too / as well","formation":"Noun + も + Verb<br>Example: 私も行きます (I'll go too)","usage":"Indicates 'also', 'too', or 'as well'. Replaces the particles は, が, を. With other particles, も follows them (e.g., にも, でも, へも). 〜も〜も means 'both ~ and ~'.","examples":[
+    {"japanese":"私も学生です。","reading":"わたしもがくせいです。","english":"I am also a student."},
+    {"japanese":"コーヒーも飲みました。","reading":"こーひーものみました。","english":"I also drank coffee."},
+    {"japanese":"猫も犬も好きです。","reading":"ねこもいぬもすきです。","english":"I like both cats and dogs."},
+    {"japanese":"日本にも行きました。","reading":"にほんにもいきました。","english":"I went to Japan too."},
+    {"japanese":"一つもありません。","reading":"ひとつもありません。","english":"There isn't even one."}],"related":[]},
+  {"id":"n5-wa","level":"n5","title":"〜は (topic)","meaning":"topic marker","formation":"Noun + は<br>Example: 私は学生です (As for me, I am a student)","usage":"The topic particle. Marks the topic of the sentence — what the sentence is about. Can also mark contrast. Pronounced 'wa' (not 'ha'). When combined with other particles, は replaces が and を, and follows に, へ, で, etc.","examples":[
+    {"japanese":"私は日本人です。","reading":"わたしはにほんじんです。","english":"I am Japanese."},
+    {"japanese":"今日はいい天気ですね。","reading":"きょうはいいてんきですね。","english":"The weather is nice today, isn't it?"},
+    {"japanese":"日本語は難しいですが、面白いです。","reading":"にほんごはむずかしいですが、おもしろいです。","english":"Japanese is difficult but interesting."},
+    {"japanese":"猫は好きですが、犬は好きじゃないです。","reading":"ねこはすきですが、いぬはすきじゃないです。","english":"I like cats, but I don't like dogs."},
+    {"japanese":"明日は休みです。","reading":"あしたはやすみです。","english":"Tomorrow is a holiday."}],"related":["n5-ga"]},
+  {"id":"n5-nai-de","level":"n5","title":"〜ないでください","meaning":"please don't do","formation":"Verb (ない-form) + でください<br>Example: 行かないでください (please don't go)","usage":"A negative request. Use the ない-form of a verb followed by でください to politely ask someone NOT to do something.","examples":[
+    {"japanese":"ここで写真を撮らないでください。","reading":"ここでしゃしんをとらないでください。","english":"Please don't take photos here."},
+    {"japanese":"タバコを吸わないでください。","reading":"たばこをすわないでください。","english":"Please don't smoke."},
+    {"japanese":"そんなことを言わないでください。","reading":"そんなことをいわないでください。","english":"Please don't say such things."},
+    {"japanese":"遅れないでください。","reading":"おくれないでください。","english":"Please don't be late."},
+    {"japanese":"心配しないでください。","reading":"しんぱいしないでください。","english":"Please don't worry."}],"related":["n5-te-kudasai","n5-nai"]},
+
+  # ===== N4 =====
+  {"id":"n4-te-iru","level":"n4","title":"〜ている","meaning":"is doing / has done (progressive/resultative)","formation":"Verb (te-form) + いる<br>Example: 食べている (is eating / has eaten)","usage":"Has two main uses: (1) progressive action (doing right now), and (2) resultant state (has done and the state continues). Some verbs like 知る, 住む, 持つ default to resultant state. Casual form contracts to 〜てる.","examples":[
+    {"japanese":"今勉強しています。","reading":"いまべんきょうしています。","english":"I am studying now."},
+    {"japanese":"東京に住んでいます。","reading":"とうきょうにすんでいます。","english":"I live in Tokyo."},
+    {"japanese":"猫が寝ています。","reading":"ねこがねています。","english":"The cat is sleeping."},
+    {"japanese":"もう結婚しています。","reading":"もうけっこんしています。","english":"I am already married."},
+    {"japanese":"窓が開いています。","reading":"まどがあいています。","english":"The window is open."}],"related":["n5-te","n4-te-aru","n4-te-oku"]},
+  {"id":"n4-te-aru","level":"n4","title":"〜てある","meaning":"has been done (resultative state)","formation":"Verb (te-form) + ある<br>Example: 書いてある (has been written)","usage":"Describes a state resulting from a deliberate action by someone. Unlike ている, it implies someone intentionally did the action for a purpose. The object is marked with が, not を.","examples":[
+    {"japanese":"壁に絵がかけてあります。","reading":"かべにえがかけてあります。","english":"A picture has been hung on the wall."},
+    {"japanese":"約束が書いてあります。","reading":"やくそくがかいてあります。","english":"The promise has been written down."},
+    {"japanese":"窓が開けてあります。","reading":"まどがあけてあります。","english":"The window has been opened (on purpose)."},
+    {"japanese":"テーブルに料理が並べてあります。","reading":"てーぶるにりょうりがならべてあります。","english":"The dishes have been arranged on the table."},
+    {"japanese":"電気がつけてあります。","reading":"でんきがつけてあります。","english":"The light has been turned on."}],"related":["n4-te-iru","n4-te-oku"]},
+  {"id":"n4-te-oku","level":"n4","title":"〜ておく","meaning":"do in advance / leave as is","formation":"Verb (te-form) + おく<br>Example: 準備しておく (prepare in advance)","usage":"Indicates doing something in advance for future benefit, or leaving something in a certain state. In casual conversation, often contracts to 〜とく (e.g., しとく, 食べとく).","examples":[
+    {"japanese":"明日のために準備しておきます。","reading":"あしたのためにじゅんびしておきます。","english":"I will prepare in advance for tomorrow."},
+    {"japanese":"窓を開けておいてください。","reading":"まどをあけておいてください。","english":"Please leave the window open."},
+    {"japanese":"食べ物を冷蔵庫に入れておきます。","reading":"たべものをれいぞうこにいれておきます。","english":"I'll put the food in the fridge (in advance)."},
+    {"japanese":"予約しておいたほうがいいですよ。","reading":"よやくしておいたほうがいいですよ。","english":"You'd better make a reservation in advance."},
+    {"japanese":"そのままにしておいてください。","reading":"そのままにしておいてください。","english":"Please leave it as is."}],"related":["n4-te-aru","n4-te-shimau"]},
+  {"id":"n4-te-shimau","level":"n4","title":"〜てしまう","meaning":"completely / regrettably","formation":"Verb (te-form) + しまう<br>Example: 食べてしまう (eat it all up / ate regrettably)","usage":"Two meanings: (1) doing something completely or finishing it, and (2) doing something regrettable or unfortunate. In casual speech, contracts to 〜ちゃう (e.g., 食べちゃう, 忘れちゃう).","examples":[
+    {"japanese":"宿題を全部やってしまいました。","reading":"しゅくだいをぜんぶやってしまいました。","english":"I finished all my homework."},
+    {"japanese":"パスポートを忘れてしまいました。","reading":"ぱすぽーとをわすれてしまいました。","english":"I forgot my passport (unfortunately)."},
+    {"japanese":"ケーキを全部食べてしまった。","reading":"けーきをぜんぶたべてしまった。","english":"I ate all the cake."},
+    {"japanese":"電車に乗り遅れてしまいました。","reading":"でんしゃにのりおくれてしまいました。","english":"I missed the train (regrettably)."},
+    {"japanese":"漫画を一気に読んでしまいました。","reading":"まんがをいっきによんでしまいました。","english":"I read the manga all at once."}],"related":["n4-te-oku"]},
+  {"id":"n4-sugiru","level":"n4","title":"〜すぎる","meaning":"too much / excessive","formation":"Verb (masu-stem) + すぎる<br>い-Adjective (remove い) + すぎる<br>な-Adjective + すぎる<br>Example: 食べすぎる (eat too much), 大きすぎる (too big)","usage":"Expresses excessiveness — doing something too much or being too much of something. Conjugates as a Group 2 verb (〜すぎます, 〜すぎた).","examples":[
+    {"japanese":"食べすぎておなかが痛いです。","reading":"たべすぎておなかがいたいです。","english":"I ate too much and my stomach hurts."},
+    {"japanese":"このかばんは大きすぎます。","reading":"このかばんはおおきすぎます。","english":"This bag is too big."},
+    {"japanese":"値段が高すぎて買えません。","reading":"ねだんがたかすぎてかえません。","english":"It's too expensive to buy."},
+    {"japanese":"仕事が忙しすぎます。","reading":"しごとがいそがしすぎます。","english":"Work is too busy."},
+    {"japanese":"簡単すぎてつまらない。","reading":"かんたんすぎてつまらない。","english":"It's too easy and boring."}],"related":[]},
+  {"id":"n4-yasui","level":"n4","title":"〜やすい","meaning":"easy to ~","formation":"Verb (masu-stem) + やすい<br>Example: 分かりやすい (easy to understand)","usage":"Indicates that an action is easy to do. Conjugates as an い-adjective (〜やすくない, 〜やすかった). Opposite is 〜にくい (hard to do).","examples":[
+    {"japanese":"この本は読みやすいです。","reading":"このほんはよみやすいです。","english":"This book is easy to read."},
+    {"japanese":"このアプリは使いやすいです。","reading":"このあぷりはつかいやすいです。","english":"This app is easy to use."},
+    {"japanese":"先生の説明は分かりやすい。","reading":"せんせいのせつめいはわかりやすい。","english":"The teacher's explanation is easy to understand."},
+    {"japanese":"この町は住みやすいです。","reading":"このまちはすみやすいです。","english":"This town is easy to live in."},
+    {"japanese":"この靴は歩きやすい。","reading":"このくつはあるきやすい。","english":"These shoes are easy to walk in."}],"related":["n4-nikui"]},
+  {"id":"n4-nikui","level":"n4","title":"〜にくい","meaning":"hard to ~ / difficult to","formation":"Verb (masu-stem) + にくい<br>Example: 分かりにくい (hard to understand)","usage":"Indicates that an action is difficult to do. Conjugates as an い-adjective. Opposite is 〜やすい (easy to do).","examples":[
+    {"japanese":"この漢字は覚えにくいです。","reading":"このかんじはおぼえにくいです。","english":"This kanji is hard to memorize."},
+    {"japanese":"このペンは書きにくい。","reading":"このぺんはかきにくい。","english":"This pen is hard to write with."},
+    {"japanese":"説明が分かりにくいです。","reading":"せつめいがわかりにくいです。","english":"The explanation is hard to understand."},
+    {"japanese":"この町は住みにくいです。","reading":"このまちはすみにくいです。","english":"This town is difficult to live in."},
+    {"japanese":"彼の話は聞き取りにくい。","reading":"かれのはなしはききとりにくい。","english":"His speech is hard to catch."}],"related":["n4-yasui"]},
+  {"id":"n4-kata","level":"n4","title":"〜方","meaning":"way of doing ~ / how to ~","formation":"Verb (masu-stem) + 方<br>Example: 作り方 (way of making / recipe), 読み方 (way of reading / pronunciation)","usage":"Creates a noun meaning 'the way/method of doing something'. Very commonly used to form compound nouns like 作り方 (recipe), 考え方 (way of thinking), 使い方 (instructions/manual).","examples":[
+    {"japanese":"この漢字の読み方を教えてください。","reading":"このかんじのよみかたをおしえてください。","english":"Please tell me how to read this kanji."},
+    {"japanese":"カメラの使い方が分かりません。","reading":"かめらのつかいかたがわかりません。","english":"I don't know how to use the camera."},
+    {"japanese":"日本料理の作り方を習いたいです。","reading":"にほんりょうりのつくりかたをならいたいです。","english":"I want to learn how to make Japanese food."},
+    {"japanese":"彼の考え方は面白い。","reading":"かれのかんがえかたはおもしろい。","english":"His way of thinking is interesting."},
+    {"japanese":"駅への行き方を教えてください。","reading":"えきへのいきかたをおしえてください。","english":"Please tell me how to get to the station."}],"related":[]},
+  {"id":"n4-ta-koto-ga-aru","level":"n4","title":"〜たことがある","meaning":"have done ~ before","formation":"Verb (ta-form) + ことがある<br>Example: 行ったことがある (have been there before)","usage":"Expresses past experience — having done something at least once. The negative form 〜たことがない means 'have never done'.","examples":[
+    {"japanese":"日本に行ったことがあります。","reading":"にほんにいったことがあります。","english":"I have been to Japan."},
+    {"japanese":"富士山に登ったことがありますか。","reading":"ふじさんにのぼったことがありますか。","english":"Have you ever climbed Mt. Fuji?"},
+    {"japanese":"すしを食べたことがあります。","reading":"すしをたべたことがあります。","english":"I have eaten sushi."},
+    {"japanese":"一度も飛行機に乗ったことがない。","reading":"いちどもひこうきにのったことがない。","english":"I have never flown on an airplane."},
+    {"japanese":"この映画を見たことがありますか。","reading":"このえいがをみたことがありますか。","english":"Have you seen this movie?"}],"related":["n5-ta"]},
+  {"id":"n4-noni","level":"n4","title":"〜のに","meaning":"although / even though","formation":"Sentence (plain) + のに + Result<br>Example: 勉強したのにテストができなかった (Even though I studied, I couldn't do the test)","usage":"Expresses contrast or unexpected result — 'even though X happened, Y happened'. Often conveys disappointment, surprise, or frustration. For な-adjectives/nouns, use なのに.","examples":[
+    {"japanese":"勉強したのに、試験に合格できませんでした。","reading":"べんきょうしたのに、しけんにごうかくできませんでした。","english":"Even though I studied, I couldn't pass the exam."},
+    {"japanese":"雨が降っているのに、出かけました。","reading":"あめがふっているのに、でかけました。","english":"Even though it was raining, I went out."},
+    {"japanese":"安いのに、とても美味しいです。","reading":"やすいのに、とてもおいしいです。","english":"Even though it's cheap, it's very delicious."},
+    {"japanese":"彼は日本人なのに、日本語があまり話せません。","reading":"かれはにほんじんなのに、にほんごがあまりはなせません。","english":"Even though he's Japanese, he can't speak Japanese much."},
+    {"japanese":"たくさん寝たのに、まだ眠いです。","reading":"たくさんねたのに、まだねむいです。","english":"Although I slept a lot, I'm still sleepy."}],"related":["n5-ga"]},
+  {"id":"n4-ba","level":"n4","title":"〜ば (conditional)","meaning":"if / when (conditional)","formation":"Group 1: 書く→書けば (replace final u with e + ba)<br>Group 2: 食べる→食べれば (replace ru with reba)<br>い-Adjective: 高い→高ければ (replace i with kereba)<br>Irregular: する→すれば, 来る→来れば","usage":"A conditional form meaning 'if' or 'when'. The result must be a personal volition, natural consequence, or general truth. Cannot be used when the result is a request or command.","examples":[
+    {"japanese":"安ければ買います。","reading":"やすければかいます。","english":"If it's cheap, I'll buy it."},
+    {"japanese":"雨が降れば、試合は中止です。","reading":"あめがふれば、しあいはちゅうしです。","english":"If it rains, the game will be canceled."},
+    {"japanese":"勉強すれば、日本語が上手になります。","reading":"べんきょうすれば、にほんごがじょうずになります。","english":"If you study, you'll become good at Japanese."},
+    {"japanese":"時間があれば、手伝ってください。","reading":"じかんがあれば、てつだってください。","english":"If you have time, please help."},
+    {"japanese":"早く寝れば、明日元気になります。","reading":"はやくねれば、あしたげんきになります。","english":"If you sleep early, you'll feel energetic tomorrow."}],"related":["n4-tara","n4-nara"]},
+  {"id":"n4-tara","level":"n4","title":"〜たら (if/when)","meaning":"if / when (conditional)","formation":"Verb (ta-form) + ら<br>Example: 食べたら (if/when eat), 行ったら (if/when go)","usage":"A versatile conditional. Can be used for both 'if' and 'when' with fewer restrictions than ば. Also used for suggestions (〜たらどうですか), and with nouns/な-adjectives (だったら).","examples":[
+    {"japanese":"東京に着いたら、電話してください。","reading":"とうきょうについたら、でんわしてください。","english":"When you arrive in Tokyo, please call me."},
+    {"japanese":"安かったら買います。","reading":"やすかったらかいます。","english":"If it's cheap, I'll buy it."},
+    {"japanese":"時間があったら、手伝ってください。","reading":"じかんがあったら、てつだってください。","english":"If you have time, please help."},
+    {"japanese":"日本に行ったら、すしを食べたいです。","reading":"にほんにいったら、すしをたべたいです。","english":"If/when I go to Japan, I want to eat sushi."},
+    {"japanese":"休みだったら、遊びに行きましょう。","reading":"やすみだったら、あそびにいきましょう。","english":"If it's a holiday, let's go out."}],"related":["n4-ba","n4-nara"]},
+  {"id":"n4-nara","level":"n4","title":"〜なら","meaning":"if (stative/topic conditional)","formation":"Noun/な-Adjective + なら<br>い-Adjective/Verb (plain) + なら<br>Example: 日本人なら (if you are Japanese), 行くなら (if you go)","usage":"Used for conditional statements about states or topics. Often used when giving advice or suggestions based on a hypothetical situation. Has a nuance of 'if it's the case that ~'.","examples":[
+    {"japanese":"日本に行くなら、秋がいいですよ。","reading":"にほんにいくなら、あきがいいですよ。","english":"If you're going to Japan, autumn is good."},
+    {"japanese":"安いなら買います。","reading":"やすいならかいます。","english":"If it's cheap (as you say), I'll buy it."},
+    {"japanese":"私ならそうしません。","reading":"わたしならそうしません。","english":"If it were me, I wouldn't do that."},
+    {"japanese":"学生なら割引があります。","reading":"がくせいならわりびきがあります。","english":"If you're a student, there's a discount."},
+    {"japanese":"勉強するなら、図書館がいいですよ。","reading":"べんきょうするなら、としょかんがいいですよ。","english":"If you're going to study, the library is good."}],"related":["n4-ba","n4-tara"]},
+  {"id":"n4-te-mo","level":"n4","title":"〜ても (even if)","meaning":"even if / although","formation":"Verb (te-form) + も<br>い-Adjective (te-form: 〜くて) + も<br>Example: 雨が降っても (even if it rains)","usage":"Expresses 'even if' or 'even though'. The main clause happens regardless of the condition. Also used in patterns like 〜てもいい (may do) and 〜ても構わない (don't mind).","examples":[
+    {"japanese":"雨が降っても、試合は行われます。","reading":"あめがふっても、しあいはおこなわれます。","english":"Even if it rains, the game will be held."},
+    {"japanese":"高くても買います。","reading":"たかくてもかいます。","english":"Even if it's expensive, I'll buy it."},
+    {"japanese":"たくさん食べても太らない。","reading":"たくさんたべてもふとらない。","english":"Even if I eat a lot, I don't gain weight."},
+    {"japanese":"急いでも間に合わない。","reading":"いそいでもまにあわない。","english":"Even if I hurry, I won't make it."},
+    {"japanese":"何度しても失敗します。","reading":"なんどしてもしっぱいします。","english":"No matter how many times I try, I fail."}],"related":["n5-te-mo-ii"]},
+  {"id":"n4-nakereba-naranai","level":"n4","title":"〜なければならない","meaning":"must do / have to","formation":"Verb (ない-form remove ない) + なければならない<br>Casual: 〜なくちゃ, 〜なきゃ<br>Example: 行く→行かない→行かなければならない (must go)","usage":"Expresses obligation — 'must do' or 'have to do'. In casual speech, often shortened to 〜なくちゃ or 〜なきゃ. The formal version is 〜なければなりません.","examples":[
+    {"japanese":"毎日宿題をしなければなりません。","reading":"まいにちしゅくだいをしなければなりません。","english":"I must do homework every day."},
+    {"japanese":"明日早く起きなければならない。","reading":"あしたはやくおきなければならない。","english":"I have to wake up early tomorrow."},
+    {"japanese":"パスポートを見せなければなりません。","reading":"ぱすぽーとをみせなければなりません。","english":"You must show your passport."},
+    {"japanese":"薬を飲まなければなりません。","reading":"くすりをのまなければなりません。","english":"I have to take medicine."},
+    {"japanese":"もう帰らなければなりません。","reading":"もうかえらなければなりません。","english":"I have to go home now."}],"related":["n5-nai","n4-nakute-mo-ii"]},
+  {"id":"n4-nakute-mo-ii","level":"n4","title":"〜なくてもいい","meaning":"don't have to","formation":"Verb (ない-form remove ない) + なくてもいい<br>Example: 行く→行かなくてもいい (don't have to go)","usage":"Expresses lack of obligation — 'don't have to' or 'it's okay not to'. The opposite of 〜なければならない.","examples":[
+    {"japanese":"明日は来なくてもいいですよ。","reading":"あしたはこなくてもいいですよ。","english":"You don't have to come tomorrow."},
+    {"japanese":"全部食べなくてもいいです。","reading":"ぜんぶたべなくてもいいです。","english":"You don't have to eat everything."},
+    {"japanese":"漢字を全部覚えなくても大丈夫です。","reading":"かんじをぜんぶおぼえなくてもだいじょうぶです。","english":"It's okay if you don't memorize all kanji."},
+    {"japanese":"急がなくてもいいですよ。","reading":"いそがなくてもいいですよ。","english":"You don't have to hurry."},
+    {"japanese":"お金を払わなくてもいいですか。","reading":"おかねをはらわなくてもいいですか。","english":"Don't I have to pay?"}],"related":["n4-nakereba-naranai"]},
+  {"id":"n4-saseru","level":"n4","title":"〜させる (causative)","meaning":"make / let someone do","formation":"Group 1: 書く→書かせる<br>Group 2: 食べる→食べさせる<br>Irregular: する→させる, 来る→来させる","usage":"The causative form. Indicates that someone makes or lets someone else do something. The person being made to act is marked with に. When the verb is intransitive, the actor can be marked with を.","examples":[
+    {"japanese":"先生は学生に宿題をさせます。","reading":"せんせいはがくせいにしゅくだいをさせます。","english":"The teacher makes students do homework."},
+    {"japanese":"母は私に野菜を食べさせます。","reading":"はははわたしにやさいをたべさせます。","english":"My mother makes me eat vegetables."},
+    {"japanese":"子供に英語を習わせたいです。","reading":"こどもにえいごをならわせたいです。","english":"I want to let my child learn English."},
+    {"japanese":"すみません、ちょっと考えさせてください。","reading":"すみません、ちょっとかんがえさせてください。","english":"Sorry, please let me think for a moment."},
+    {"japanese":"彼に行かせましょう。","reading":"かれにいかせましょう。","english":"Let him go."}],"related":["n4-rare","n4-saserareru"]},
+  {"id":"n4-rare","level":"n4","title":"〜られる (potential/passive)","meaning":"can / be able to (potential)","formation":"Group 1: replace u with eru (書く→書ける)<br>Group 2: replace ru with rareru (食べる→食べられる)<br>Irregular: する→できる, 来る→来られる","usage":"The potential form expresses ability (can do). For Group 1 verbs, the form is 〜eru (not 〜rareru). For Group 2, it is 〜られる. The object of potential verbs is often marked with が instead of を.","examples":[
+    {"japanese":"日本語が話せます。","reading":"にほんごがはなせます。","english":"I can speak Japanese."},
+    {"japanese":"この漢字が読めますか。","reading":"このかんじがよめますか。","english":"Can you read this kanji?"},
+    {"japanese":"一人で来られますか。","reading":"ひとりでこられますか。","english":"Can you come alone?"},
+    {"japanese":"早く起きられません。","reading":"はやくおきられません。","english":"I can't wake up early."},
+    {"japanese":"全部食べられなかった。","reading":"ぜんぶたべられなかった。","english":"I couldn't eat it all."}],"related":["n5-koto-ga-dekiru","n4-saserareru"]},
+  {"id":"n4-saserareru","level":"n4","title":"〜させられる (causative-passive)","meaning":"be made to do (by someone)","formation":"Group 1: 書く→書かされる/書かせられる<br>Group 2: 食べる→食べさせられる<br>Irregular: する→させられる, 来る→来させられる","usage":"Combines causative and passive. Expresses that someone is made/forced to do something by someone else. Often implies the action is unwanted or burdensome.","examples":[
+    {"japanese":"毎日宿題をさせられます。","reading":"まいにちしゅくだいをさせられます。","english":"I am made to do homework every day."},
+    {"japanese":"嫌いな野菜を食べさせられました。","reading":"きらいなやさいをたべさせられました。","english":"I was made to eat vegetables I hate."},
+    {"japanese":"休みの日も働かせられます。","reading":"やすみのひもはたらかせられます。","english":"I'm made to work even on holidays."},
+    {"japanese":"長時間待たせられました。","reading":"ちょうじかんまたせられました。","english":"I was made to wait a long time."},
+    {"japanese":"先生に復唱させられました。","reading":"せんせいにふくしょうさせられました。","english":"I was made to repeat by the teacher."}],"related":["n4-saseru","n4-rare"]},
+  {"id":"n4-you-ni-naru","level":"n4","title":"〜ようになる","meaning":"come to / reach the point where","formation":"Verb (dictionary/ない) + ようになる<br>Example: 話せるようになった (have come to be able to speak)","usage":"Describes a change in ability or habit — 'reach the point where' or 'come to'. Often used with potential forms to express acquiring a skill.","examples":[
+    {"japanese":"日本語が話せるようになりました。","reading":"にほんごがはなせるようになりました。","english":"I've come to be able to speak Japanese."},
+    {"japanese":"毎日運動するようになりました。","reading":"まいにちうんどうするようになりました。","english":"I've come to exercise every day."},
+    {"japanese":"漢字が書けるようになった。","reading":"かんじがかけるようになった。","english":"I've come to be able to write kanji."},
+    {"japanese":"納豆が食べられるようになりました。","reading":"なっとうがたべられるようになりました。","english":"I've come to be able to eat natto."},
+    {"japanese":"早く起きるようになりました。","reading":"はやくおきるようになりました。","english":"I've come to wake up early."}],"related":["n5-ni-naru","n4-you-ni-suru"]},
+  {"id":"n4-you-ni-suru","level":"n4","title":"〜ようにする","meaning":"make sure to / try to","formation":"Verb (dictionary/ない) + ようにする<br>Example: 毎日勉強するようにする (make sure to study every day)","usage":"Expresses an effort or attempt to do something. 〜ようにしています means 'make a habit of' or 'always try to'.","examples":[
+    {"japanese":"毎日運動するようにしています。","reading":"まいにちうんどうするようにしています。","english":"I make sure to exercise every day."},
+    {"japanese":"早寝早起きするようにしてください。","reading":"はやねはやおきするようにしてください。","english":"Please try to sleep and wake early."},
+    {"japanese":"漢字を復習するようにしています。","reading":"かんじをふくしゅうするようにしています。","english":"I make it a habit to review kanji."},
+    {"japanese":"タバコを吸わないようにしています。","reading":"たばこをすわないようにしています。","english":"I try not to smoke."},
+    {"japanese":"ゴミは分別するようにしてください。","reading":"ごみはぶんべつするようにしてください。","english":"Please make sure to separate the trash."}],"related":["n4-you-ni-naru"]},
+  {"id":"n4-koto-ni-suru","level":"n4","title":"〜ことにする","meaning":"decide to","formation":"Verb (dictionary/ない) + ことにする<br>Example: やめることにする (decide to quit)","usage":"Expresses a personal decision or choice. 〜ことにしている means 'make it a rule to' — a habitual decision.","examples":[
+    {"japanese":"タバコをやめることにしました。","reading":"たばこをやめることにしました。","english":"I decided to quit smoking."},
+    {"japanese":"毎日ジョギングすることにしています。","reading":"まいにちじょぎんぐすることにしています。","english":"I make it a rule to jog every day."},
+    {"japanese":"来年留学することにした。","reading":"らいねんりゅうがくすることにした。","english":"I decided to study abroad next year."},
+    {"japanese":"もう話さないことにしました。","reading":"もうはなさないことにしました。","english":"I decided not to talk anymore."},
+    {"japanese":"結婚することにしました。","reading":"けっこんすることにしました。","english":"I decided to get married."}],"related":["n4-koto-ni-naru"]},
+  {"id":"n4-koto-ni-naru","level":"n4","title":"〜ことになる","meaning":"it is decided that / results in","formation":"Verb (dictionary/ない) + ことになる<br>Example: 行くことになった (it's been decided that I'll go)","usage":"Indicates a decision or result determined by external circumstances, not by the speaker's own will. Often used for group decisions, company decisions, or fate.","examples":[
+    {"japanese":"来月東京に転勤することになりました。","reading":"らいげつとうきょうにてんきんすることになりました。","english":"It's been decided that I'll be transferred to Tokyo next month."},
+    {"japanese":"会議は来週に延期することになりました。","reading":"かいぎはらいしゅうにえんきすることになりました。","english":"It's been decided that the meeting will be postponed to next week."},
+    {"japanese":"結局行かないことになった。","reading":"けっきょくいかないことになった。","english":"It ended up that we won't go."},
+    {"japanese":"もう一度試験を受けることになりました。","reading":"もういちどしけんをうけることになりました。","english":"It's been decided that I'll take the exam again."},
+    {"japanese":"明日は休みになることになりました。","reading":"あしたはやすみになることになりました。","english":"It's been decided that tomorrow is a holiday."}],"related":["n4-koto-ni-suru"]},
+  {"id":"n4-te-iku","level":"n4","title":"〜ていく","meaning":"go on doing / continue / start to","formation":"Verb (te-form) + いく<br>Example: 歩いていく (go walking), 増えていく (continue to increase)","usage":"Describes an action that continues into the future, or a process that develops over time. Also used literally as 'do something and go' (e.g., 持っていく = take something).","examples":[
+    {"japanese":"日本語の勉強を続けていくつもりです。","reading":"にほんごのべんきょうをつづけていくつもりです。","english":"I intend to continue studying Japanese."},
+    {"japanese":"これからもよろしくお願いします。","reading":"これからもよろしくおねがいします。","english":"I look forward to your continued support."},
+    {"japanese":"人口が減っていくでしょう。","reading":"じんこうがへっていくでしょう。","english":"The population will probably continue to decrease."},
+    {"japanese":"この道をまっすぐ歩いていってください。","reading":"このみちをまっすぐあるいていってください。","english":"Please go straight along this road."},
+    {"japanese":"だんだん慣れていくと思います。","reading":"だんだんなれていくとおもいます。","english":"I think you'll gradually get used to it."}],"related":["n4-te-kuru"]},
+  {"id":"n4-te-kuru","level":"n4","title":"〜てくる","meaning":"come doing / has come to / start to","formation":"Verb (te-form) + くる<br>Example: 持ってくる (bring), 寒くなってきた (it has gotten cold)","usage":"Has several meanings: (1) do something and come back, (2) a change that has started and is approaching the present, (3) a gradual change up to now.","examples":[
+    {"japanese":"お弁当を持ってきました。","reading":"おべんとうをもってきました。","english":"I brought a lunch box."},
+    {"japanese":"日本語が上手になってきました。","reading":"にほんごがじょうずになってきました。","english":"I've become better at Japanese (up to now)."},
+    {"japanese":"寒くなってきましたね。","reading":"さむくなってきましたね。","english":"It's getting cold, isn't it?"},
+    {"japanese":"雨が降ってきた。","reading":"あめがふってきた。","english":"It started raining."},
+    {"japanese":"ちょっと出かけてきます。","reading":"ちょっとでかけてきます。","english":"I'll go out for a bit and come back."}],"related":["n4-te-iku"]},
+
+  # ===== N3 =====
+  {"id":"n3-souda","level":"n3","title":"〜そうだ (hearsay)","meaning":"I heard that / it is said that","formation":"Sentence (plain) + そうだ<br>Example: 雨が降るそうだ (I heard it will rain)","usage":"Expresses hearsay — reporting information obtained from another source. The source is indicated with によると or の話では. Do not confuse with 〜そうだ (seems like) which attaches to adjective/verb stems.","examples":[
+    {"japanese":"天気予報によると、明日は雨が降るそうです。","reading":"てんきよほうによると、あしたはあめがふるそうです。","english":"According to the weather forecast, I hear it will rain tomorrow."},
+    {"japanese":"彼は来月結婚するそうです。","reading":"かれはらいげつけっこんするそうです。","english":"I heard he will get married next month."},
+    {"japanese":"このレストランは美味しいそうです。","reading":"このれすとらんはおいしいそうです。","english":"I heard this restaurant is delicious."},
+    {"japanese":"地震があったそうです。","reading":"じしんがあったそうです。","english":"I heard there was an earthquake."},
+    {"japanese":"田中さんは病気だそうです。","reading":"たなかさんはびょうきだそうです。","english":"I heard Tanaka is sick."}],"related":["n3-rasii","n3-you-da"]},
+  {"id":"n3-you-da","level":"n3","title":"〜ようだ (seems)","meaning":"seems like / appears","formation":"Verb (plain) + ようだ<br>い-Adjective + ようだ<br>な-Adjective + な + ようだ<br>Noun + の + ようだ<br>Example: 雨のようだ (It seems to be rain)","usage":"Expresses an inference based on direct observation or information. Similar to 'it seems' in English. The adverbial form is ように, and the attributive form is ような.","examples":[
+    {"japanese":"誰かが泣いているようだ。","reading":"だれかがないているようだ。","english":"It seems like someone is crying."},
+    {"japanese":"あの人は日本人のようです。","reading":"あのひとはにほんじんのようです。","english":"That person appears to be Japanese."},
+    {"japanese":"これは外国製のようです。","reading":"これはがいこくせいのようです。","english":"This seems to be foreign-made."},
+    {"japanese":"彼は疲れているようでした。","reading":"かれはつかれているようでした。","english":"He seemed to be tired."},
+    {"japanese":"日本語が上手なようですね。","reading":"にほんごがじょうずなようですね。","english":"You seem to be good at Japanese."}],"related":["n3-rasii","n3-souda","n3-mitai"]},
+  {"id":"n3-rasii","level":"n3","title":"〜らしい (seems/typical)","meaning":"seems / typical of / -ish","formation":"Verb/い-Adjective (plain) + らしい<br>な-Adjective/Noun + らしい<br>Example: 彼は学生らしい (He seems like a student / He is typical of a student)","usage":"Two main uses: (1) expressing inference based on reliable information, and (2) expressing that something is typical or worthy of its name. For 'typical of', it attaches to the noun directly.","examples":[
+    {"japanese":"天気予報によると、明日は晴れらしいです。","reading":"てんきよほうによると、あしたははれらしいです。","english":"According to the forecast, it seems it'll be sunny tomorrow."},
+    {"japanese":"彼は本当の日本人らしい。","reading":"かれはほんとうのにほんじんらしい。","english":"He seems like a true Japanese person."},
+    {"japanese":"これは子供らしい絵ですね。","reading":"これはこどもらしいえですね。","english":"This is a childlike drawing."},
+    {"japanese":"彼女は女らしいと言われます。","reading":"かのじょはおんならしいといわれます。","english":"She is said to be feminine."},
+    {"japanese":"今日は春らしい天気ですね。","reading":"きょうははるらしいてんきですね。","english":"Today is spring-like weather."}],"related":["n3-souda","n3-you-da","n3-mitai"]},
+  {"id":"n3-mitai","level":"n3","title":"〜みたい","meaning":"like / similar to / as if","formation":"Verb/い-Adjective (plain) + みたい<br>な-Adjective/Noun + みたい<br>Example: 子供みたい (like a child)","usage":"Casual equivalent of ようだ. Used in spoken Japanese to express similarity or conjecture. Cannot be used in formal writing. Inflects as a な-adjective (みたいな, みたいに).","examples":[
+    {"japanese":"この味はりんごみたいです。","reading":"このあじはりんごみたいです。","english":"This taste is like an apple."},
+    {"japanese":"彼は犬みたいに走る。","reading":"かれはいぬみたいにはしる。","english":"He runs like a dog."},
+    {"japanese":"疲れて死にそうみたい。","reading":"つかれてしにそうみたい。","english":"I'm so tired I feel like I'm dying."},
+    {"japanese":"ここはテーマパークみたいだね。","reading":"ここはてーまぱーくみたいだね。","english":"This place is like a theme park."},
+    {"japanese":"夢みたいな話ですね。","reading":"ゆめみたいなはなしですね。","english":"It's like a dream story."}],"related":["n3-you-da","n3-rasii"]},
+  {"id":"n3-nagara","level":"n3","title":"〜ながら","meaning":"while (simultaneous action)","formation":"Verb (masu-stem) + ながら<br>Example: 音楽を聞きながら勉強する (study while listening to music)","usage":"Indicates two actions done simultaneously by the same subject. The main action comes last. Cannot be used with momentary actions.","examples":[
+    {"japanese":"音楽を聞きながら勉強します。","reading":"おんがくをききながらべんきょうします。","english":"I study while listening to music."},
+    {"japanese":"テレビを見ながら食事する。","reading":"てれびをみながらしょくじする。","english":"I eat while watching TV."},
+    {"japanese":"歩きながら電話をしていました。","reading":"あるきながらでんわをしていました。","english":"I was talking on the phone while walking."},
+    {"japanese":"考えながら答えてください。","reading":"かんがえながらこたえてください。","english":"Please answer while thinking."},
+    {"japanese":"コーヒーを飲みながら話しましょう。","reading":"こーひーをのみながらはなしましょう。","english":"Let's talk over coffee."}],"related":[]},
+  {"id":"n3-tsumori","level":"n3","title":"〜つもり","meaning":"intend to / plan to","formation":"Verb (dictionary/ない) + つもり<br>Example: 行くつもり (intend to go)","usage":"Expresses intention or plan. Can be used in negative to express intention not to do. For a more objective schedule, use 予定.","examples":[
+    {"japanese":"将来は医者になるつもりです。","reading":"しょうらいはいしゃになるつもりです。","english":"I intend to become a doctor in the future."},
+    {"japanese":"今日は何も食べないつもりです。","reading":"きょうはなにもたべないつもりです。","english":"I intend not to eat anything today."},
+    {"japanese":"来年日本に行くつもりですか。","reading":"らいねんにほんにいくつもりですか。","english":"Do you plan to go to Japan next year?"},
+    {"japanese":"結婚するつもりはありません。","reading":"けっこんするつもりはありません。","english":"I have no intention of getting married."},
+    {"japanese":"彼は会社を辞めるつもりだそうです。","reading":"かれはかいしゃをやめるつもりだそうです。","english":"I heard he intends to quit the company."}],"related":["n3-yotei"]},
+  {"id":"n3-bakari","level":"n3","title":"〜ばかり","meaning":"just / only / about to","formation":"Verb (ta-form) + ばかり (just did)<br>Verb (dictionary) + ばかり (about to)<br>Noun + ばかり (only)<br>Example: 来たばかり (just arrived), 本ばかり読む (only reads books)","usage":"Three main uses: (1) 'just did' with past tense, (2) 'about to' with dictionary form, (3) 'only' with nouns — can imply excessive or undesirable exclusivity.","examples":[
+    {"japanese":"日本に来たばかりです。","reading":"にほんにきたばかりです。","english":"I just arrived in Japan."},
+    {"japanese":"食べたばかりでおなかがいっぱいです。","reading":"たべたばかりでおなかがいっぱいです。","english":"I just ate, so I'm full."},
+    {"japanese":"彼はゲームばかりしています。","reading":"かれはげーむばかりしています。","english":"He only plays games."},
+    {"japanese":"漫画ばかり読んではいけません。","reading":"まんがばかりよんではいけません。","english":"You mustn't read only manga."},
+    {"japanese":"今帰ったばかりです。","reading":"いまかえったばかりです。","english":"I just got home."}],"related":["n3-dake"]},
+  {"id":"n3-dake","level":"n3","title":"〜だけ","meaning":"only / just / as ~ as","formation":"Noun/Adjective/Verb + だけ<br>Example: 一つだけ (only one), できるだけ (as much as possible)","usage":"Indicates limitation — 'only this much' or 'just this'. 〜だけあって means 'as expected of'. 〜だけに means 'precisely because'. できるだけ is a common set phrase meaning 'as much as possible'.","examples":[
+    {"japanese":"一つだけください。","reading":"ひとつだけください。","english":"Please give me just one."},
+    {"japanese":"これだけあれば十分です。","reading":"これだけあればじゅうぶんです。","english":"If we have just this much, it's enough."},
+    {"japanese":"彼だけが知っている。","reading":"かれだけがしっている。","english":"Only he knows."},
+    {"japanese":"見るだけなら無料です。","reading":"みるだけならむりょうです。","english":"If you only look, it's free."},
+    {"japanese":"できるだけ早く来てください。","reading":"できるだけはやくきてください。","english":"Please come as soon as possible."}],"related":["n3-shika-nai","n3-bakari"]},
+  {"id":"n3-shika-nai","level":"n3","title":"〜しかない","meaning":"nothing but / have no choice but to","formation":"Noun + しか + Negative Verb<br>Verb (dictionary) + しかない<br>Example: 一つしかない (there is only one), 行くしかない (have no choice but to go)","usage":"Two uses: (1) 'only' when paired with a negative verb — stronger than だけ, and (2) 'have no choice but to' when attached to a dictionary form verb.","examples":[
+    {"japanese":"お金が100円しかありません。","reading":"おかねがひゃくえんしかありません。","english":"I only have 100 yen."},
+    {"japanese":"時間が10分しかない。","reading":"じかんがじゅっぷんしかない。","english":"There's only 10 minutes."},
+    {"japanese":"やるしかない。","reading":"やるしかない。","english":"There's no choice but to do it."},
+    {"japanese":"電車がなかったので、歩いて帰るしかなかった。","reading":"でんしゃがなかったので、あるいてかえるしかなかった。","english":"There was no train, so I had to walk home."},
+    {"japanese":"ここには日本語しか話せない人がいます。","reading":"ここにはにほんごしかはなせないひとがいます。","english":"There are people here who can only speak Japanese."}],"related":["n3-dake"]},
+  {"id":"n3-sa","level":"n3","title":"〜さ (nominalizer)","meaning":"-ness (degree/quality)","formation":"い-Adjective (replace い with さ)<br>Example: 高い→高さ (height), 長い→長さ (length)","usage":"Creates a noun from an い-adjective, expressing the degree or extent of that quality. Similar to '-ness' or '-ity' in English. For な-adjectives, sometimes さ can also be used.","examples":[
+    {"japanese":"この山の高さは3000メートルです。","reading":"このやまのたかさは3000めーとるです。","english":"The height of this mountain is 3000 meters."},
+    {"japanese":"富士山の美しさに感動しました。","reading":"ふじさんのうつくしさにかんどうしました。","english":"I was moved by the beauty of Mt. Fuji."},
+    {"japanese":"この文章の難しさが分かりますか。","reading":"このぶんしょうのむずかしさがわかりますか。","english":"Do you understand the difficulty of this sentence?"},
+    {"japanese":"彼の優しさに感謝しています。","reading":"かれのやさしさにかんしゃしています。","english":"I appreciate his kindness."},
+    {"japanese":"漢字の面白さを感じています。","reading":"かんじのおもしろさをかんじています。","english":"I feel the fun/interest of kanji."}],"related":[]},
+  {"id":"n3-ppoi","level":"n3","title":"〜っぽい","meaning":"-ish / tending to","formation":"Verb (masu-stem) + っぽい<br>い-Adjective (remove い) + っぽい<br>Noun + っぽい<br>Example: 子供っぽい (childish), 忘れっぽい (forgetful)","usage":"Expresses a strong tendency or characteristic. Can be negative or positive depending on context. Conjugates as an い-adjective.","examples":[
+    {"japanese":"彼は子供っぽいです。","reading":"かれはこどもっぽいです。","english":"He is childish."},
+    {"japanese":"私は忘れっぽい性格です。","reading":"わたしはわすれっぽいせいかくです。","english":"I have a forgetful personality."},
+    {"japanese":"このスープは水っぽいです。","reading":"このすーぷはみずっぽいです。","english":"This soup is watery."},
+    {"japanese":"彼女は怒りっぽいです。","reading":"かのじょはおこりっぽいです。","english":"She is quick-tempered."},
+    {"japanese":"この色は黒っぽいですね。","reading":"このいろはくろっぽいですね。","english":"This color is blackish, isn't it?"}],"related":[]},
+  {"id":"n3-gachi","level":"n3","title":"〜がち","meaning":"tend to / prone to","formation":"Verb (masu-stem) + がち<br>Noun + がち<br>Example: 遅れがち (tend to be late), 病気がち (sickly)","usage":"Indicates a tendency or inclination toward something, often negative. Conjugates as a な-adjective (〜がちな, 〜がちに).","examples":[
+    {"japanese":"最近、遅刻しがちです。","reading":"さいきん、ちこくしがちです。","english":"I tend to be late recently."},
+    {"japanese":"彼は病気がちです。","reading":"かれはびょうきがちです。","english":"He tends to get sick."},
+    {"japanese":"現代人は運動不足になりがちだ。","reading":"げんだいじんはうんどうぶそくになりがちだ。","english":"Modern people tend to lack exercise."},
+    {"japanese":"彼女は悲観的に考えがちです。","reading":"かのじょはひかんてきにかんがえがちです。","english":"She tends to think pessimistically."},
+    {"japanese":"この地域は雨が降りがちです。","reading":"このちいきはあめがふりがちです。","english":"This region tends to get rain."}],"related":[]},
+  {"id":"n3-ni-tsuite","level":"n3","title":"〜について","meaning":"regarding / about","formation":"Noun + について<br>Example: 日本語について (about Japanese)","usage":"Indicates the topic being discussed, thought about, or written about. Similar to 'regarding' or 'concerning' in English. 〜についての + noun means 'about' as an adjective.","examples":[
+    {"japanese":"その問題について話しましょう。","reading":"そのもんだいについてはなしましょう。","english":"Let's talk about that problem."},
+    {"japanese":"日本の歴史について勉強しています。","reading":"にほんのれきしについてべんきょうしています。","english":"I am studying about Japanese history."},
+    {"japanese":"この件についてどう思いますか。","reading":"このけんについてどうおもいますか。","english":"What do you think about this matter?"},
+    {"japanese":"旅行についての情報を調べています。","reading":"りょこうについてのじょうほうをしらべています。","english":"I'm researching information about the trip."},
+    {"japanese":"環境問題について発表します。","reading":"かんきょうもんだいについてはっぴょうします。","english":"I will present about environmental issues."}],"related":["n3-ni-totte","n3-ni-yotte"]},
+  {"id":"n3-ni-totte","level":"n3","title":"〜にとって","meaning":"for / in terms of","formation":"Noun + にとって<br>Example: 私にとって (for me)","usage":"Expresses a viewpoint or perspective — 'from the standpoint of' or 'for'. Often followed by 大切, 重要, 必要, etc.","examples":[
+    {"japanese":"これは私にとって大切なものです。","reading":"これはわたしにとってたいせつなものです。","english":"This is important to me."},
+    {"japanese":"学生にとって勉強は一番大事です。","reading":"がくせいにとってべんきょうはいちばんだいじです。","english":"For students, studying is the most important."},
+    {"japanese":"彼にとってそれは大きなチャンスです。","reading":"かれにとってそれはおおきなちゃんすです。","english":"For him, that is a big opportunity."},
+    {"japanese":"日本人にとって、お辞儀は大切な習慣です。","reading":"にほんじんにとって、おじぎはたいせつなしゅうかんです。","english":"For Japanese people, bowing is an important custom."},
+    {"japanese":"健康にとって一番いいことは何ですか。","reading":"けんこうにとって、いちばんいいことはなんですか。","english":"What is the best thing for your health?"}],"related":["n3-ni-tsuite"]},
+  {"id":"n3-ni-yotte","level":"n3","title":"〜によって","meaning":"by / depending on / due to","formation":"Noun + によって<br>Example: 人によって (depending on the person), 地震によって (due to the earthquake)","usage":"Has multiple uses: (1) indicates the agent in passive sentences, (2) 'depending on', (3) 'by means of', (4) 'due to'.","examples":[
+    {"japanese":"この法律は国会によって作られました。","reading":"このほうりつはこっかいによってつくられました。","english":"This law was created by the National Diet."},
+    {"japanese":"人によって考え方が違います。","reading":"ひとによってかんがえかたがちがいます。","english":"Ways of thinking differ depending on the person."},
+    {"japanese":"地震によって多くの家が壊れました。","reading":"じしんによっておおくのいえがこわれました。","english":"Many houses were destroyed due to the earthquake."},
+    {"japanese":"インターネットによって情報が簡単に手に入る。","reading":"いんたーねっとによってじょうほうがかんたんにてにはいる。","english":"Information can be easily obtained through the internet."},
+    {"japanese":"国によって習慣が異なります。","reading":"くにによってしゅうかんがことなります。","english":"Customs differ depending on the country."}],"related":["n3-ni-tsuite"]},
+  {"id":"n3-kagiri","level":"n3","title":"〜限り","meaning":"as long as / within the limits of","formation":"Verb (dictionary/ている) + 限り<br>Noun + の + 限り<br>Example: 勉強する限り (as long as I study)","usage":"Two main uses: (1) 'as long as ~' — expresses a condition, (2) 'within the limits of' — indicating a scope or boundary. 〜ない限り means 'unless'.","examples":[
+    {"japanese":"努力する限り、夢は叶うと思います。","reading":"どりょくするかぎり、ゆめはかなうとおもいます。","english":"As long as you make an effort, I think dreams come true."},
+    {"japanese":"雨が降らない限り、試合をします。","reading":"あめがふらないかぎり、しあいをします。","english":"Unless it rains, we will have the game."},
+    {"japanese":"私の知っている限り、彼は正直な人です。","reading":"わたしのしっているかぎり、かれはしょうじきなひとです。","english":"As far as I know, he is an honest person."},
+    {"japanese":"可能な限り早く返事をします。","reading":"かのうなかぎりはやくへんじをします。","english":"I will reply as soon as possible."},
+    {"japanese":"見える限り、海が広がっていました。","reading":"みえるかぎり、うみがひろがっていました。","english":"The sea stretched as far as the eye could see."}],"related":[]},
+  {"id":"n3-hodo","level":"n3","title":"〜ほど","meaning":"to the extent that / the more ~ the more","formation":"Verb/Adjective (plain) + ほど<br>ば + Verb + ほど<br>Example: 見れば見るほど (the more I look, the more...), 涙が出るほど (to the extent that tears come out)","usage":"Has two main uses: (1) indicates degree/extent, (2) 'the more ~, the more ~' with ば conditional. ほど〜ない means 'not as ~ as'.","examples":[
+    {"japanese":"この本は読めば読むほど面白いです。","reading":"このほんはよめばよむほどおもしろいです。","english":"The more you read this book, the more interesting it is."},
+    {"japanese":"嬉しくて涙が出るほど感動しました。","reading":"うれしくてなみだがでるほどかんどうしました。","english":"I was so moved that tears came out."},
+    {"japanese":"日本語は勉強すればするほど難しくなる。","reading":"にほんごはべんきょうすればするほどむずかしくなる。","english":"The more I study Japanese, the more difficult it becomes."},
+    {"japanese":"彼は思ったほど悪い人じゃなかった。","reading":"かれはおもったほどわるいひとじゃなかった。","english":"He wasn't as bad a person as I thought."},
+    {"japanese":"この問題は簡単なほどいい。","reading":"このもんだいはかんたんなほどいい。","english":"The simpler this problem is, the better."}],"related":[]},
+  {"id":"n3-ni-chigainai","level":"n3","title":"〜に違いない","meaning":"must be / certainly is","formation":"Verb/い-Adjective (plain) + に違いない<br>な-Adjective/Noun + である + に違いない<br>Example: 間違いない (it must be a mistake)","usage":"Expresses a strong conviction or certainty about something — 'it must be', 'no doubt'. More emphatic than 〜はずだ. In casual speech, 〜に違いない can be shortened to 〜違いない.","examples":[
+    {"japanese":"彼はもう着いたに違いない。","reading":"かれはもうついたにちがいない。","english":"He must have already arrived."},
+    {"japanese":"これは誰かの忘れ物に違いない。","reading":"これはだれかのわすれものにちがいない。","english":"This must be someone's forgotten item."},
+    {"japanese":"あのレストランは高いに違いない。","reading":"あのれすとらんはたかいにちがいない。","english":"That restaurant must be expensive."},
+    {"japanese":"彼女は日本人に違いない。","reading":"かのじょはにほんじんにちがいない。","english":"She must be Japanese (no doubt)."},
+    {"japanese":"犯人はあいつに違いない。","reading":"はんにんはあいつにちがいない。","english":"The culprit must be that guy."}],"related":[]},
+  {"id":"n3-ni-shitagatte","level":"n3","title":"〜に従って","meaning":"according to / in accordance with","formation":"Noun + に従って<br>Verb (dictionary) + に従って<br>Example: 指示に従って (following instructions), 進むに従って (as it progresses)","usage":"Two uses: (1) 'in accordance with' rules/instructions, (2) 'as' indicating proportional change — as one thing changes, another changes too.","examples":[
+    {"japanese":"説明書に従って組み立ててください。","reading":"せつめいしょにしたがってくみたててください。","english":"Please assemble following the instructions."},
+    {"japanese":"年を取るに従って、記憶力が落ちます。","reading":"としをとるにしたがって、きおくりょくがおちます。","english":"As you get older, your memory declines."},
+    {"japanese":"先生の指示に従ってください。","reading":"せんせいのしじにしたがってください。","english":"Please follow the teacher's instructions."},
+    {"japanese":"日本語が上手になるに従って、文法も難しくなる。","reading":"にほんごがじょうずになるにしたがって、ぶんぽうもむずかしくなる。","english":"As your Japanese improves, the grammar gets more difficult."},
+    {"japanese":"法律に従って行動しなければなりません。","reading":"ほうりつにしたがってこうどうしなければなりません。","english":"You must act in accordance with the law."}],"related":["n3-ni-tsurete","n3-ni-tomonatte"]},
+  {"id":"n3-ni-tsurete","level":"n3","title":"〜につれて","meaning":"as / along with","formation":"Verb (dictionary) + につれて<br>Noun + につれて<br>Example: 時間が経つにつれて (as time passes)","usage":"Describes proportional change — as one thing changes, another changes accordingly. Similar to 〜に従って but more focused on natural, unavoidable change.","examples":[
+    {"japanese":"時間が経つにつれて、悲しみが薄れていった。","reading":"じかんがたつにつれて、かなしみがうすれていった。","english":"As time passed, the sadness faded."},
+    {"japanese":"練習するにつれて、上手になります。","reading":"れんしゅうするにつれて、じょうずになります。","english":"As you practice, you'll get better."},
+    {"japanese":"経済が発展するにつれて、環境問題が深刻になった。","reading":"けいざいがはってんするにつれて、かんきょうもんだいがしんこくになった。","english":"As the economy developed, environmental problems became serious."},
+    {"japanese":"暗くなるにつれて、星が見えてきた。","reading":"くらくなるにつれて、ほしがみえてきた。","english":"As it got dark, the stars became visible."},
+    {"japanese":"話が進むにつれて、真相が明らかになった。","reading":"はなしがすすむにつれて、しんそうがあきらかになった。","english":"As the story progressed, the truth became clear."}],"related":["n3-ni-shitagatte","n3-ni-tomonatte"]},
+]
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_DIR = os.path.dirname(SCRIPT_DIR)
+FILE_PATH = os.path.join(PROJECT_DIR, 'src/data/grammar.json')
+
+with open(FILE_PATH, 'w', encoding='utf-8') as f:
+    json.dump(data, f, ensure_ascii=False, indent=2)
+
+print(f"Written {len(data)} grammar entries to {FILE_PATH}")

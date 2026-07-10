@@ -1,0 +1,60 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import type { Level } from "@/lib/kanji"
+import { levelMeta } from "@/lib/levels"
+import { collectionPageSchema, itemListSchema, breadcrumbSchema } from "@/lib/seo"
+import { getGrammar } from "@/lib/grammar"
+
+export interface Props {
+  level: Level
+}
+
+const { level } = Astro.props
+const meta = levelMeta(level)
+const prefix = `/${level}`
+
+const items = getGrammar(level)
+
+const title = `JLPT ${meta.label} Grammar List — ${items.length} Japanese Grammar Points`
+const description = `Free JLPT ${meta.label} grammar list with detailed explanations, formation rules, usage notes, and example sentences. Master Japanese grammar for kanji practice.`
+
+const listItems = items.map((g) => ({ name: `${g.title} — ${g.meaning}`, url: `${prefix}/grammar/${g.id}/` }))
+const pageSchema = collectionPageSchema(title, `Complete JLPT ${meta.label} grammar list with explanations and examples.`, `${prefix}/grammar`)
+const listSchema = itemListSchema(listItems)
+const breadSchema = breadcrumbSchema([
+  { name: "Home", url: "/" },
+  { name: meta.label, url: `${prefix}/` },
+  { name: "Grammar", url: `${prefix}/grammar/` },
+])
+---
+
+<DefaultLayout title={title} description={description} level={level}>
+  <script type="application/ld+json" set:html={JSON.stringify(pageSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(listSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadSchema)} />
+
+  <div class="px-4 py-6 sm:py-8">
+    <div class="mb-6 animate-fade-up">
+      <h1 class="text-xl sm:text-2xl font-black text-ink">JLPT {meta.label} Japanese Grammar</h1>
+      <p class="text-xs sm:text-sm text-ink/55 mt-1">{items.length} grammar points · {meta.tagline} · a–z order</p>
+    </div>
+
+    <div class="space-y-2">
+      {items.map((g, i) => (
+        <a
+          href={`${prefix}/grammar/${g.id}/`}
+          class="card card-hover group px-3 sm:px-5 py-2.5 sm:py-3 flex items-center gap-3 sm:gap-4 reveal"
+          style={`--reveal-delay: ${(i % 8) * 40}ms`}
+        >
+          <span class="flex-1 min-w-0">
+            <span class="text-base sm:text-lg font-bold text-ink leading-none group-hover:text-vermilion transition-colors">
+              {g.title}
+            </span>
+            <span class="block text-[11px] sm:text-xs text-ink/50 mt-1 truncate">{g.meaning}</span>
+          </span>
+          <span class="text-ink/25 shrink-0 text-sm transition-all duration-300 group-hover:text-vermilion group-hover:translate-x-0.5">&rarr;</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</DefaultLayout>

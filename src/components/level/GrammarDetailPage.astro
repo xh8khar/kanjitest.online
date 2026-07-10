@@ -1,0 +1,112 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import type { Level } from "@/lib/kanji"
+import { levelMeta } from "@/lib/levels"
+import { breadcrumbSchema, definedTermSchema } from "@/lib/seo"
+import { getGrammar } from "@/lib/grammar"
+
+export interface Props {
+  level: Level
+  id: string
+}
+
+const { level, id } = Astro.props
+const meta = levelMeta(level)
+const prefix = `/${level}`
+const allLevel = getGrammar(level)
+const idx = allLevel.findIndex((g) => g.id === id)
+const grammar = allLevel[idx]!
+const prev = idx > 0 ? allLevel[idx - 1] : null
+const next = idx < allLevel.length - 1 ? allLevel[idx + 1] : null
+
+const title = `${grammar.title} — JLPT ${meta.label} Grammar`
+const description = `${grammar.title} — ${grammar.meaning}. Formation, usage notes, and example sentences for JLPT ${meta.label}.`
+
+const termSchema = definedTermSchema(grammar.title, `${grammar.meaning} — ${grammar.usage}`, grammar.formation, meta.label)
+const breadSchema = breadcrumbSchema([
+  { name: "Home", url: "/" },
+  { name: meta.label, url: `${prefix}/` },
+  { name: "Grammar", url: `${prefix}/grammar/` },
+  { name: grammar.title, url: `${prefix}/grammar/${grammar.id}/` },
+])
+---
+
+<DefaultLayout title={title} description={description} level={level}>
+  <script type="application/ld+json" set:html={JSON.stringify(breadSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(termSchema)} />
+
+  <div class="px-4 py-6 sm:py-8">
+    <a href={`${prefix}/grammar/`} class="inline-flex items-center gap-1 text-xs text-ink/55 hover:text-vermilion transition-colors animate-fade-in">
+      &larr; All grammar
+    </a>
+
+    <div class="relative card overflow-hidden mt-4 animate-fade-up">
+      <div class={`absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r ${meta.gradient}`} />
+      <div class="px-4 sm:px-6 py-6 sm:py-7">
+        <h1 class="text-2xl sm:text-3xl font-black text-ink leading-tight animate-ink-in">{grammar.title}</h1>
+        <p class="text-sm text-ink/55 mt-1.5">{grammar.meaning}</p>
+
+        <div class="mt-6">
+          <p class="text-[11px] font-bold uppercase tracking-widest text-ink/40 mb-2">Formation</p>
+          <div class="rounded-xl bg-ink/[0.03] border border-ink/8 px-4 py-3">
+            <p class="text-sm text-ink font-jp leading-relaxed">{grammar.formation}</p>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <p class="text-[11px] font-bold uppercase tracking-widest text-ink/40 mb-2">Usage</p>
+          <p class="text-sm text-ink/75 leading-relaxed">{grammar.usage}</p>
+        </div>
+
+        {grammar.examples.length > 0 && (
+          <div class="mt-6">
+            <p class="text-[11px] font-bold uppercase tracking-widest text-ink/40 mb-2.5">Example sentences</p>
+            <div class="space-y-2.5">
+              {grammar.examples.map((s, i) => (
+                <div class="rounded-xl bg-ink/[0.03] border border-ink/8 px-4 py-3 reveal" style={`--reveal-delay: ${i * 80}ms`}>
+                  <p class="text-[13px] sm:text-sm text-ink font-jp leading-relaxed">{s.jp}</p>
+                  <p class="text-[11px] sm:text-xs text-ink/55 mt-1">{s.en}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {grammar.related.length > 0 && (
+          <div class="mt-6">
+            <p class="text-[11px] font-bold uppercase tracking-widest text-ink/40 mb-2.5">Related grammar</p>
+            <div class="flex flex-wrap gap-2">
+              {grammar.related.map((rid) => {
+                const relatedItem = allLevel.find((g) => g.id === rid)
+                if (!relatedItem) return null
+                return (
+                  <a
+                    href={`${prefix}/grammar/${rid}/`}
+                    class="px-3 py-1.5 rounded-lg border border-ink/10 bg-ink/[0.03] text-xs font-medium text-ink/70 hover:text-vermilion hover:border-vermilion/30 transition-all"
+                  >
+                    {relatedItem.title}
+                  </a>
+                )
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+
+    <div class="flex gap-2 mt-5">
+      {prev ? (
+        <a href={`${prefix}/grammar/${prev.id}/`} class="card card-hover group flex-1 h-13 flex items-center gap-2 px-4 text-sm text-ink/70">
+          <span class="text-ink/35 transition-transform duration-300 group-hover:-translate-x-1">&larr;</span>
+          <span class="font-bold text-ink truncate">{prev.title}</span>
+        </a>
+      ) : <div class="flex-1" />}
+      {next ? (
+        <a href={`${prefix}/grammar/${next.id}/`} class="card card-hover group flex-1 h-13 flex items-center justify-end gap-2 px-4 text-sm text-ink/70">
+          <span class="font-bold text-ink truncate">{next.title}</span>
+          <span class="text-ink/35 transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
+        </a>
+      ) : <div class="flex-1" />}
+    </div>
+  </div>
+</DefaultLayout>

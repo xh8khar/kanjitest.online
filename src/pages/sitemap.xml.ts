@@ -3,6 +3,7 @@ import { siteUrl } from "@/lib/seo"
 import { getAll, getVocabulary } from "@/lib/kanji"
 import { getCollection } from "astro:content"
 import { radicals, toSlug } from "@/lib/radicals"
+import { getAllGrammar } from "@/lib/grammar"
 
 export const GET: APIRoute = async () => {
   const BASE = siteUrl()
@@ -66,6 +67,7 @@ const entries: UrlEntry[] = [
     entries.push({ loc: `${BASE}/${level}/flashcards/`, priority: "0.8", changefreq: "weekly" })
     entries.push({ loc: `${BASE}/${level}/sets/`, priority: "0.8", changefreq: "weekly" })
     entries.push({ loc: `${BASE}/${level}/vocabulary/`, priority: "0.8", changefreq: "weekly" })
+    entries.push({ loc: `${BASE}/${level}/grammar/`, priority: "0.8", changefreq: "weekly" })
 
     for (const k of all) {
       entries.push({ loc: `${BASE}/${level}/study/${k.kanji}/`, priority: "0.7", changefreq: "monthly" })
@@ -79,6 +81,11 @@ const entries: UrlEntry[] = [
     const vocab = getVocabulary(level)
     for (const v of vocab) {
       entries.push({ loc: `${BASE}/${level}/vocabulary/${v.slug}/`, priority: "0.6", changefreq: "monthly" })
+    }
+
+    const levelGrammar = getAllGrammar().filter((g) => g.level === level)
+    for (const g of levelGrammar) {
+      entries.push({ loc: `${BASE}/${level}/grammar/${g.id}/`, priority: "0.6", changefreq: "monthly" })
     }
   }
 
