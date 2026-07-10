@@ -25,7 +25,12 @@ import ButtonGroup from "@/components/tools/ButtonGroup.astro"
       </div>
     </div>
     <div class="grid grid-cols-3 gap-3 mt-4" id="rt-stats">
-      {["Chars","Kanji","Time"].map(l=>`<div class="card p-4 text-center"><div class="text-2xl font-black text-ink" data-rt="${l.toLowerCase()}">0</div><div class="text-[11px] text-ink/50 mt-1 font-medium uppercase tracking-wider">${l}</div></div>`).join("")}
+      {["Chars", "Kanji", "Time"].map((label) => (
+        <div class="card p-4 text-center">
+          <div class="text-2xl font-black text-ink" data-rt={label.toLowerCase()}>0</div>
+          <div class="text-[11px] text-ink/50 mt-1 font-medium uppercase tracking-wider">{label}</div>
+        </div>
+      ))}
     </div>
   </div>
 </DefaultLayout>
