@@ -1,0 +1,594 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import { breadcrumbSchema } from "@/lib/seo"
+
+const breadSchema = breadcrumbSchema([
+  { name: "Home", url: "/" },
+  { name: "Learn", url: "/learn/" },
+  { name: "Particle Guide", url: "/learn/particle-guide/" },
+])
+
+const particles = [
+  {
+    id: "wa",
+    char: "は",
+    reading: "wa",
+    title: "Topic Marker",
+    summary: "Indicates what the sentence is about. The topic can be the subject, object, or any other element.",
+    rules: [
+      "Marks the topic of the sentence — the thing being talked about",
+      "Pronounced 'wa' despite being written は",
+      "Can replace が, を, or be added after に, で, へ, と",
+      "Often used for contrasts: は vs は",
+      "Cannot be used in embedded questions or with certain expressions of existence",
+    ],
+    examples: [
+      { jp: "私は学生です。", en: "I am a student (speaking about myself...)" },
+      { jp: "今日は天気がいいです。", en: "As for today, the weather is good." },
+      { jp: "犬は好きですが、猫は嫌いです。", en: "I like dogs, but I dislike cats (contrast)." },
+      { jp: "日本語は難しいですか？", en: "Is Japanese difficult?" },
+      { jp: "ここには人が多い。", en: "Here, there are many people." },
+    ],
+    mistake: "Using は to mark the subject in questions like 誰は来ますか — must use が for question words.",
+  },
+  {
+    id: "ga",
+    char: "が",
+    reading: "ga",
+    title: "Subject Marker",
+    summary: "Identifies the subject or introduces new information. Also used with certain verbs and adjectives.",
+    rules: [
+      "Marks the grammatical subject of the sentence",
+      "Introduces new information (who/what is doing something)",
+      "Used with question words: 誰が, 何が, どこが",
+      "Used with expressions of existence: いる, ある",
+      "Used with potential verbs: できる, 見える, 聞こえる",
+      "Marks the object of liking/disliking: 好き, 嫌い, 上手, 下手",
+      "Used in subordinate clauses where は cannot appear",
+    ],
+    examples: [
+      { jp: "猫が好きです。", en: "I like cats (ga marks what is liked)." },
+      { jp: "誰が来ましたか？", en: "Who came? (question word takes ga)." },
+      { jp: "机の上に本がある。", en: "There is a book on the desk (existence)." },
+      { jp: "私がやります。", en: "I'll do it (responding to 'who will do it?')." },
+      { jp: "日本語が話せます。", en: "I can speak Japanese (potential verb)." },
+    ],
+    mistake: "Using が for the topic in a sentence where は is needed. が introduces new info; は marks known/topic info.",
+  },
+  {
+    id: "o",
+    char: "を",
+    reading: "o",
+    title: "Object Marker",
+    summary: "Marks the direct object of a transitive verb. Also used with certain movement verbs.",
+    rules: [
+      "Marks the direct object receiving the action",
+      "Pronounced 'o' despite being written を",
+      "Used with transitive verbs: 食べる, 読む, 書く, 見る",
+      "Also used with some movement verbs: 道を歩く, 公園を散歩する",
+      "Can be omitted in casual speech when the object is clear",
+      "Never used with intransitive verbs",
+    ],
+    examples: [
+      { jp: "ご飯を食べます。", en: "I eat rice." },
+      { jp: "本を読んでいる。", en: "I'm reading a book." },
+      { jp: "日本語を勉強しています。", en: "I'm studying Japanese." },
+      { jp: "道を歩いてください。", en: "Please walk along the path." },
+      { jp: "窓を開けてもいいですか？", en: "May I open the window?" },
+    ],
+    mistake: "Using を with intransitive verbs like いる, ある, 行く (use に or が instead).",
+  },
+  {
+    id: "ni",
+    char: "に",
+    reading: "ni",
+    title: "Target / Time / Location",
+    summary: "A multipurpose particle indicating direction, time, location, indirect object, and more.",
+    rules: [
+      "Direction/target: marks the destination of movement (行く, 来る, 帰る)",
+      "Time: marks a specific point in time (3時に, 月曜日に)",
+      "Indirect object: marks the receiver of an action (あげる, くれる, もらう)",
+      "Location of existence: used with いる, ある for where something exists",
+      "Purpose: 〜に行く/来る (go/come in order to do something)",
+      "Frequency: 週に一回 (once per week)",
+      "Transformation: になる (become), にする (decide on)",
+    ],
+    examples: [
+      { jp: "学校に行きます。", en: "I go to school (destination)." },
+      { jp: "7時に起きます。", en: "I wake up at 7 o'clock (time)." },
+      { jp: "友達にプレゼントをあげた。", en: "I gave a present to my friend." },
+      { jp: "部屋に猫がいる。", en: "There is a cat in the room (existence)." },
+      { jp: "映画を見に行く。", en: "Go to watch a movie (purpose)." },
+      { jp: "先生になりたい。", en: "I want to become a teacher (transformation)." },
+    ],
+    mistake: "Confusing に and で for location. に = existence/static, で = action takes place.",
+  },
+  {
+    id: "de",
+    char: "で",
+    reading: "de",
+    title: "Location of Action / Means",
+    summary: "Marks where an action takes place, the means/method used, or the total amount.",
+    rules: [
+      "Location of action: marks where a dynamic action occurs (vs に for static existence)",
+      "Means/method: indicates the tool, language, or method used",
+      "Material: indicates what something is made of",
+      "Cause/reason: indicates the cause of an event",
+      "Total amount: marks the total for a group or sum (3人で, 全部で)",
+      "Scope: defines a range or boundary",
+    ],
+    examples: [
+      { jp: "図書館で勉強します。", en: "I study at the library (action location)." },
+      { jp: "電車で学校に行く。", en: "I go to school by train (means)." },
+      { jp: "この机は木でできている。", en: "This desk is made of wood (material)." },
+      { jp: "地震でビルが倒れた。", en: "The building collapsed due to the earthquake (cause)." },
+      { jp: "みんなで歌いましょう。", en: "Let's sing together (group)." },
+    ],
+    mistake: "Using で instead of に with いる/ある (existence requires に, not で).",
+  },
+  {
+    id: "e",
+    char: "へ",
+    reading: "e",
+    title: "Direction Marker",
+    summary: "Indicates direction toward a destination. More general than に, emphasizing the direction rather than arrival.",
+    rules: [
+      "Marks the direction of movement toward a destination",
+      "Pronounced 'e' despite being written へ",
+      "More general than に — emphasizes direction, not necessarily arrival",
+      "Can often be replaced by に, but へ sounds more abstract",
+      "Only used with movement verbs: 行く, 来る, 帰る",
+      "Common in letters and formal writing: 東京へ",
+    ],
+    examples: [
+      { jp: "日本へ行きます。", en: "I'm going to Japan (direction)." },
+      { jp: "友達の家へ行く。", en: "Going to my friend's house." },
+      { jp: "駅へ向かっています。", en: "I'm heading toward the station." },
+      { jp: "母への手紙を書いた。", en: "I wrote a letter to my mother (の form)." },
+      { jp: "どちらへ？", en: "Where are you headed?" },
+    ],
+    mistake: "Using へ with non-movement verbs (can't use へ with いる, ある, etc.).",
+  },
+  {
+    id: "to",
+    char: "と",
+    reading: "to",
+    title: "And / With / Quotation",
+    summary: "A versatile particle for listing, accompaniment, quotation, and conditional statements.",
+    rules: [
+      "And: lists nouns exhaustively (AとBとC)",
+      "With: indicates accompaniment (someone you do something with)",
+      "Quotation: marks quoted speech or thoughts (〜と言う, 〜と思う)",
+      "Conditional: 〜と = when/if (natural consequence)",
+      "Comparison: used in 〜と同じ (same as), 〜と違う (different from)",
+      "Onomatopoeia: 雨がざあざあと降る",
+    ],
+    examples: [
+      { jp: "本とペンを買った。", en: "I bought a book and a pen (listing)." },
+      { jp: "友達と映画を見た。", en: "I watched a movie with my friend." },
+      { jp: "「行こう」と言った。", en: "He said 'let's go' (quotation)." },
+      { jp: "春になると桜が咲く。", en: "When spring comes, cherry blossoms bloom (conditional)." },
+      { jp: "私と同じですか？", en: "Is it the same as mine? (comparison)." },
+    ],
+    mistake: "Using と for listing adjectives or verbs (use て-form or し instead).",
+  },
+  {
+    id: "no",
+    char: "の",
+    reading: "no",
+    title: "Possession / Noun Linker",
+    summary: "Links nouns together showing possession, attribution, or description. One of the most common particles.",
+    rules: [
+      "Possession: AのB = B of A, A's B",
+      "Attribution/description: 日本の車, 数学の本",
+      "Apposition: 友達の田中さん (Tanaka, who is a friend)",
+      "Nominalization: 〜の makes a clause into a noun (赤いのが欲しい)",
+      "Replaces が in relative clauses: 髪の長い人 (person whose hair is long)",
+      "Sentence ending: casual explanation or question (行くの？)",
+    ],
+    examples: [
+      { jp: "私の本です。", en: "This is my book (possession)." },
+      { jp: "日本の文化に興味がある。", en: "I'm interested in Japanese culture (attribution)." },
+      { jp: "これは大きいのが欲しい。", en: "I want the big one (nominalization)." },
+      { jp: "駅に行くのを忘れた。", en: "I forgot to go to the station." },
+      { jp: "何をしているの？", en: "What are you doing? (casual question)." },
+    ],
+    mistake: "Using の as a subject marker in main clauses (の is not ga — it replaces ga only in relative clauses).",
+  },
+  {
+    id: "kara",
+    char: "から",
+    reading: "kara",
+    title: "From / Because",
+    summary: "Marks the starting point in time/space or expresses a reason/cause.",
+    rules: [
+      "From (time/space): starting point of an action",
+      "From (person): receiving from someone (usually with もらう)",
+      "Because: gives a reason (sentence から result)",
+      "After: てから = after doing something",
+      "Made of: からできる/作られる (made from)",
+    ],
+    examples: [
+      { jp: "駅から歩いて5分です。", en: "It's a 5-minute walk from the station." },
+      { jp: "9時から仕事です。", en: "Work starts from 9 o'clock." },
+      { jp: "友達からプレゼントをもらった。", en: "I received a present from my friend." },
+      { jp: "疲れたから休みます。", en: "I'll rest because I'm tired." },
+      { jp: "日本から来ました。", en: "I came from Japan." },
+    ],
+    mistake: "Using から as 'from a person' with あげる (use に instead).",
+  },
+  {
+    id: "made",
+    char: "まで",
+    reading: "made",
+    title: "Until / Up To",
+    summary: "Marks the endpoint or limit in time or space. Often paired with から.",
+    rules: [
+      "Until (time): marks the end point of a continuous action",
+      "Up to (space): marks the physical limit",
+      "Even: used adverbially to mean 'even' (子供まで知っている)",
+      "Can be combined with から: から〜まで (from〜until〜)",
+      "までに = by (a deadline) — different from まで (continuously until)",
+    ],
+    examples: [
+      { jp: "6時まで働きます。", en: "I work until 6 o'clock (continuous)." },
+      { jp: "東京まで新幹線で行く。", en: "Go to Tokyo by Shinkansen." },
+      { jp: "子供まで知っている。", en: "Even children know that." },
+      { jp: "朝から晩まで働いた。", en: "I worked from morning until night." },
+      { jp: "金曜日までに宿題を出してください。", en: "Please submit homework by Friday." },
+    ],
+    mistake: "Confusing まで (until/up to) with までに (by/deadline). まで = continuous; までに = one-time.",
+  },
+  {
+    id: "yori",
+    char: "より",
+    reading: "yori",
+    title: "Than / From",
+    summary: "Marks the basis of comparison or a formal alternative to から.",
+    rules: [
+      "Comparison: AよりB = B is more than A (BのほうがAより)",
+      "Formal 'from': used in formal letters and announcements",
+      "Can be used with superlative: 〜の中で〜が一番〜",
+      "より is also used as an adverb meaning 'more' (もっと similar)",
+    ],
+    examples: [
+      { jp: "猫より犬のほうが好きです。", en: "I like dogs more than cats." },
+      { jp: "思ったより簡単だった。", en: "It was easier than I thought." },
+      { jp: "会議は10時より始まります。", en: "The meeting will begin at 10 o'clock (formal)." },
+      { jp: "日本より中国のほうが広い。", en: "China is bigger than Japan." },
+      { jp: "より良い方法を考えよう。", en: "Let's think of a better method." },
+    ],
+    mistake: "Forgetting のほうが in comparison: 猫より犬が好き is acceptable, but 猫より犬のほうが好き is more natural.",
+  },
+  {
+    id: "mo",
+    char: "も",
+    reading: "mo",
+    title: "Also / Even",
+    summary: "Indicates 'also', 'too', or 'even'. Replaces は, が, を in sentences.",
+    rules: [
+      "Also/too: Xも = X also / X too",
+      "Negative: Xも = X either (in negative sentences)",
+      "Even: with numbers = emphasis (一人もいない = not even one person)",
+      "Both/neither: XもYも = both X and Y / neither X nor Y",
+      "Replaces は, が, を (but adds after に, で, へ, と)",
+      "〜ても = even if / even though",
+    ],
+    examples: [
+      { jp: "私も行きます。", en: "I will go too." },
+      { jp: "これもください。", en: "I'll also have this one." },
+      { jp: "一人も来なかった。", en: "Not even one person came." },
+      { jp: "英語も日本語も話せる。", en: "I can speak both English and Japanese." },
+      { jp: "雨が降っても行く。", en: "Even if it rains, I'll go." },
+    ],
+    mistake: "Using も with が/は (も replaces them — never 私はも or 私もが).",
+  },
+  {
+    id: "ne",
+    char: "ね",
+    reading: "ne",
+    title: "Softener / Agreement",
+    summary: "A sentence-final particle that softens statements, seeks agreement, or confirms shared knowledge.",
+    rules: [
+      "Softens statements so they sound less direct",
+      "Seeks agreement: 'right?', 'isn't it?', 'you know?'",
+      "Confirms shared information between speaker and listener",
+      "Softens requests and suggestions",
+      "Women tend to use it slightly more in polite speech",
+    ],
+    examples: [
+      { jp: "いい天気ですね。", en: "Nice weather, isn't it?" },
+      { jp: "そうですね。", en: "Let me see / That's right." },
+      { jp: "難しいですね。", en: "It's difficult, isn't it?" },
+      { jp: "一緒に行きましょうね。", en: "Let's go together, okay?" },
+      { jp: "これ、おいしいね。", en: "This is yummy, right? (casual)." },
+    ],
+    mistake: "Overusing ね in formal/business settings where it may sound too familiar.",
+  },
+  {
+    id: "yo",
+    char: "よ",
+    reading: "yo",
+    title: "Emphasis / Assertion",
+    summary: "A sentence-final particle that adds emphasis, assertiveness, or new information.",
+    rules: [
+      "Adds emphasis to a statement (I'm telling you)",
+      "Presents new information the listener doesn't know",
+      "Makes commands sound stronger or more determined",
+      "Softer than a direct command but still assertive",
+      "Can combine with ね → よね (seeking confirmation with emphasis)",
+    ],
+    examples: [
+      { jp: "忘れ物ですよ。", en: "You forgot something!" },
+      { jp: "これは便利ですよ。", en: "This is really convenient, you know." },
+      { jp: "できるよ！", en: "You can do it! (encouraging)." },
+      { jp: "間に合いますよ。", en: "We'll make it in time, I'm telling you." },
+      { jp: "知ってるよね？", en: "You know that, right? (よね combination)." },
+    ],
+    mistake: "Using よ in formal writing or with superiors — can sound too assertive or presumptuous.",
+  },
+  {
+    id: "ka",
+    char: "か",
+    reading: "ka",
+    title: "Question / Or",
+    summary: "Marks a question. Also used between nouns to mean 'or'.",
+    rules: [
+      "Question marker: placed at the end of a sentence to form a question",
+      "Polite questions: use ですか, ますか",
+      "Casual questions: drop か and use rising intonation (or add の？)",
+      "Or: AかB = A or B",
+      "Whether: 〜かどうか = whether or not",
+      "Embedded questions: どこに行くか知っていますか？",
+    ],
+    examples: [
+      { jp: "お元気ですか？", en: "How are you?" },
+      { jp: "コーヒーか紅茶をください。", en: "Please give me coffee or tea." },
+      { jp: "行くかどうか決めていない。", en: "I haven't decided whether to go or not." },
+      { jp: "どこにいるか教えてください。", en: "Please tell me where you are." },
+      { jp: "これ、美味しい？", en: "Is this tasty? (casual, no か)." },
+    ],
+    mistake: "Using both か and ですか together (redundant — ますか already includes question).",
+  },
+]
+
+const waVsGa = [
+  { usage: "Topic (known info)", wa: "私は学生です (I am a student — as for me)", ga: "私が学生です (I am the student — identifying)" },
+  { usage: "Question words", wa: "❌ 誰は (never used)", ga: "誰が来ますか (who is coming?)" },
+  { usage: "Answer to question", wa: "❌ 私は (incomplete)", ga: "私が来ました (I came — the one who did it)" },
+  { usage: "Negative scope", wa: "日本に行かない (won't go to Japan — は can widen scope)", ga: "❌ (not used for neg scope)" },
+  { usage: "Subordinate clause", wa: "❌ (は cannot be in embedded clause)", ga: "彼が買った本 (the book he bought)" },
+  { usage: "Existence", wa: "❌", ga: "猫がいる (there is a cat)" },
+  { usage: "Contrast", wa: "酒は飲むが、タバコは吸わない (drink sake but don't smoke)", ga: "❌" },
+  { usage: "Potential / ability", wa: "❌", ga: "日本語ができる (can do Japanese)" },
+  { usage: "Like / dislike", wa: "❌", ga: "納豆が嫌い (hate natto)" },
+  { usage: "Natural phenomenon", wa: "雪は降っている (talking about snow)", ga: "雪が降っている (snow is falling — neutral)" },
+]
+
+const niVsDe = [
+  { usage: "Location", ni: "部屋にいる (exist in room — static)", de: "部屋で寝る (sleep in room — action)" },
+  { usage: "Destination", ni: "学校に行く (go to school)", de: "❌" },
+  { usage: "Time", ni: "3時に会う (meet at 3)", de: "❌" },
+  { usage: "Means/tool", ni: "❌", de: "電車で行く (go by train)" },
+  { usage: "Group action", ni: "❌", de: "みんなで歌う (sing together)" },
+  { usage: "Indirect object", ni: "友達にあげる (give to friend)", de: "❌" },
+  { usage: "Cause", ni: "❌", de: "風邪で休む (absent due to cold)" },
+  { usage: "Material", ni: "❌", de: "木で作る (made of wood)" },
+  { usage: "Transformation", ni: "先生になる (become teacher)", de: "❌" },
+  { usage: "Frequency/rate", ni: "週に三回 (three times a week)", de: "❌" },
+]
+---
+
+<DefaultLayout
+  title="Japanese Particle Guide — Wa, Ga, O, Ni, De, E, To — KanjiTest.Online"
+  description="Complete guide to Japanese particles with detailed usage rules, example sentences, comparison tables for wa vs ga and ni vs de, and common mistakes."
+  keywords="Japanese particles, wa vs ga, Japanese grammar, particle guide, Japanese wa ga, Japanese ni de, Japanese particle comparison, JLPT grammar, Japanese language learning"
+>
+  <script type="application/ld+json" set:html={JSON.stringify(breadSchema)} />
+
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-10 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink tracking-tight">Japanese Particle Guide</h1>
+      <p class="text-sm text-ink/60 mt-3 max-w-xl mx-auto leading-relaxed">
+        Particles are the grammatical glue of Japanese — small words that mark the role of each noun in a sentence.
+        Master these 14 essential particles and you unlock the structure of the language.
+      </p>
+    </div>
+
+    <div class="card overflow-hidden mb-10 animate-fade-up" style="animation-delay: 40ms">
+      <div class="px-5 py-3 bg-ink/[0.03] border-b border-ink/5">
+        <h2 class="text-sm font-bold text-ink">Quick Reference</h2>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-ink/5 text-xs text-ink/40 uppercase tracking-widest">
+              <th class="text-left px-5 py-2.5 font-medium">Particle</th>
+              <th class="text-left px-5 py-2.5 font-medium">Reading</th>
+              <th class="text-left px-5 py-2.5 font-medium">Primary Function</th>
+            </tr>
+          </thead>
+          <tbody>
+            {particles.map((p) => (
+              <tr class="border-b border-ink/5 last:border-0 hover:bg-ink/[0.02] transition-colors">
+                <td class="px-5 py-2.5">
+                  <a href={`#${p.id}`} class="font-jp font-bold text-ink text-lg hover:text-vermilion transition-colors">{p.char}</a>
+                </td>
+                <td class="px-5 py-2.5 text-ink/50 font-mono">{p.reading}</td>
+                <td class="px-5 py-2.5 text-ink/70">{p.title}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="space-y-8">
+      {particles.map((p, si) => (
+        <section id={p.id} class="card overflow-hidden animate-fade-up scroll-mt-16" style={`animation-delay: ${si * 60}ms`}>
+          <div class="px-5 sm:px-6 pt-5 sm:pt-6 pb-4">
+            <div class="flex items-baseline gap-3 mb-3">
+              <span class="text-3xl font-jp font-black text-ink leading-none">{p.char}</span>
+              <span class="text-sm font-mono text-ink/40">{p.reading}</span>
+              <span class="text-xs text-ink/50 font-medium">— {p.title}</span>
+            </div>
+            <p class="text-sm text-ink/70 leading-relaxed">{p.summary}</p>
+
+            <div class="mt-4">
+              <h3 class="text-[11px] font-bold uppercase tracking-widest text-ink/40 mb-2">Usage Rules</h3>
+              <ul class="space-y-1">
+                {p.rules.map((rule) => (
+                  <li class="text-[13px] text-ink/65 flex items-start gap-2">
+                    <span class="text-vermilion/60 mt-0.5 shrink-0">•</span>
+                    <span>{rule}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div class="mt-4">
+              <h3 class="text-[11px] font-bold uppercase tracking-widest text-ink/40 mb-2">Examples</h3>
+              <div class="space-y-2">
+                {p.examples.map((ex) => (
+                  <div class="rounded-lg bg-ink/[0.03] px-4 py-2.5">
+                    <p class="text-sm text-ink font-jp">{ex.jp}</p>
+                    <p class="text-[12px] text-ink/55 mt-0.5">{ex.en}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div class="mt-4 rounded-lg bg-amber-50 border border-amber-200/70 px-4 py-3">
+              <p class="text-[11px] font-bold uppercase tracking-widest text-amber-700">Common Mistake</p>
+              <p class="text-[13px] text-amber-800/80 mt-1">{p.mistake}</p>
+            </div>
+          </div>
+        </section>
+      ))}
+    </div>
+
+    <section class="card overflow-hidden mt-8 animate-fade-up" style="animation-delay: 800ms">
+      <div class="px-5 sm:px-6 pt-5 sm:pt-6 pb-4">
+        <h2 class="text-base font-black text-ink mb-1">は vs が — The Ultimate Comparison</h2>
+        <p class="text-sm text-ink/60 leading-relaxed">
+          The most debated topic in Japanese grammar. The simple rule: は marks the <strong>topic</strong>
+          (what you're talking about), while が marks the <strong>subject</strong> (who/what does the action).
+        </p>
+        <div class="overflow-x-auto mt-4">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-ink/10 text-xs text-ink/40 uppercase tracking-widest">
+                <th class="text-left px-3 py-2 font-medium">Usage</th>
+                <th class="text-left px-3 py-2 font-medium">は</th>
+                <th class="text-left px-3 py-2 font-medium">が</th>
+              </tr>
+            </thead>
+            <tbody>
+              {waVsGa.map((row) => (
+                <tr class="border-b border-ink/5 last:border-0 hover:bg-ink/[0.02] transition-colors">
+                  <td class="px-3 py-2.5 text-ink/70 font-medium whitespace-nowrap align-top">{row.usage}</td>
+                  <td class="px-3 py-2.5 text-ink/60 text-[13px] leading-relaxed align-top">{row.wa}</td>
+                  <td class="px-3 py-2.5 text-ink/60 text-[13px] leading-relaxed align-top">{row.ga}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="card overflow-hidden mt-6 animate-fade-up" style="animation-delay: 850ms">
+      <div class="px-5 sm:px-6 pt-5 sm:pt-6 pb-4">
+        <h2 class="text-base font-black text-ink mb-1">に vs で — Location Showdown</h2>
+        <p class="text-sm text-ink/60 leading-relaxed">
+          Both can mark location, but they are not interchangeable. に = <strong>static location</strong>
+          (existence, destination, time). で = <strong>dynamic location</strong> (where action happens, means, cause).
+        </p>
+        <div class="overflow-x-auto mt-4">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-ink/10 text-xs text-ink/40 uppercase tracking-widest">
+                <th class="text-left px-3 py-2 font-medium">Usage</th>
+                <th class="text-left px-3 py-2 font-medium">に</th>
+                <th class="text-left px-3 py-2 font-medium">で</th>
+              </tr>
+            </thead>
+            <tbody>
+              {niVsDe.map((row) => (
+                <tr class="border-b border-ink/5 last:border-0 hover:bg-ink/[0.02] transition-colors">
+                  <td class="px-3 py-2.5 text-ink/70 font-medium whitespace-nowrap align-top">{row.usage}</td>
+                  <td class="px-3 py-2.5 text-ink/60 text-[13px] leading-relaxed align-top">{row.ni}</td>
+                  <td class="px-3 py-2.5 text-ink/60 text-[13px] leading-relaxed align-top">{row.de}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="card overflow-hidden mt-6 animate-fade-up" style="animation-delay: 900ms">
+      <div class="px-5 sm:px-6 pt-5 sm:pt-6 pb-4">
+        <h2 class="text-base font-black text-ink mb-3">Combined Particles</h2>
+        <p class="text-sm text-ink/60 leading-relaxed mb-4">
+          Particles can stack, with the important rule that は, が, を are replaced but others combine:
+        </p>
+        <div class="space-y-3">
+          <div class="rounded-lg bg-ink/[0.03] px-4 py-3">
+            <p class="text-sm font-bold text-ink font-jp mb-1">には / では / へは / とは</p>
+            <p class="text-[13px] text-ink/60">Particle + は for contrastive topic. E.g., 日本<strong>には</strong>行くが、アメリカ<strong>には</strong>行かない.</p>
+          </div>
+          <div class="rounded-lg bg-ink/[0.03] px-4 py-3">
+            <p class="text-sm font-bold text-ink font-jp mb-1">でも / にも / へも</p>
+            <p class="text-[13px] text-ink/60">Particle + も = also/even. E.g., 東京<strong>でも</strong>大阪<strong>でも</strong>行ける.</p>
+          </div>
+          <div class="rounded-lg bg-ink/[0.03] px-4 py-3">
+            <p class="text-sm font-bold text-ink font-jp mb-1">への / での / との</p>
+            <p class="text-[13px] text-ink/60">Particle + の to modify nouns. E.g., 母<strong>への</strong>手紙, 東京<strong>での</strong>仕事.</p>
+          </div>
+          <div class="rounded-lg bg-ink/[0.03] px-4 py-3">
+            <p class="text-sm font-bold text-ink font-jp mb-1">だけ / しか + particles</p>
+            <p class="text-[13px] text-ink/60">Quantifiers combine after particles: 日本<strong>にだけ</strong> (only in Japan), これ<strong>でしか</strong> (only with this).</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card overflow-hidden mt-6 animate-fade-up" style="animation-delay: 950ms">
+      <div class="px-5 sm:px-6 pt-5 sm:pt-6 pb-4">
+        <h2 class="text-base font-black text-ink mb-3">Particle Omission in Casual Speech</h2>
+        <p class="text-sm text-ink/60 leading-relaxed">
+          In casual conversation, particles (especially は, が, を) are often dropped when the meaning is clear from context.
+        </p>
+        <div class="mt-4 space-y-2">
+          <div class="rounded-lg bg-ink/[0.03] px-4 py-2.5">
+            <p class="text-sm text-ink font-jp">これ、食べる？</p>
+            <p class="text-[12px] text-ink/55">= これ<strong>を</strong>食べますか？</p>
+          </div>
+          <div class="rounded-lg bg-ink/[0.03] px-4 py-2.5">
+            <p class="text-sm text-ink font-jp">今、どこ？</p>
+            <p class="text-[12px] text-ink/55">= 今<strong>は</strong>どこ<strong>に</strong>いますか？</p>
+          </div>
+          <div class="rounded-lg bg-ink/[0.03] px-4 py-2.5">
+            <p class="text-sm text-ink font-jp">それ、いいね！</p>
+            <p class="text-[12px] text-ink/55">= それ<strong>は</strong>いいですね！</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card overflow-hidden mt-6 animate-fade-up" style="animation-delay: 1000ms">
+      <div class="px-5 sm:px-6 pt-5 sm:pt-6 pb-4">
+        <h2 class="text-base font-black text-ink mb-3">Memory Tips</h2>
+        <ul class="space-y-2">
+          <li class="text-[13px] text-ink/70 flex items-start gap-2"><span class="text-vermilion font-bold shrink-0">1.</span><span><strong>は wa</strong> — spotlight on the <em>topic</em>.</span></li>
+          <li class="text-[13px] text-ink/70 flex items-start gap-2"><span class="text-vermilion font-bold shrink-0">2.</span><span><strong>が ga</strong> — finger pointing at the <em>subject</em>.</span></li>
+          <li class="text-[13px] text-ink/70 flex items-start gap-2"><span class="text-vermilion font-bold shrink-0">3.</span><span><strong>に ni</strong> = 'target' (time, place, person). Arrow → use に.</span></li>
+          <li class="text-[13px] text-ink/70 flex items-start gap-2"><span class="text-vermilion font-bold shrink-0">4.</span><span><strong>で de</strong> = 'at/in/with' for active action.</span></li>
+          <li class="text-[13px] text-ink/70 flex items-start gap-2"><span class="text-vermilion font-bold shrink-0">5.</span><span><strong>を o</strong> = direct object receiving the action.</span></li>
+          <li class="text-[13px] text-ink/70 flex items-start gap-2"><span class="text-vermilion font-bold shrink-0">6.</span><span><strong>の no</strong> = the connector (like upside-down 'of').</span></li>
+        </ul>
+      </div>
+    </section>
+  </div>
+</DefaultLayout>
