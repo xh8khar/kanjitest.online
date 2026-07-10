@@ -207,6 +207,7 @@ html.js .reveal.is-visible {
     gap: 0.5rem;
     font-weight: 700;
     border-radius: 0.875rem;
+    white-space: nowrap;
     will-change: transform;
     transition:
       transform 0.12s var(--ease-out-expo),

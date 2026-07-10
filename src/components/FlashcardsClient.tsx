@@ -189,7 +189,7 @@ export default function FlashcardsClient({ level, entry: initialEntry, startInde
   return (
     <div className="max-w-xl mx-auto px-4 py-6 sm:py-8">
       {/* Header */}
-      <div className="flex items-center justify-between mb-5 animate-fade-up">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-5 animate-fade-up">
         <div className="flex items-center gap-3">
           <div>
             <h1 className="text-xl font-black text-ink">Flashcards</h1>

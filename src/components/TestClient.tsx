@@ -293,7 +293,7 @@ export default function TestClient({ level, setNum, questions }: Props) {
   return (
     <div className="max-w-xl mx-auto px-4 py-6 sm:py-8">
       {/* Header + segmented progress */}
-      <div className="flex items-center justify-between mb-4 animate-fade-up">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-4 animate-fade-up">
         <div>
           <h1 className="text-xl font-black text-ink">Set {setNum}</h1>
           <p className="text-xs text-ink/55 mt-0.5">

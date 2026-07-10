@@ -22,12 +22,12 @@ const pageSchema = collectionPageSchema(title, `All ${all.length} JLPT ${meta.la
 <DefaultLayout title={title} description={description} level={level}>
   <script type="application/ld+json" set:html={JSON.stringify(pageSchema)} />
   <div class="px-4 py-6 sm:py-8">
-    <div class="flex items-end justify-between mb-6 animate-fade-up">
-      <div>
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between mb-6 animate-fade-up">
+      <div class="min-w-0">
         <h1 class="text-xl sm:text-2xl font-black text-ink">JLPT {meta.label} Kanji Flashcards</h1>
         <p class="text-xs sm:text-sm text-ink/55 mt-1">{all.length.toLocaleString()} cards · {meta.tagline}</p>
       </div>
-      <a href={`${prefix}/flashcards/${all[0]?.kanji}/`} class="btn btn-accent h-10 px-4 text-xs sm:text-sm">
+      <a href={`${prefix}/flashcards/${all[0]?.kanji}/`} class="btn btn-accent h-11 sm:h-10 px-5 text-sm shrink-0 self-start sm:self-auto">
         ▶ Start from card 1
       </a>
     </div>
