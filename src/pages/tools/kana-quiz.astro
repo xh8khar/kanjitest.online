@@ -11,23 +11,22 @@ import ButtonGroup from "@/components/tools/ButtonGroup.astro"
     </div>
 
     <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay: 80ms">
-      <div class="flex flex-wrap justify-center gap-2 mb-6">
+      <div class="flex flex-wrap justify-center gap-2 mb-4">
         <ButtonGroup classPrefix="q-mode" dataAttr="data-mode" buttons={["Hiragana", "Katakana", "Both"]} />
+      </div>
+
+      <div class="flex items-center justify-between text-xs text-ink/40 mb-3">
+        <span id="q-date"></span>
+        <span id="q-score">0 correct</span>
       </div>
 
       <div id="quiz-area" class="text-center">
         <div id="q-char" class="text-6xl sm:text-7xl font-jp font-black text-ink min-h-[5rem] leading-none flex items-center justify-center">あ</div>
-        <div id="q-romaji" class="text-lg sm:text-xl font-bold text-ink/60 mt-4 min-h-[2rem]"></div>
+        <div id="q-reading" class="text-xs text-ink/50 mt-2">What is the reading?</div>
+        <div id="q-romaji" class="text-lg sm:text-xl font-bold text-ink/60 mt-2 min-h-[2rem]"></div>
 
-        <div id="q-options" class="flex flex-wrap justify-center gap-2 mt-6"></div>
-
-        <div id="q-result" class="mt-4 text-sm font-bold" hidden></div>
-
-        <div class="flex items-center justify-center gap-4 mt-6 text-xs text-ink/40">
-          <span id="q-score">0 correct</span>
-          <span>·</span>
-          <span id="q-count">0 answered</span>
-        </div>
+        <div id="q-options" class="grid grid-cols-2 gap-2 mt-5 max-w-sm mx-auto"></div>
+        <div id="q-result" class="mt-3 text-sm font-bold" hidden></div>
       </div>
     </div>
   </div>
@@ -99,24 +98,29 @@ import ButtonGroup from "@/components/tools/ButtonGroup.astro"
   }
 
   const allKana = [...KANA.gojuon, ...KANA.dakuon, ...KANA.handakuon, ...KANA.youon]
-
   let mode = "hiragana"
   let correct = 0
   let answered = 0
   let current: typeof allKana[0] | null = null
   let showingAnswer = false
 
+  const dateEl = document.getElementById("q-date")!
   const charEl = document.getElementById("q-char")!
   const romajiEl = document.getElementById("q-romaji")!
   const optionsEl = document.getElementById("q-options")!
   const resultEl = document.getElementById("q-result")!
   const scoreEl = document.getElementById("q-score")!
-  const countEl = document.getElementById("q-count")!
+
+  dateEl.textContent = new Date().toISOString().slice(0, 10)
 
   function getPool() {
     if (mode === "hiragana") return allKana.map(k => ({ char: k.hira, answer: k.roma }))
     if (mode === "katakana") return allKana.map(k => ({ char: k.kata, answer: k.roma }))
     return allKana.flatMap(k => [{ char: k.hira, answer: k.roma }, { char: k.kata, answer: k.roma }])
+  }
+
+  function shuffle<T>(a: T[]): T[] {
+    const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]] }; return b
   }
 
   function next() {
@@ -128,11 +132,14 @@ import ButtonGroup from "@/components/tools/ButtonGroup.astro"
     romajiEl.textContent = "?"
 
     const wrongPool = pool.filter(p => p.answer !== current.answer)
-    const wrong = wrongPool.sort(() => Math.random() - 0.5).slice(0, 3).map(p => p.answer)
-    const answers = [current.answer, ...wrong].sort(() => Math.random() - 0.5)
+    const wrong = shuffle(wrongPool).slice(0, 3).map(p => p.answer)
+    const answers = shuffle([current.answer, ...wrong])
 
-    optionsEl.innerHTML = answers.map(a =>
-      `<button class="opt-btn btn h-10 px-4 text-sm rounded-xl">${a}</button>`
+    optionsEl.innerHTML = answers.map((a, oi) =>
+      `<button class="opt-btn relative w-full min-h-[48px] rounded-xl border border-ink/12 bg-white px-4 flex items-center gap-3 text-left transition-all duration-200 hover:border-ink/35 hover:-translate-y-0.5 hover:shadow-md hover:shadow-ink/5 active:scale-[0.98] cursor-pointer">
+        <span class="w-6 h-6 rounded-md text-[11px] font-bold flex items-center justify-center shrink-0 bg-ink/5 text-ink/45">${oi + 1}</span>
+        <span class="text-sm sm:text-base">${a}</span>
+      </button>`
     ).join("")
 
     optionsEl.querySelectorAll(".opt-btn").forEach(btn => {
@@ -140,14 +147,32 @@ import ButtonGroup from "@/components/tools/ButtonGroup.astro"
         if (showingAnswer) return
         showingAnswer = true
         answered++
-        const isCorrect = (btn as HTMLElement).textContent === current!.answer
+        const selected = (btn as HTMLElement).textContent?.trim()
+        const isCorrect = selected === current!.answer
         if (isCorrect) correct++
+        scoreEl.textContent = `${correct} correct`
+
+        optionsEl.querySelectorAll(".opt-btn").forEach((b, oi) => {
+          const txt = b.textContent?.trim()
+          const span = b.querySelector("span")!
+          if (txt === current!.answer) {
+            (b as HTMLElement).className = "opt-btn relative w-full min-h-[48px] rounded-xl border border-emerald-500 bg-emerald-500/10 px-4 flex items-center gap-3 text-left font-bold animate-pop"
+            span.className = "w-6 h-6 rounded-md text-[11px] font-bold flex items-center justify-center shrink-0 bg-emerald-500 text-white"
+            span.textContent = "✓"
+          } else if (txt === selected && !isCorrect) {
+            (b as HTMLElement).className = "opt-btn relative w-full min-h-[48px] rounded-xl border border-vermilion bg-vermilion/5 px-4 flex items-center gap-3 text-left text-ink/70 animate-shake"
+            span.className = "w-6 h-6 rounded-md text-[11px] font-bold flex items-center justify-center shrink-0 bg-vermilion text-white"
+            span.textContent = "✕"
+          } else {
+            (b as HTMLElement).className = "opt-btn relative w-full min-h-[48px] rounded-xl border border-ink/8 opacity-45 px-4 flex items-center gap-3 text-left"
+            span.className = "w-6 h-6 rounded-md text-[11px] font-bold flex items-center justify-center shrink-0 bg-ink/5 text-ink/45"
+          }
+        })
+
         resultEl.hidden = false
         resultEl.textContent = isCorrect ? "✓ Correct!" : `✗ ${current!.answer}`
         resultEl.style.color = isCorrect ? "var(--color-emerald, #10b981)" : "var(--color-vermilion)"
         romajiEl.textContent = current!.answer
-        scoreEl.textContent = `${correct} correct`
-        countEl.textContent = `${answered} answered`
         setTimeout(next, 1200)
       })
     })
@@ -160,7 +185,6 @@ import ButtonGroup from "@/components/tools/ButtonGroup.astro"
       mode = (btn as HTMLElement).dataset.mode!
       correct = 0; answered = 0
       scoreEl.textContent = "0 correct"
-      countEl.textContent = "0 answered"
       next()
     })
   })

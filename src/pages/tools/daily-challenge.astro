@@ -10,36 +10,41 @@ import ButtonGroup from "@/components/tools/ButtonGroup.astro"
       <p class="text-sm text-ink/60 mt-2">A fresh set of 10 kanji questions every day. Can you ace today's challenge?</p>
     </div>
 
-    <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay:80ms">
-      <div class="flex flex-wrap items-center justify-center gap-3 mb-5">
-        <div class="flex flex-wrap justify-center gap-1.5">
-          <ButtonGroup classPrefix="dc-lvl" buttons={["All","N5","N4","N3","N2","N1"]} />
-        </div>
-        <span id="dc-date" class="text-xs text-ink/40 font-medium"></span>
+    <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay: 80ms">
+      <div class="flex flex-wrap justify-center gap-2 mb-4">
+        <ButtonGroup classPrefix="dc-lvl" buttons={["All","N5","N4","N3","N2","N1"]} />
       </div>
 
-      <div class="flex items-center justify-between mb-3 text-xs text-ink/40">
-        <span id="dc-progress">Question 1 of 10</span>
+      <div class="flex items-center justify-between text-xs text-ink/40 mb-3">
+        <span id="dc-date"></span>
         <span id="dc-score">0 correct</span>
       </div>
+
+      <div id="dc-progress-bar" class="flex gap-1 mb-4" aria-hidden="true"></div>
 
       <div id="dc-question" class="text-center">
         <div id="dc-prompt-type" class="text-[11px] text-ink/40 font-medium uppercase tracking-wider mb-1"></div>
         <div id="dc-prompt" class="text-2xl sm:text-3xl font-jp font-bold text-ink min-h-[3rem]">—</div>
         <div id="dc-hint" class="text-xs text-ink/50 mt-1"></div>
-        <div id="dc-options" class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-5 max-w-sm mx-auto"></div>
+        <div id="dc-options" class="grid grid-cols-2 gap-2 mt-5 max-w-sm mx-auto"></div>
         <div id="dc-feedback" class="mt-3 text-sm font-bold" hidden></div>
       </div>
 
       <div class="flex justify-center mt-4">
-        <button id="dc-next" class="btn btn-accent h-10 px-5 text-sm">Next →</button>
+        <button id="dc-next" class="btn btn-accent h-10 px-5 text-sm" hidden>Next →</button>
       </div>
 
       <div id="dc-results" class="text-center" hidden>
-        <div class="text-4xl mb-2">🏆</div>
-        <div class="text-xl font-black text-ink">Daily Challenge Complete!</div>
-        <div id="dc-final-score" class="text-sm text-ink/60 mt-1"></div>
-        <button id="dc-reset" class="btn btn-accent h-10 px-5 text-sm mt-4">Start New Challenge</button>
+        <div class="relative w-32 h-32 mx-auto" id="dc-score-ring">
+          <svg viewBox="0 0 100 100" class="w-full h-full -rotate-90">
+            <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="8" class="text-ink/8" />
+            <circle id="dc-ring" cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-dasharray="283" stroke-dashoffset="283" class="text-emerald-500" style="transition: stroke-dashoffset 1.2s cubic-bezier(0.16, 1, 0.3, 1)" />
+          </svg>
+          <span id="dc-pct" class="absolute inset-0 flex items-center justify-center text-2xl font-black text-ink tabular-nums">0%</span>
+        </div>
+        <div class="text-lg font-black text-ink mt-4 animate-pop" style="animation-delay: 300ms" id="dc-final-score"></div>
+        <div class="text-sm text-ink/60 mt-1" id="dc-message"></div>
+        <button id="dc-reset" class="btn btn-ghost h-12 text-sm mt-5">↻ New Challenge</button>
       </div>
     </div>
   </div>
@@ -53,8 +58,8 @@ import ButtonGroup from "@/components/tools/ButtonGroup.astro"
   let qIndex = 0, correct = 0, answered = false
 
   const dateEl = document.getElementById("dc-date")!
-  const progressEl = document.getElementById("dc-progress")!
   const scoreEl = document.getElementById("dc-score")!
+  const progressBarEl = document.getElementById("dc-progress-bar")!
   const promptEl = document.getElementById("dc-prompt")!
   const promptTypeEl = document.getElementById("dc-prompt-type")!
   const hintEl = document.getElementById("dc-hint")!
@@ -63,7 +68,10 @@ import ButtonGroup from "@/components/tools/ButtonGroup.astro"
   const questionEl = document.getElementById("dc-question")!
   const resultsEl = document.getElementById("dc-results")!
   const finalScoreEl = document.getElementById("dc-final-score")!
+  const messageEl = document.getElementById("dc-message")!
   const nextBtn = document.getElementById("dc-next") as HTMLButtonElement
+  const ringEl = document.getElementById("dc-ring")!
+  const pctEl = document.getElementById("dc-pct")!
 
   const today = new Date().toISOString().slice(0, 10)
   dateEl.textContent = today
@@ -107,37 +115,79 @@ import ButtonGroup from "@/components/tools/ButtonGroup.astro"
     })
 
     qIndex = 0; correct = 0
-    questionEl.hidden = false; resultsEl.hidden = true
-    nextBtn.hidden = false
+    questionEl.hidden = false; resultsEl.hidden = true; nextBtn.hidden = false
+    scoreEl.textContent = "0 correct"
+    updateProgress()
     showQuestion()
   }
 
+  function updateProgress() {
+    progressBarEl.innerHTML = questions.map((_, i) =>
+      `<span class="h-1.5 flex-1 rounded-full transition-all duration-300 ${i === qIndex ? "bg-ink scale-y-[1.4]" : i < qIndex ? "bg-emerald-500" : "bg-ink/10"}" />`
+    ).join("")
+  }
+
   function showQuestion() {
-    answered = false; feedbackEl.hidden = true
+    answered = false; feedbackEl.hidden = true; nextBtn.hidden = true
     const q = questions[qIndex]
     promptTypeEl.textContent = q.promptType
     promptEl.textContent = q.prompt
     hintEl.textContent = q.hint
-    progressEl.textContent = `Question ${qIndex + 1} of ${questions.length}`
     scoreEl.textContent = `${correct} correct`
-    optionsEl.innerHTML = q.options.map(o => `<button class="dc-opt btn h-11 text-sm rounded-xl">${o}</button>`).join("")
-    optionsEl.querySelectorAll(".dc-opt").forEach(b => b.addEventListener("click", function() {
-      if (answered) return; answered = true
-      const ok = (this as HTMLElement).textContent === q.correct
-      if (ok) correct++
-      feedbackEl.hidden = false
-      feedbackEl.textContent = ok ? "✓ Correct!" : `✗ ${q.correct}`
-      feedbackEl.style.color = ok ? "#10b981" : "var(--color-vermilion)"
-      scoreEl.textContent = `${correct} correct`
-    }))
+    updateProgress()
+
+    optionsEl.innerHTML = q.options.map((o, oi) =>
+      `<button class="dc-opt relative w-full min-h-[48px] rounded-xl border border-ink/12 bg-white px-4 flex items-center gap-3 text-left transition-all duration-200 hover:border-ink/35 hover:-translate-y-0.5 hover:shadow-md hover:shadow-ink/5 active:scale-[0.98] cursor-pointer">
+        <span class="w-6 h-6 rounded-md text-[11px] font-bold flex items-center justify-center shrink-0 bg-ink/5 text-ink/45">${oi + 1}</span>
+        <span class="text-sm sm:text-base">${o}</span>
+      </button>`
+    ).join("")
+
+    optionsEl.querySelectorAll(".dc-opt").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (answered) return; answered = true
+        const selected = (btn as HTMLElement).textContent?.trim()
+        const isCorrect = selected === q.correct
+        if (isCorrect) correct++
+        scoreEl.textContent = `${correct} correct`
+
+        optionsEl.querySelectorAll(".dc-opt").forEach((b, oi) => {
+          const txt = b.textContent?.trim()
+          const span = b.querySelector("span")!
+          if (txt === q.correct) {
+            (b as HTMLElement).className = "dc-opt relative w-full min-h-[48px] rounded-xl border border-emerald-500 bg-emerald-500/10 px-4 flex items-center gap-3 text-left font-bold animate-pop"
+            span.className = "w-6 h-6 rounded-md text-[11px] font-bold flex items-center justify-center shrink-0 bg-emerald-500 text-white"
+            span.textContent = "✓"
+          } else if (txt === selected && !isCorrect) {
+            (b as HTMLElement).className = "dc-opt relative w-full min-h-[48px] rounded-xl border border-vermilion bg-vermilion/5 px-4 flex items-center gap-3 text-left text-ink/70 animate-shake"
+            span.className = "w-6 h-6 rounded-md text-[11px] font-bold flex items-center justify-center shrink-0 bg-vermilion text-white"
+            span.textContent = "✕"
+          } else {
+            (b as HTMLElement).className = "dc-opt relative w-full min-h-[48px] rounded-xl border border-ink/8 opacity-45 px-4 flex items-center gap-3 text-left"
+            span.className = "w-6 h-6 rounded-md text-[11px] font-bold flex items-center justify-center shrink-0 bg-ink/5 text-ink/45"
+          }
+        })
+
+        feedbackEl.hidden = false
+        feedbackEl.textContent = isCorrect ? "✓ Correct!" : `✗ ${q.correct}`
+        feedbackEl.style.color = isCorrect ? "#10b981" : "var(--color-vermilion)"
+        nextBtn.hidden = false
+      })
+    })
   }
 
   nextBtn.onclick = () => {
     if (qIndex < questions.length - 1) { qIndex++; showQuestion() }
-    else {
-      questionEl.hidden = true; nextBtn.hidden = true; resultsEl.hidden = false
-      finalScoreEl.textContent = `You got ${correct} out of ${questions.length} correct!`
-    }
+    else showResults()
+  }
+
+  function showResults() {
+    questionEl.hidden = true; nextBtn.hidden = true; resultsEl.hidden = false
+    const pct = Math.round((correct / questions.length) * 100)
+    finalScoreEl.textContent = `${correct} / ${questions.length}`
+    messageEl.textContent = pct === 100 ? "Perfect score! 完璧です！" : pct >= 80 ? "Great job! すごい！" : pct >= 50 ? "Keep practicing! がんばって！" : "Review and try again — 一歩ずつ。"
+    pctEl.textContent = `${pct}%`
+    requestAnimationFrame(() => { ringEl.style.strokeDashoffset = `${283 - (283 * pct) / 100}` })
   }
 
   document.getElementById("dc-reset")!.onclick = () => {
@@ -145,10 +195,12 @@ import ButtonGroup from "@/components/tools/ButtonGroup.astro"
     generateChallenge()
   }
 
-  document.querySelectorAll(".dc-lvl").forEach(b => b.addEventListener("click", function() {
-    document.querySelectorAll(".dc-lvl").forEach(x => x.classList.remove("on"))
-    this.classList.add("on")
-    activeLvl = (this as HTMLElement).dataset.lvl!
-    generateChallenge()
-  }))
+  document.querySelectorAll(".dc-lvl").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".dc-lvl").forEach(b => b.classList.remove("on"))
+      btn.classList.add("on")
+      activeLvl = (btn as HTMLElement).dataset.lvl!
+      generateChallenge()
+    })
+  })
 </script>

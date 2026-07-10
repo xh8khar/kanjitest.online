@@ -8,40 +8,106 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
       <h1 class="text-3xl sm:text-4xl font-black text-ink">JLPT Countdown</h1>
       <p class="text-sm text-ink/60 mt-2">Days, hours, minutes until the next JLPT exam.</p>
     </div>
-    <div class="card p-6 sm:p-8 animate-fade-up text-center" style="animation-delay:80ms">
+
+    <div class="card p-6 sm:p-8 animate-fade-up text-center" style="animation-delay: 80ms">
       <div class="text-[11px] text-ink/40 font-medium uppercase tracking-wider mb-1">Next exam</div>
-      <div id="cd-date" class="text-sm font-bold text-ink/60 mb-4"></div>
-      <div class="flex justify-center gap-4 sm:gap-6">
-        {["Days","Hours","Minutes","Seconds"].map(l=>`<div class="text-center"><div class="cd-val text-3xl sm:text-4xl font-black text-ink tabular-nums" data-cd="${l.toLowerCase()}">0</div><div class="text-[10px] text-ink/40 font-medium uppercase tracking-wider mt-0.5">${l}</div></div>`).join("")}
+      <div id="cd-date" class="text-base font-bold text-ink/70 mb-6"></div>
+
+      <div class="flex justify-center gap-3 sm:gap-5">
+        <div class="flex-1 max-w-[100px]">
+          <div class="bg-ink/[0.03] rounded-2xl border border-ink/8 px-3 py-4 sm:py-5">
+            <div class="cd-val text-3xl sm:text-4xl font-black text-ink tabular-nums" data-cd="days">0</div>
+          </div>
+          <div class="text-[10px] text-ink/40 font-medium uppercase tracking-wider mt-1.5">Days</div>
+        </div>
+        <div class="self-center text-2xl text-ink/20 font-black">:</div>
+        <div class="flex-1 max-w-[100px]">
+          <div class="bg-ink/[0.03] rounded-2xl border border-ink/8 px-3 py-4 sm:py-5">
+            <div class="cd-val text-3xl sm:text-4xl font-black text-ink tabular-nums" data-cd="hours">0</div>
+          </div>
+          <div class="text-[10px] text-ink/40 font-medium uppercase tracking-wider mt-1.5">Hours</div>
+        </div>
+        <div class="self-center text-2xl text-ink/20 font-black">:</div>
+        <div class="flex-1 max-w-[100px]">
+          <div class="bg-ink/[0.03] rounded-2xl border border-ink/8 px-3 py-4 sm:py-5">
+            <div class="cd-val text-3xl sm:text-4xl font-black text-ink tabular-nums" data-cd="minutes">0</div>
+          </div>
+          <div class="text-[10px] text-ink/40 font-medium uppercase tracking-wider mt-1.5">Minutes</div>
+        </div>
+        <div class="self-center text-2xl text-ink/20 font-black">:</div>
+        <div class="flex-1 max-w-[100px]">
+          <div class="bg-ink/[0.03] rounded-2xl border border-ink/8 px-3 py-4 sm:py-5">
+            <div class="cd-val text-3xl sm:text-4xl font-black text-ink tabular-nums" data-cd="seconds">0</div>
+          </div>
+          <div class="text-[10px] text-ink/40 font-medium uppercase tracking-wider mt-1.5">Seconds</div>
+        </div>
       </div>
-      <div id="cd-passed" class="mt-4 text-sm text-ink/50" hidden></div>
+
+      <div id="cd-passed" class="mt-6 text-sm text-ink/50 animate-fade-in" hidden></div>
+      <div id="cd-info" class="mt-5 pt-4 border-t border-ink/8 text-[11px] text-ink/35">
+        JLPT is held twice a year — on the first Sunday of July and December
+      </div>
     </div>
   </div>
 </DefaultLayout>
 
 <script>
-  const EXAMS=[{m:7,d:5},{m:12,o:true}] // July 5, 2026 & December (first Sunday)
-  function getNext():Date{
-    const n=new Date(),y=n.getFullYear()
-    const july=new Date(y,6,5)
-    if(july>n)return july
-    const dec=new Date(y,11,1)
-    const sun=dec.getDay()?dec:new Date(y,11,1+(7-dec.getDay()))
-    if(sun>n)return sun
-    return new Date(y+1,6,5)
+  const EXAMS = [
+    { m: 7, d: 5 },                     // July 5, 2026
+    { m: 12, d: (new Date().getFullYear() >= 2026 ? 6 : 6) },  // first Sunday of December
+  ]
+
+  function getFirstSunday(y: number, m: number): Date {
+    const d = new Date(y, m, 1)
+    const diff = d.getDay() === 0 ? 0 : 7 - d.getDay()
+    return new Date(y, m, 1 + diff)
   }
-  const dateEl=document.getElementById("cd-date")!,passedEl=document.getElementById("cd-passed")!
-  const daysEl=document.querySelector("[data-cd=days]")!,hrsEl=document.querySelector("[data-cd=hours]")!,
-    minEl=document.querySelector("[data-cd=minutes]")!,secEl=document.querySelector("[data-cd=seconds]")!
-  function tick(){
-    const now=new Date(),next=getNext(),diff=Math.max(0,next.getTime()-now.getTime())
-    if(diff===0){passedEl.hidden=false;passedEl.textContent="Exam day! Good luck! \u{1F389}";return}
-    passedEl.hidden=true
-    daysEl.textContent=String(Math.floor(diff/86400000))
-    hrsEl.textContent=String(Math.floor((diff%86400000)/3600000))
-    minEl.textContent=String(Math.floor((diff%3600000)/60000))
-    secEl.textContent=String(Math.floor((diff%60000)/1000))
-    dateEl.textContent=next.toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric"})
+
+  function getNext(): Date {
+    const now = new Date()
+    const y = now.getFullYear()
+
+    const july = new Date(y, 6, 5)
+    if (july > now) return july
+
+    const dec = getFirstSunday(y, 11)
+    if (dec > now) return dec
+
+    return new Date(y + 1, 6, 5)
   }
-  setInterval(tick,1000);tick()
+
+  const dateEl = document.getElementById("cd-date")!
+  const passedEl = document.getElementById("cd-passed")!
+  const daysEl = document.querySelector("[data-cd=days]")!
+  const hrsEl = document.querySelector("[data-cd=hours]")!
+  const minEl = document.querySelector("[data-cd=minutes]")!
+  const secEl = document.querySelector("[data-cd=seconds]")!
+
+  function tick() {
+    const now = new Date()
+    const next = getNext()
+    const diff = Math.max(0, next.getTime() - now.getTime())
+
+    if (diff === 0) {
+      passedEl.hidden = false
+      passedEl.textContent = "Exam day! \uD83C\uDF89 Good luck!"
+      return
+    }
+    passedEl.hidden = true
+
+    daysEl.textContent = String(Math.floor(diff / 86400000))
+    hrsEl.textContent = String(Math.floor((diff % 86400000) / 3600000)).padStart(2, "0")
+    minEl.textContent = String(Math.floor((diff % 3600000) / 60000)).padStart(2, "0")
+    secEl.textContent = String(Math.floor((diff % 60000) / 1000)).padStart(2, "0")
+
+    dateEl.textContent = next.toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
+  }
+
+  setInterval(tick, 1000)
+  tick()
 </script>

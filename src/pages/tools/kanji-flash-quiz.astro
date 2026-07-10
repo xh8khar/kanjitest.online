@@ -11,88 +11,181 @@ import ButtonGroup from "@/components/tools/ButtonGroup.astro"
     </div>
 
     <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay: 80ms">
-      <div class="flex flex-wrap justify-center gap-2 mb-6">
-        <ButtonGroup classPrefix="fq-lvl" buttons={["All", "N5", "N4", "N3", "N2", "N1"]} />
+      <div class="flex flex-wrap justify-center gap-2 mb-4">
+        <ButtonGroup classPrefix="kq-lvl" buttons={["All", "N5", "N4", "N3", "N2", "N1"]} />
       </div>
 
-      <div class="flex items-center justify-between mb-4 text-xs text-ink/40">
-        <span id="fq-score">0 correct</span>
-        <span id="fq-count">0 of 0</span>
+      <div class="flex items-center justify-between text-xs text-ink/40 mb-3">
+        <span id="kq-date"></span>
+        <span id="kq-score">0 correct</span>
       </div>
 
-      <div class="text-center">
-        <div id="fq-kanji" class="text-6xl sm:text-7xl font-jp font-black text-ink min-h-[5rem] flex items-center justify-center">—</div>
-        <div id="fq-options" class="grid grid-cols-2 gap-2 mt-6 max-w-sm mx-auto"></div>
-        <div id="fq-feedback" class="mt-4 text-sm font-bold" hidden></div>
+      <div id="kq-progress-bar" class="flex gap-1 mb-4" aria-hidden="true"></div>
+
+      <div id="kq-question" class="text-center">
+        <div id="kq-prompt-type" class="text-[11px] text-ink/40 font-medium uppercase tracking-wider mb-1">What is the meaning?</div>
+        <div id="kq-kanji" class="text-6xl sm:text-7xl font-jp font-black text-ink min-h-[5rem] flex items-center justify-center">—</div>
+        <div id="kq-hint" class="text-xs text-ink/50 mt-2"></div>
+        <div id="kq-options" class="grid grid-cols-2 gap-2 mt-5 max-w-sm mx-auto"></div>
+        <div id="kq-feedback" class="mt-3 text-sm font-bold" hidden></div>
       </div>
 
-      <div class="flex justify-center mt-6">
-        <button id="fq-next" class="btn btn-accent h-10 px-5 text-sm">Next →</button>
+      <div class="flex justify-center mt-4">
+        <button id="kq-next" class="btn btn-accent h-10 px-5 text-sm" hidden>Next →</button>
+      </div>
+
+      <div id="kq-results" class="text-center" hidden>
+        <div class="relative w-32 h-32 mx-auto" id="kq-score-ring">
+          <svg viewBox="0 0 100 100" class="w-full h-full -rotate-90">
+            <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="8" class="text-ink/8" />
+            <circle id="kq-ring" cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-dasharray="283" stroke-dashoffset="283" class="text-emerald-500" style="transition: stroke-dashoffset 1.2s cubic-bezier(0.16, 1, 0.3, 1)" />
+          </svg>
+          <span id="kq-pct" class="absolute inset-0 flex items-center justify-center text-2xl font-black text-ink tabular-nums">0%</span>
+        </div>
+        <div class="text-lg font-black text-ink mt-4 animate-pop" style="animation-delay: 300ms" id="kq-final-score"></div>
+        <div class="text-sm text-ink/60 mt-1" id="kq-message"></div>
+        <button id="kq-retry" class="btn btn-ghost h-12 text-sm mt-5">↻ Try again</button>
       </div>
     </div>
   </div>
 </DefaultLayout>
 
 <script>
-  type Entry = { kanji: string; meanings: string[]; level: string }
+  type Entry = { kanji: string; meanings: string[]; level: string; strokes: number }
+  const QUESTIONS_PER_ROUND = 10
+
   let data: Entry[] = []
   let activeLevel = "all"
-  let current: Entry | null = null
-  let correct = 0, total = 0
-  let answered = false
+  let questions: { kanji: string; correct: string; options: string[]; hint: string }[] = []
+  let qIndex = 0, correct = 0, answered = false
 
-  const kanjiEl = document.getElementById("fq-kanji")!
-  const optionsEl = document.getElementById("fq-options")!
-  const feedbackEl = document.getElementById("fq-feedback")!
-  const scoreEl = document.getElementById("fq-score")!
-  const countEl = document.getElementById("fq-count")!
-  const nextBtn = document.getElementById("fq-next") as HTMLButtonElement
+  const dateEl = document.getElementById("kq-date")!
+  const scoreEl = document.getElementById("kq-score")!
+  const progressBarEl = document.getElementById("kq-progress-bar")!
+  const questionEl = document.getElementById("kq-question")!
+  const promptTypeEl = document.getElementById("kq-prompt-type")!
+  const kanjiEl = document.getElementById("kq-kanji")!
+  const hintEl = document.getElementById("kq-hint")!
+  const optionsEl = document.getElementById("kq-options")!
+  const feedbackEl = document.getElementById("kq-feedback")!
+  const nextBtn = document.getElementById("kq-next") as HTMLButtonElement
+  const resultsEl = document.getElementById("kq-results")!
+  const ringEl = document.getElementById("kq-ring")!
+  const pctEl = document.getElementById("kq-pct")!
+  const finalScoreEl = document.getElementById("kq-final-score")!
+  const messageEl = document.getElementById("kq-message")!
 
-  fetch("/api/kanji.json").then(r => r.json()).then(d => { data = d; nextQ() })
+  dateEl.textContent = new Date().toISOString().slice(0, 10)
 
-  function nextQ() {
-    answered = false
-    feedbackEl.hidden = true
+  fetch("/api/kanji.json").then(r => r.json()).then(d => { data = d; newRound() })
+
+  function shuffle<T>(a: T[]): T[] {
+    const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]] }; return b
+  }
+
+  function newRound() {
     const pool = activeLevel === "all" ? data : data.filter(e => e.level === activeLevel)
     if (!pool.length) return
-    current = pool[Math.floor(Math.random() * pool.length)]
-    kanjiEl.textContent = current.kanji
-    countEl.textContent = `${total} answered`
+    const picked = shuffle(pool).slice(0, QUESTIONS_PER_ROUND)
+    questions = picked.map(e => {
+      const wrong = data.filter(x => x.kanji !== e.kanji).sort(() => Math.random() - 0.5).slice(0, 3)
+      const options = shuffle([e.meanings[0], ...wrong.map(x => x.meanings[0])])
+      return {
+        kanji: e.kanji,
+        correct: e.meanings[0],
+        options,
+        hint: `${e.level.toUpperCase()} · ${e.strokes} strokes`,
+      }
+    })
+    qIndex = 0; correct = 0
+    questionEl.hidden = false; resultsEl.hidden = true; nextBtn.hidden = false
+    scoreEl.textContent = "0 correct"
+    updateProgress()
+    showQuestion()
+  }
 
-    const wrongPool = data.filter(e => e.kanji !== current!.kanji).sort(() => Math.random() - 0.5).slice(0, 3)
-    const wrongMeanings = wrongPool.map(e => e.meanings[0])
-    const answers = [current.meanings[0], ...wrongMeanings].sort(() => Math.random() - 0.5)
+  function updateProgress() {
+    progressBarEl.innerHTML = questions.map((_, i) =>
+      `<span class="h-1.5 flex-1 rounded-full transition-all duration-300 ${i === qIndex ? "bg-ink scale-y-[1.4]" : i < qIndex ? "bg-emerald-500" : "bg-ink/10"}" />`
+    ).join("")
+  }
 
-    optionsEl.innerHTML = answers.map(a =>
-      `<button class="fq-opt btn h-11 text-sm rounded-xl px-3">${a}</button>`
+  function showQuestion() {
+    answered = false; feedbackEl.hidden = true; nextBtn.hidden = true
+    const q = questions[qIndex]
+    promptTypeEl.textContent = "What is the meaning?"
+    kanjiEl.textContent = q.kanji
+    hintEl.textContent = q.hint
+    scoreEl.textContent = `${correct} correct`
+    updateProgress()
+
+    optionsEl.innerHTML = q.options.map((o, oi) =>
+      `<button class="kq-opt relative w-full min-h-[48px] rounded-xl border border-ink/12 bg-white px-4 flex items-center gap-3 text-left transition-all duration-200 hover:border-ink/35 hover:-translate-y-0.5 hover:shadow-md hover:shadow-ink/5 active:scale-[0.98] cursor-pointer">
+        <span class="w-6 h-6 rounded-md text-[11px] font-bold flex items-center justify-center shrink-0 bg-ink/5 text-ink/45">${oi + 1}</span>
+        <span class="text-sm sm:text-base">${o}</span>
+      </button>`
     ).join("")
 
-    optionsEl.querySelectorAll(".fq-opt").forEach(btn => {
+    optionsEl.querySelectorAll(".kq-opt").forEach(btn => {
       btn.addEventListener("click", () => {
-        if (answered) return
-        answered = true; total++
-        const isCorrect = (btn as HTMLElement).textContent === current!.meanings[0]
+        if (answered) return; answered = true
+        const selected = (btn as HTMLElement).textContent?.trim()
+        const isCorrect = selected === q.correct
         if (isCorrect) correct++
-        feedbackEl.hidden = false
-        feedbackEl.textContent = isCorrect ? "✓ Correct!" : `✗ ${current!.meanings[0]}`
-        feedbackEl.style.color = isCorrect ? "#10b981" : "var(--color-vermilion)"
         scoreEl.textContent = `${correct} correct`
-        countEl.textContent = `${total} answered`
+
+        optionsEl.querySelectorAll(".kq-opt").forEach((b, oi) => {
+          const txt = b.textContent?.trim()
+          const span = b.querySelector("span")!
+          if (txt === q.correct) {
+            (b as HTMLElement).className = "kq-opt relative w-full min-h-[48px] rounded-xl border border-emerald-500 bg-emerald-500/10 px-4 flex items-center gap-3 text-left font-bold animate-pop"
+            span.className = "w-6 h-6 rounded-md text-[11px] font-bold flex items-center justify-center shrink-0 bg-emerald-500 text-white"
+            span.textContent = "✓"
+          } else if (txt === selected && !isCorrect) {
+            (b as HTMLElement).className = "kq-opt relative w-full min-h-[48px] rounded-xl border border-vermilion bg-vermilion/5 px-4 flex items-center gap-3 text-left text-ink/70 animate-shake"
+            span.className = "w-6 h-6 rounded-md text-[11px] font-bold flex items-center justify-center shrink-0 bg-vermilion text-white"
+            span.textContent = "✕"
+          } else {
+            (b as HTMLElement).className = "kq-opt relative w-full min-h-[48px] rounded-xl border border-ink/8 opacity-45 px-4 flex items-center gap-3 text-left"
+            span.className = "w-6 h-6 rounded-md text-[11px] font-bold flex items-center justify-center shrink-0 bg-ink/5 text-ink/45"
+            span.textContent = isCorrect || (b as HTMLElement).textContent?.trim() === selected ? "" : `${oi + 1}`
+          }
+        })
+
+        feedbackEl.hidden = false
+        feedbackEl.textContent = isCorrect ? "✓ Correct!" : `✗ ${q.correct}`
+        feedbackEl.style.color = isCorrect ? "#10b981" : "var(--color-vermilion)"
+        nextBtn.hidden = false
       })
+    })
+
+    document.querySelectorAll(".kq-opt").forEach(b => {
+      (b as HTMLElement).style.pointerEvents = "auto"
     })
   }
 
-  nextBtn.onclick = nextQ
+  nextBtn.onclick = () => {
+    if (qIndex < questions.length - 1) { qIndex++; showQuestion() }
+    else showResults()
+  }
 
-  document.querySelectorAll(".fq-lvl").forEach(btn => {
+  function showResults() {
+    questionEl.hidden = true; nextBtn.hidden = true; resultsEl.hidden = false
+    const pct = Math.round((correct / questions.length) * 100)
+    finalScoreEl.textContent = `${correct} / ${questions.length}`
+    messageEl.textContent = pct === 100 ? "Perfect score! 完璧です！" : pct >= 80 ? "Great job! すごい！" : pct >= 50 ? "Keep practicing! がんばって！" : "Review and try again — 一歩ずつ。"
+    pctEl.textContent = `${pct}%`
+    requestAnimationFrame(() => { ringEl.style.strokeDashoffset = `${283 - (283 * pct) / 100}` })
+  }
+
+  document.getElementById("kq-retry")!.onclick = newRound
+
+  document.querySelectorAll(".kq-lvl").forEach(btn => {
     btn.addEventListener("click", () => {
-      document.querySelectorAll(".fq-lvl").forEach(b => b.classList.remove("on"))
+      document.querySelectorAll(".kq-lvl").forEach(b => b.classList.remove("on"))
       btn.classList.add("on")
       activeLevel = (btn as HTMLElement).dataset.lvl!
-      correct = 0; total = 0
-      scoreEl.textContent = "0 correct"
-      countEl.textContent = "0 of 0"
-      nextQ()
+      newRound()
     })
   })
 </script>

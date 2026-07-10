@@ -9,51 +9,183 @@ import ButtonGroup from "@/components/tools/ButtonGroup.astro"
       <h1 class="text-3xl sm:text-4xl font-black text-ink">Vocabulary Quiz</h1>
       <p class="text-sm text-ink/60 mt-2">Test your vocabulary with random JLPT words from every level.</p>
     </div>
-    <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay:80ms">
+
+    <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay: 80ms">
       <div class="flex flex-wrap justify-center gap-2 mb-4">
         <ButtonGroup classPrefix="vq-lvl" buttons={["All","N5","N4","N3","N2","N1"]} />
       </div>
-      <div class="flex items-center justify-between mb-3 text-xs text-ink/40"><span id="vq-score">0 correct</span><span id="vq-total">0 answered</span></div>
-      <div class="text-center">
+
+      <div class="flex items-center justify-between text-xs text-ink/40 mb-3">
+        <span id="vq-date"></span>
+        <span id="vq-score">0 correct</span>
+      </div>
+
+      <div id="vq-progress-bar" class="flex gap-1 mb-4" aria-hidden="true"></div>
+
+      <div id="vq-question" class="text-center">
+        <div id="vq-prompt-type" class="text-[11px] text-ink/40 font-medium uppercase tracking-wider mb-1">What is the meaning?</div>
         <div id="vq-word" class="text-2xl sm:text-3xl font-jp font-bold text-ink min-h-[3rem]">—</div>
-        <div id="vq-reading" class="text-sm text-ink/50 mt-1"></div>
-        <div id="vq-options" class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-5"></div>
+        <div id="vq-reading" class="text-xs text-ink/50 mt-1"></div>
+        <div id="vq-hint" class="text-xs text-ink/50 mt-1"></div>
+        <div id="vq-options" class="grid grid-cols-2 gap-2 mt-5 max-w-sm mx-auto"></div>
         <div id="vq-feedback" class="mt-3 text-sm font-bold" hidden></div>
       </div>
-      <button id="vq-next" class="btn btn-accent h-10 px-5 text-sm mt-4 w-full">Next →</button>
+
+      <div class="flex justify-center mt-4">
+        <button id="vq-next" class="btn btn-accent h-10 px-5 text-sm" hidden>Next →</button>
+      </div>
+
+      <div id="vq-results" class="text-center" hidden>
+        <div class="relative w-32 h-32 mx-auto" id="vq-score-ring">
+          <svg viewBox="0 0 100 100" class="w-full h-full -rotate-90">
+            <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="8" class="text-ink/8" />
+            <circle id="vq-ring" cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-dasharray="283" stroke-dashoffset="283" class="text-emerald-500" style="transition: stroke-dashoffset 1.2s cubic-bezier(0.16, 1, 0.3, 1)" />
+          </svg>
+          <span id="vq-pct" class="absolute inset-0 flex items-center justify-center text-2xl font-black text-ink tabular-nums">0%</span>
+        </div>
+        <div class="text-lg font-black text-ink mt-4 animate-pop" style="animation-delay: 300ms" id="vq-final-score"></div>
+        <div class="text-sm text-ink/60 mt-1" id="vq-message"></div>
+        <button id="vq-retry" class="btn btn-ghost h-12 text-sm mt-5">↻ Try again</button>
+      </div>
     </div>
   </div>
 </DefaultLayout>
 
 <script>
-  type Entry={kanji:string;meanings:string[];level:string;kun:string[];on:string[]}
-  let data:Entry[]=[],activeLvl="all",correct=0,total=0,answered=false
-  const wordEl=document.getElementById("vq-word")!,readingEl=document.getElementById("vq-reading")!
-  const optionsEl=document.getElementById("vq-options")!,feedbackEl=document.getElementById("vq-feedback")!
-  const scoreEl=document.getElementById("vq-score")!,totalEl=document.getElementById("vq-total")!
-  fetch("/api/kanji.json").then(r=>r.json()).then(d=>{data=d;nextQ()})
-  function nextQ(){
-    answered=false;feedbackEl.hidden=true
-    const pool=activeLvl==="all"?data:data.filter(e=>e.level===activeLvl)
-    if(!pool.length)return
-    const entry=pool[Math.floor(Math.random()*pool.length)]
-    wordEl.textContent=entry.kanji;readingEl.textContent=[...entry.kun,...entry.on].join("、")||""
-    const wrong=data.filter(e=>e.kanji!==entry.kanji).sort(()=>Math.random()-0.5).slice(0,3)
-    const ans=[entry.meanings[0],...wrong.map(e=>e.meanings[0])].sort(()=>Math.random()-0.5)
-    optionsEl.innerHTML=ans.map(a=>`<button class="vq-opt btn h-12 text-sm rounded-xl">${a}</button>`).join("")
-    optionsEl.querySelectorAll(".vq-opt").forEach(b=>b.addEventListener("click",function(){
-      if(answered)return;answered=true;total++
-      const ok=(this as HTMLElement).textContent===entry.meanings[0]
-      if(ok)correct++
-      feedbackEl.hidden=false;feedbackEl.textContent=ok?"✓ Correct!":`✗ ${entry.meanings[0]}`
-      feedbackEl.style.color=ok?"#10b981":"var(--color-vermilion)"
-      scoreEl.textContent=`${correct} correct`;totalEl.textContent=`${total} answered`
-    }))
+  type Entry = { kanji: string; meanings: string[]; level: string; kun: string[]; on: string[]; strokes: number }
+  const QUESTIONS_PER_ROUND = 10
+
+  let data: Entry[] = []
+  let activeLevel = "all"
+  let questions: { kanji: string; reading: string; correct: string; options: string[]; hint: string }[] = []
+  let qIndex = 0, correct = 0, answered = false
+
+  const dateEl = document.getElementById("vq-date")!
+  const scoreEl = document.getElementById("vq-score")!
+  const progressBarEl = document.getElementById("vq-progress-bar")!
+  const questionEl = document.getElementById("vq-question")!
+  const promptTypeEl = document.getElementById("vq-prompt-type")!
+  const wordEl = document.getElementById("vq-word")!
+  const readingEl = document.getElementById("vq-reading")!
+  const hintEl = document.getElementById("vq-hint")!
+  const optionsEl = document.getElementById("vq-options")!
+  const feedbackEl = document.getElementById("vq-feedback")!
+  const nextBtn = document.getElementById("vq-next") as HTMLButtonElement
+  const resultsEl = document.getElementById("vq-results")!
+  const ringEl = document.getElementById("vq-ring")!
+  const pctEl = document.getElementById("vq-pct")!
+  const finalScoreEl = document.getElementById("vq-final-score")!
+  const messageEl = document.getElementById("vq-message")!
+
+  dateEl.textContent = new Date().toISOString().slice(0, 10)
+
+  fetch("/api/kanji.json").then(r => r.json()).then(d => { data = d; newRound() })
+
+  function shuffle<T>(a: T[]): T[] {
+    const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]] }; return b
   }
-  document.getElementById("vq-next")!.onclick=nextQ
-  document.querySelectorAll(".vq-lvl").forEach(b=>b.addEventListener("click",function(){
-    document.querySelectorAll(".vq-lvl").forEach(x=>x.classList.remove("on"));this.classList.add("on")
-    activeLvl=(this as HTMLElement).dataset.lvl!;correct=0;total=0
-    scoreEl.textContent="0 correct";totalEl.textContent="0 answered";nextQ()
-  }))
+
+  function newRound() {
+    const pool = activeLevel === "all" ? data : data.filter(e => e.level === activeLevel)
+    if (!pool.length) return
+    const picked = shuffle(pool).slice(0, QUESTIONS_PER_ROUND)
+    questions = picked.map(e => {
+      const reading = [...e.kun, ...e.on].filter(Boolean).join("、") || ""
+      const wrong = data.filter(x => x.kanji !== e.kanji).sort(() => Math.random() - 0.5).slice(0, 3)
+      const options = shuffle([e.meanings[0], ...wrong.map(x => x.meanings[0])])
+      return {
+        kanji: e.kanji,
+        reading,
+        correct: e.meanings[0],
+        options,
+        hint: `${e.level.toUpperCase()} · ${e.strokes} strokes`,
+      }
+    })
+    qIndex = 0; correct = 0
+    questionEl.hidden = false; resultsEl.hidden = true; nextBtn.hidden = false
+    scoreEl.textContent = "0 correct"
+    updateProgress()
+    showQuestion()
+  }
+
+  function updateProgress() {
+    progressBarEl.innerHTML = questions.map((_, i) =>
+      `<span class="h-1.5 flex-1 rounded-full transition-all duration-300 ${i === qIndex ? "bg-ink scale-y-[1.4]" : i < qIndex ? "bg-emerald-500" : "bg-ink/10"}" />`
+    ).join("")
+  }
+
+  function showQuestion() {
+    answered = false; feedbackEl.hidden = true; nextBtn.hidden = true
+    const q = questions[qIndex]
+    promptTypeEl.textContent = "What is the meaning?"
+    wordEl.textContent = q.kanji
+    readingEl.textContent = q.reading
+    hintEl.textContent = q.hint
+    scoreEl.textContent = `${correct} correct`
+    updateProgress()
+
+    optionsEl.innerHTML = q.options.map((o, oi) =>
+      `<button class="vq-opt relative w-full min-h-[48px] rounded-xl border border-ink/12 bg-white px-4 flex items-center gap-3 text-left transition-all duration-200 hover:border-ink/35 hover:-translate-y-0.5 hover:shadow-md hover:shadow-ink/5 active:scale-[0.98] cursor-pointer">
+        <span class="w-6 h-6 rounded-md text-[11px] font-bold flex items-center justify-center shrink-0 bg-ink/5 text-ink/45">${oi + 1}</span>
+        <span class="text-sm sm:text-base">${o}</span>
+      </button>`
+    ).join("")
+
+    optionsEl.querySelectorAll(".vq-opt").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (answered) return; answered = true
+        const selected = (btn as HTMLElement).textContent?.trim()
+        const isCorrect = selected === q.correct
+        if (isCorrect) correct++
+        scoreEl.textContent = `${correct} correct`
+
+        optionsEl.querySelectorAll(".vq-opt").forEach((b, oi) => {
+          const txt = b.textContent?.trim()
+          const span = b.querySelector("span")!
+          if (txt === q.correct) {
+            (b as HTMLElement).className = "vq-opt relative w-full min-h-[48px] rounded-xl border border-emerald-500 bg-emerald-500/10 px-4 flex items-center gap-3 text-left font-bold animate-pop"
+            span.className = "w-6 h-6 rounded-md text-[11px] font-bold flex items-center justify-center shrink-0 bg-emerald-500 text-white"
+            span.textContent = "✓"
+          } else if (txt === selected && !isCorrect) {
+            (b as HTMLElement).className = "vq-opt relative w-full min-h-[48px] rounded-xl border border-vermilion bg-vermilion/5 px-4 flex items-center gap-3 text-left text-ink/70 animate-shake"
+            span.className = "w-6 h-6 rounded-md text-[11px] font-bold flex items-center justify-center shrink-0 bg-vermilion text-white"
+            span.textContent = "✕"
+          } else {
+            (b as HTMLElement).className = "vq-opt relative w-full min-h-[48px] rounded-xl border border-ink/8 opacity-45 px-4 flex items-center gap-3 text-left"
+            span.className = "w-6 h-6 rounded-md text-[11px] font-bold flex items-center justify-center shrink-0 bg-ink/5 text-ink/45"
+          }
+        })
+
+        feedbackEl.hidden = false
+        feedbackEl.textContent = isCorrect ? "✓ Correct!" : `✗ ${q.correct}`
+        feedbackEl.style.color = isCorrect ? "#10b981" : "var(--color-vermilion)"
+        nextBtn.hidden = false
+      })
+    })
+  }
+
+  nextBtn.onclick = () => {
+    if (qIndex < questions.length - 1) { qIndex++; showQuestion() }
+    else showResults()
+  }
+
+  function showResults() {
+    questionEl.hidden = true; nextBtn.hidden = true; resultsEl.hidden = false
+    const pct = Math.round((correct / questions.length) * 100)
+    finalScoreEl.textContent = `${correct} / ${questions.length}`
+    messageEl.textContent = pct === 100 ? "Perfect score! 完璧です！" : pct >= 80 ? "Great job! すごい！" : pct >= 50 ? "Keep practicing! がんばって！" : "Review and try again — 一歩ずつ。"
+    pctEl.textContent = `${pct}%`
+    requestAnimationFrame(() => { ringEl.style.strokeDashoffset = `${283 - (283 * pct) / 100}` })
+  }
+
+  document.getElementById("vq-retry")!.onclick = newRound
+
+  document.querySelectorAll(".vq-lvl").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".vq-lvl").forEach(b => b.classList.remove("on"))
+      btn.classList.add("on")
+      activeLevel = (btn as HTMLElement).dataset.lvl!
+      newRound()
+    })
+  })
 </script>
