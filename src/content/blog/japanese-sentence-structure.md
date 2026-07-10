@@ -3,7 +3,7 @@ title: "Japanese Sentence Structure: A Beginner's Guide"
 description: "Learn Japanese sentence structure from scratch — SOV word order, particles, verb placement, and building natural sentences."
 date: 2026-04-08
 author: "KanjiTest.Online"
-tags: ["beginner", "grammar"]
+tags: ["N5", "beginner", "grammar"]
 draft: false
 ---
 

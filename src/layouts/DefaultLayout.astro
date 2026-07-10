@@ -27,7 +27,8 @@ const finalTitle = title
     : `${title} — KanjiTest.Online`
   : "KanjiTest.Online"
 const finalDesc = description || "Free JLPT N5, N4, N3, N2, and N1 kanji study with flashcards, vocabulary, and practice tests."
-const image = ogImage || "/icon.svg"
+const defaultOg = level ? `/og/og-${level}.png` : "/og/og-default.png"
+const image = ogImage || defaultOg
 const path = Astro.url.pathname
 
 const subLinks = [
@@ -79,6 +80,8 @@ const subLinks = [
     <meta property="og:title" content={finalTitle} />
     <meta property="og:description" content={finalDesc} />
     <meta property="og:image" content={siteUrl(image)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:site_name" content="KanjiTest.Online" />
     <meta property="og:locale" content="en_US" />
 
@@ -94,8 +97,9 @@ const subLinks = [
     <ClientRouter />
   </head>
   <body class="font-sans antialiased min-h-dvh flex flex-col overflow-x-hidden">
+    <a href="#main-content" class="skip-link">Skip to content</a>
     <Navbar />
-    <main class="flex-1">
+    <main id="main-content" class="flex-1">
       {level ? (
         <div class="max-w-6xl mx-auto">
           <div class="lg:hidden overflow-x-auto px-4 py-2.5 scrollbar-none">
@@ -150,6 +154,24 @@ const subLinks = [
       }
       .pill:hover {
         border-color: color-mix(in srgb, var(--color-ink) 35%, transparent);
+      }
+      .skip-link {
+        position: absolute;
+        top: -100%;
+        left: 1rem;
+        z-index: 9999;
+        padding: 0.5rem 1rem;
+        background: var(--color-ink);
+        color: #fff;
+        font-size: 0.875rem;
+        font-weight: 600;
+        border-radius: 0.5rem;
+        transition: top 0.15s ease;
+      }
+      .skip-link:focus {
+        top: 0.75rem;
+        outline: 2px solid var(--color-vermilion);
+        outline-offset: 2px;
       }
       .pill.on {
         background: var(--color-ink);

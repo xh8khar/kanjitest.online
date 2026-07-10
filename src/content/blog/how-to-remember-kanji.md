@@ -3,7 +3,7 @@ title: "How to Remember Kanji: The Best Mnemonic Techniques"
 description: "Discover powerful mnemonic techniques to memorize kanji faster and retain them longer — from radical stories to spaced repetition."
 date: 2026-02-15
 author: "KanjiTest.Online"
-tags: ["kanji", "mnemonics", "study-tips", "all-levels"]
+tags: ["kanji", "mnemonics", "study-tips", "N5", "all-levels"]
 draft: false
 ---
 

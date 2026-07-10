@@ -3,7 +3,7 @@ title: "How to Write Kanji: Stroke Order and Handwriting Guide"
 description: "Master proper kanji stroke order — essential rules, common patterns, techniques for neat handwriting, and reading written Japanese."
 date: 2026-04-10
 author: "KanjiTest.Online"
-tags: ["kanji", "beginner", "study-tips"]
+tags: ["kanji", "N5", "beginner", "study-tips"]
 draft: false
 ---
 

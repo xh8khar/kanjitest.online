@@ -3,7 +3,7 @@ title: "Best Japanese Dictionaries Online: A Complete Guide"
 description: "The ultimate guide to Japanese dictionaries online — from Jisho and Weblio to monolingual options, apps, and browser extensions."
 date: 2026-04-20
 author: "KanjiTest.Online"
-tags: ["resources", "all-levels", "study-tips"]
+tags: ["resources", "N5", "all-levels", "study-tips"]
 draft: false
 ---
 

@@ -3,7 +3,7 @@ title: "Kanji Radicals: The Building Blocks You Must Know"
 description: "Learn the 214 kanji radicals and how they unlock the meaning and readings of thousands of Japanese characters."
 date: 2026-03-01
 author: "KanjiTest.Online"
-tags: ["kanji", "radicals", "beginner", "all-levels"]
+tags: ["kanji", "radicals", "beginner", "N5", "all-levels"]
 draft: false
 ---
 

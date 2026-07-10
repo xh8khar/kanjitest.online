@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://kanjitest.online/sitemap-index.xml

@@ -11,6 +11,7 @@ const blog = defineCollection({
       date: z.coerce.date(),
       author: z.string().default("KanjiTest.Online"),
       image: image().optional(),
+      kanji: z.string().optional(),
       tags: z.array(z.string()).default([]),
       draft: z.boolean().default(false),
     }),

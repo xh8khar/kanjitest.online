@@ -3,7 +3,7 @@ title: "Complete JLPT Kanji List: All Levels N5 to N1"
 description: "The complete JLPT kanji list from N5 to N1 — counts, example characters per level, study order, and progression strategies."
 date: 2026-04-25
 author: "KanjiTest.Online"
-tags: ["JLPT", "kanji", "all-levels", "study-guide"]
+tags: ["JLPT", "kanji", "N5", "all-levels", "study-guide"]
 draft: false
 ---
 

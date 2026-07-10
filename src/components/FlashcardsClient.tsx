@@ -353,6 +353,7 @@ export default function FlashcardsClient({ level, entry: initialEntry, startInde
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search kanji or meaning…"
+                aria-label="Search kanji or meaning"
                 className="flex-1 bg-ink/[0.03] border border-ink/12 rounded-xl px-4 h-11 text-sm text-ink outline-none focus:border-vermilion/50 focus:bg-white transition-colors placeholder:text-ink/30"
               />
               <button

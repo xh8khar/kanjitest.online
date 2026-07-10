@@ -3,7 +3,7 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
 import { getAll, getVocabulary } from "@/lib/kanji"
 import type { Level } from "@/lib/kanji"
 import { levelMeta, SETS_PER_LEVEL } from "@/lib/levels"
-import { collectionPageSchema, itemListSchema } from "@/lib/seo"
+import { collectionPageSchema, itemListSchema, breadcrumbSchema, siteUrl } from "@/lib/seo"
 import { getCollection } from "astro:content"
 
 export interface Props {
@@ -23,12 +23,16 @@ const blogPosts = allBlogPosts
   .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
   .slice(0, 3)
 
-const title = `JLPT ${meta.label} Kanji — All ${all.length} Characters`
-const description = `Browse all ${all.length} JLPT ${meta.label} kanji with kun/on readings, example words, and daily-life sentences. Study, flashcard, and test yourself.`
+const title = `JLPT ${meta.label} Kanji Test Online — All ${all.length} Characters, Quiz & Practice`
+const description = `Free JLPT ${meta.label} kanji test online. Browse all ${all.length} characters with kun/on readings, example words, and daily-life sentences. Study with flashcards and practice quizzes.`
 
 const items = all.map((k) => ({ name: `${k.kanji} — ${k.meanings[0]}`, url: `${prefix}/study/${k.kanji}/` }))
-const pageSchema = collectionPageSchema(`JLPT ${meta.label} Kanji Hub — All ${all.length} Characters`, `Browse all ${all.length} JLPT ${meta.label} kanji with readings and examples.`, prefix)
+const pageSchema = collectionPageSchema(title, `Browse all ${all.length} JLPT ${meta.label} kanji with readings, examples, flashcards, and practice tests.`, prefix)
 const listSchema = itemListSchema(items)
+const breadSchema = breadcrumbSchema([
+  { name: "Home", url: "/" },
+  { name: meta.label, url: `${prefix}/` },
+])
 
 const tools = [
   { href: `${prefix}/study/`, icon: "📖", label: "Study", sub: `${all.length} characters` },
@@ -41,6 +45,7 @@ const tools = [
 <DefaultLayout title={title} description={description} level={level}>
   <script type="application/ld+json" set:html={JSON.stringify(pageSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(listSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadSchema)} />
 
   <div class="px-4 py-6 sm:py-8">
     <!-- Level hero -->

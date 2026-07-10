@@ -3,7 +3,7 @@ title: "Understanding Japanese Politeness Levels: From Casual to Keigo"
 description: "Navigate Japanese politeness levels — plain form, polite masu, honorific language, and when to use each in real conversations."
 date: 2026-04-12
 author: "KanjiTest.Online"
-tags: ["beginner", "intermediate", "grammar"]
+tags: ["N5", "beginner", "intermediate", "grammar"]
 draft: false
 ---
 

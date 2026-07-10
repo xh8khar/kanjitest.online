@@ -3,7 +3,7 @@ title: "Japanese Onomatopoeia: Mastering Giongo and Gitaigo"
 description: "Master Japanese onomatopoeia — giongo (sound words) and gitaigo (state words) with examples, categories, and study techniques."
 date: 2026-04-22
 author: "KanjiTest.Online"
-tags: ["beginner", "intermediate", "vocabulary"]
+tags: ["N5", "beginner", "intermediate", "vocabulary"]
 draft: false
 ---
 

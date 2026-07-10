@@ -3,7 +3,7 @@ title: "Keigo: A Complete Guide to Japanese Honorific Language"
 description: "Master keigo (Japanese honorific language) — sonkeigo, kenjougo, teineigo explained with conjugation tables, examples, and real-world usage."
 date: 2026-03-22
 author: "KanjiTest.Online"
-tags: ["intermediate", "advanced", "grammar"]
+tags: ["N3", "intermediate", "advanced", "grammar"]
 draft: false
 ---
 

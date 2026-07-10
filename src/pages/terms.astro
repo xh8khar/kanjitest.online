@@ -1,6 +1,6 @@
 ---
 import DefaultLayout from "@/layouts/DefaultLayout.astro"
-import { siteUrl, webPageSchema } from "@/lib/seo"
+import { siteUrl, webPageSchema, breadcrumbSchema } from "@/lib/seo"
 ---
 
 <DefaultLayout
@@ -11,6 +11,13 @@ import { siteUrl, webPageSchema } from "@/lib/seo"
     <script
       type="application/ld+json"
       set:html={JSON.stringify(webPageSchema("Terms of Service | KanjiTest.Online", "Terms of service for KanjiTest.Online."))}
+    />
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(breadcrumbSchema([
+        { name: "Home", url: siteUrl("/") },
+        { name: "Terms", url: siteUrl("/terms/") },
+      ]))}
     />
 
     <h1 class="text-3xl sm:text-4xl font-black text-ink mb-6">Terms of Service</h1>

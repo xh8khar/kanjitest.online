@@ -3,7 +3,7 @@ title: "Tips for JLPT Listening Comprehension: Improve Your Score"
 description: "Practical strategies to boost your JLPT listening score — shadowing techniques, pitch accent, common patterns, and section-by-section tips."
 date: 2026-04-05
 author: "KanjiTest.Online"
-tags: ["JLPT", "listening", "all-levels"]
+tags: ["JLPT", "listening", "N5", "all-levels"]
 draft: false
 ---
 

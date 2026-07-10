@@ -3,7 +3,7 @@ title: "JLPT Test Day Tips: What to Expect and How to Prepare"
 description: "Everything you need to know for JLPT test day — what to bring, time management strategies, section-by-section tips, and how to stay calm."
 date: 2026-03-25
 author: "KanjiTest.Online"
-tags: ["JLPT", "all-levels", "study-tips"]
+tags: ["JLPT", "N5", "all-levels", "study-tips"]
 draft: false
 ---
 

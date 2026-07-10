@@ -1,16 +1,23 @@
 ---
 import DefaultLayout from "@/layouts/DefaultLayout.astro"
-import { siteUrl, webPageSchema } from "@/lib/seo"
+import { siteUrl, webPageSchema, breadcrumbSchema } from "@/lib/seo"
 ---
 
 <DefaultLayout
-  title="About | KanjiTest.Online"
-  description="Learn about KanjiTest.Online — a free JLPT kanji study platform with flashcards, vocabulary, and practice quizzes."
+  title="About KanjiTest.Online — Free JLPT Kanji Practice & Quiz Platform"
+  description="Learn about KanjiTest.Online — a free JLPT kanji test and study platform with flashcards, vocabulary, and practice quizzes for N5, N4, N3, N2, and N1."
 >
   <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
     <script
       type="application/ld+json"
       set:html={JSON.stringify(webPageSchema("About | KanjiTest.Online", "About KanjiTest.Online — a free JLPT kanji study platform."))}
+    />
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(breadcrumbSchema([
+        { name: "Home", url: siteUrl("/") },
+        { name: "About", url: siteUrl("/about/") },
+      ]))}
     />
 
     <h1 class="text-3xl sm:text-4xl font-black text-ink mb-6">About KanjiTest.Online</h1>

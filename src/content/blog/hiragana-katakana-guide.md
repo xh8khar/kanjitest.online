@@ -3,7 +3,7 @@ title: "Hiragana and Katakana: The Complete Beginner's Guide to Japanese Scripts
 description: "Master hiragana and katakana with our complete guide — charts, reading practice, and study tips for Japanese learners."
 date: 2026-01-15
 author: "KanjiTest.Online"
-tags: ["beginner", "hiragana", "katakana", "Japanese-scripts"]
+tags: ["N5", "beginner", "hiragana", "katakana", "Japanese-scripts"]
 draft: false
 ---
 

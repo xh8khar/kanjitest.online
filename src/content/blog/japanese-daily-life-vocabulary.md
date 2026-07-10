@@ -3,7 +3,7 @@ title: "Japanese Vocabulary for Daily Life: Essential Words and Phrases"
 description: "Essential Japanese vocabulary for daily life — greetings, shopping, transportation, dining, and emergency phrases with example sentences."
 date: 2026-04-28
 author: "KanjiTest.Online"
-tags: ["beginner", "vocabulary"]
+tags: ["N5", "beginner", "vocabulary"]
 draft: false
 ---
 

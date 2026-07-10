@@ -3,7 +3,7 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
 import { getVocabulary } from "@/lib/kanji"
 import type { Level } from "@/lib/kanji"
 import { levelMeta } from "@/lib/levels"
-import { collectionPageSchema, itemListSchema } from "@/lib/seo"
+import { collectionPageSchema, itemListSchema, breadcrumbSchema } from "@/lib/seo"
 import { getCollection } from "astro:content"
 
 export interface Props {
@@ -23,17 +23,23 @@ const blogPosts = allBlogPosts
 const vocab = getVocabulary(level)
 const sorted = [...vocab].sort((a, b) => a.reading.localeCompare(b.reading, "ja"))
 
-const title = `JLPT ${meta.label} Vocabulary — ${sorted.length.toLocaleString()} Words with Readings`
-const description = `Complete JLPT ${meta.label} vocabulary list with readings, meanings, and associated kanji. Browse ${sorted.length.toLocaleString()} essential Japanese words.`
+const title = `JLPT ${meta.label} Vocabulary List — ${sorted.length.toLocaleString()} Japanese Words with Readings`
+const description = `Free JLPT ${meta.label} vocabulary list with readings, meanings, and associated kanji. Browse ${sorted.length.toLocaleString()} essential Japanese words for kanji practice.`
 
 const items = sorted.map((v) => ({ name: `${v.word} (${v.reading}) — ${v.english}`, url: `${prefix}/vocabulary/${v.slug}/` }))
 const pageSchema = collectionPageSchema(title, `Complete JLPT ${meta.label} vocabulary list with readings, meanings, and associated kanji.`, `${prefix}/vocabulary`)
 const listSchema = itemListSchema(items)
+const breadSchema = breadcrumbSchema([
+  { name: "Home", url: "/" },
+  { name: meta.label, url: `${prefix}/` },
+  { name: "Vocabulary", url: `${prefix}/vocabulary/` },
+])
 ---
 
 <DefaultLayout title={title} description={description} level={level}>
   <script type="application/ld+json" set:html={JSON.stringify(pageSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(listSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadSchema)} />
 
   <div class="px-4 py-6 sm:py-8">
     <div class="mb-6 animate-fade-up">

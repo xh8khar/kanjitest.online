@@ -3,7 +3,7 @@ title: "Best Resources for JLPT Preparation in 2026"
 description: "The ultimate guide to JLPT study resources — from free online tools and textbooks to mobile apps and practice tests for every level."
 date: 2026-02-05
 author: "KanjiTest.Online"
-tags: ["JLPT", "resources", "all-levels", "study-guide"]
+tags: ["JLPT", "resources", "N5", "all-levels", "study-guide"]
 draft: false
 ---
 

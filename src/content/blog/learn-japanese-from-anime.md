@@ -3,7 +3,7 @@ title: "How to Learn Japanese from Anime and Manga"
 description: "Learn Japanese through anime and manga — subtitle strategies, sentence mining, recommended shows by level, and bridging to real Japanese."
 date: 2026-04-15
 author: "KanjiTest.Online"
-tags: ["beginner", "intermediate", "study-tips"]
+tags: ["N5", "beginner", "intermediate", "study-tips"]
 draft: false
 ---
 

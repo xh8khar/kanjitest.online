@@ -3,7 +3,7 @@ title: "Japanese Pitch Accent: A Beginner's Guide to Pronunciation"
 description: "Understand Japanese pitch accent patterns and improve your pronunciation — from Tokyo standard to common pitch accent rules."
 date: 2026-03-05
 author: "KanjiTest.Online"
-tags: ["pronunciation", "beginner", "intermediate"]
+tags: ["pronunciation", "N5", "beginner", "intermediate"]
 draft: false
 ---
 

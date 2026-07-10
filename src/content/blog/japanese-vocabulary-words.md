@@ -3,7 +3,7 @@ title: "The 100 Most Common Japanese Vocabulary Words for JLPT"
 description: "Master the 100 most essential Japanese vocabulary words for JLPT success — from basic nouns to advanced verbs, with example sentences."
 date: 2026-01-25
 author: "KanjiTest.Online"
-tags: ["vocabulary", "JLPT", "all-levels"]
+tags: ["vocabulary", "JLPT", "N5", "all-levels"]
 draft: false
 ---
 

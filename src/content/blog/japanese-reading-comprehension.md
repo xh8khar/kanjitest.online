@@ -3,7 +3,7 @@ title: "How to Improve Your Japanese Reading Comprehension"
 description: "Practical strategies to improve Japanese reading comprehension for JLPT — from graded readers to newspaper articles and literary texts."
 date: 2026-02-20
 author: "KanjiTest.Online"
-tags: ["reading", "JLPT", "intermediate", "advanced"]
+tags: ["reading", "JLPT", "N3", "intermediate", "advanced"]
 draft: false
 ---
 

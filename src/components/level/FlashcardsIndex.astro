@@ -3,7 +3,7 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
 import { getAll } from "@/lib/kanji"
 import type { Level } from "@/lib/kanji"
 import { levelMeta } from "@/lib/levels"
-import { collectionPageSchema } from "@/lib/seo"
+import { collectionPageSchema, breadcrumbSchema } from "@/lib/seo"
 import { getCollection } from "astro:content"
 
 const allBlogPosts = await getCollection("blog")
@@ -21,13 +21,19 @@ const meta = levelMeta(level)
 const all = getAll(level)
 const prefix = `/${level}`
 
-const title = `JLPT ${meta.label} Kanji Flashcards — Flip & Memorize`
-const description = `Flip through all ${all.length} JLPT ${meta.label} kanji flashcards. Tap to reveal readings and meanings. Track your progress with Know/Again.`
+const title = `JLPT ${meta.label} Kanji Flashcards Online — Flip & Memorize Free`
+const description = `Free JLPT ${meta.label} kanji flashcards online. Flip through all ${all.length} cards to reveal readings and meanings. Track your progress with Know/Again.`
 const pageSchema = collectionPageSchema(title, `All ${all.length} JLPT ${meta.label} kanji flashcards.`, `${prefix}/flashcards`)
+const breadSchema = breadcrumbSchema([
+  { name: "Home", url: "/" },
+  { name: meta.label, url: `${prefix}/` },
+  { name: "Flashcards", url: `${prefix}/flashcards/` },
+])
 ---
 
 <DefaultLayout title={title} description={description} level={level}>
   <script type="application/ld+json" set:html={JSON.stringify(pageSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadSchema)} />
   <div class="px-4 py-6 sm:py-8">
     <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between mb-6 animate-fade-up">
       <div class="min-w-0">

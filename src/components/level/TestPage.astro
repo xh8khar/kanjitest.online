@@ -4,7 +4,7 @@ import TestClient from "@/components/TestClient"
 import { getSetQuestions } from "@/lib/kanji"
 import type { Level } from "@/lib/kanji"
 import { levelMeta, QUESTIONS_PER_SET } from "@/lib/levels"
-import { breadcrumbSchema, webPageSchema } from "@/lib/seo"
+import { breadcrumbSchema, quizSchema } from "@/lib/seo"
 
 export interface Props {
   level: Level
@@ -19,10 +19,10 @@ const prefix = `/${level}`
 // so the level's full JSON dataset never ships to the browser.
 const questions = getSetQuestions(setNum, level)
 
-const title = `Kanji Test Online – JLPT ${meta.label} Kanji Quiz Set ${setNum} (${QUESTIONS_PER_SET} Questions)`
-const description = `Practice JLPT ${meta.label} kanji with Set ${setNum} of ${QUESTIONS_PER_SET} questions. Test your kanji-to-reading and reading-to-kanji skills with real sentence context.`
+const title = `Free JLPT ${meta.label} Kanji Quiz Set ${setNum} — ${QUESTIONS_PER_SET} Questions | Kanji Test Online`
+const description = `Free JLPT ${meta.label} kanji practice test and mock quiz — Set ${setNum} of ${QUESTIONS_PER_SET} multiple choice questions. Test your kanji-to-reading and reading-to-kanji skills with real sentence context.`
 
-const pageSchema = webPageSchema(title, description)
+const pageSchema = quizSchema(title, description, QUESTIONS_PER_SET, `${prefix}/sets/${setNum}/`)
 const breadSchema = breadcrumbSchema([
   { name: "Home", url: "/" },
   { name: meta.label, url: `${prefix}/` },

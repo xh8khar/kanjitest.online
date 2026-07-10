@@ -2,7 +2,7 @@
 import DefaultLayout from "@/layouts/DefaultLayout.astro"
 import { getAll, getVocabulary } from "@/lib/kanji"
 import { LEVELS, LEVEL_IDS, SETS_PER_LEVEL, QUESTIONS_PER_SET } from "@/lib/levels"
-import { collectionPageSchema } from "@/lib/seo"
+import { collectionPageSchema, breadcrumbSchema } from "@/lib/seo"
 import { getCollection } from "astro:content"
 
 const featuredPosts = (await getCollection("blog"))
@@ -51,13 +51,101 @@ const jsonLd = collectionPageSchema(
   "Free JLPT N5, N4, N3, N2, and N1 kanji tests with answers. Study with flashcards, vocabulary, and practice quizzes.",
   "/"
 )
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "How many kanji are in JLPT N5?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: `JLPT N5 has 79 kanji characters. These are the most fundamental Japanese characters that every beginner learns first, covering basic nouns, verbs, and adjectives.`,
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How many kanji are in JLPT N4?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: `JLPT N4 has 168 kanji characters. These build on N5 and cover everyday kanji used in basic conversations and simple reading materials.`,
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How many kanji are in JLPT N3?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: `JLPT N3 has 365 kanji characters. These are upper-intermediate characters that bridge daily life vocabulary and more formal written Japanese such as news articles.`,
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How many kanji are in JLPT N2?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: `JLPT N2 has 686 kanji characters. These are advanced kanji found in newspapers, workplaces, and serious reading materials.`,
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How many kanji are in JLPT N1?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: `JLPT N1 has 1,237 kanji characters. This covers the full sweep of literary, academic, and professional Japanese required for native-level fluency.`,
+      },
+    },
+    {
+      "@type": "Question",
+      name: "What is the best JLPT kanji test online?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: `KanjiTest.Online is a free JLPT kanji test platform covering all levels from N5 to N1. It offers multiple choice quizzes, flashcards, vocabulary lists, and detailed kanji study pages — all without requiring an account or payment.`,
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Where can I practice JLPT kanji?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: `You can practice JLPT kanji for free on KanjiTest.Online. The site offers study pages with readings and examples, flip flashcards for active recall, vocabulary lists with sentences, and 20 practice test sets per level with instant feedback.`,
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Is JLPT N3 kanji difficult?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: `JLPT N3 kanji is moderately difficult — it requires learning 365 characters beyond the 247 in N5 and N4 combined. N3 marks the transition from beginner to intermediate Japanese, introducing more abstract vocabulary and concepts. With consistent practice using flashcards and quizzes, most learners find N3 achievable within 6-12 months of study.`,
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How to study JLPT N2 kanji?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: `To study JLPT N2 kanji effectively: (1) Review N3 kanji first to build a strong foundation. (2) Study kanji in context using example words and sentences rather than in isolation. (3) Use flashcards for spaced repetition and active recall. (4) Take practice tests to identify weak areas. KanjiTest.Online offers all these tools for free across every JLPT level.`,
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How to pass JLPT N1 kanji section?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: `To pass the JLPT N1 kanji section: (1) Master all 1,237 N1 kanji with their multiple readings and meanings. (2) Study vocabulary in context — N1 tests kanji within compound words and sentences. (3) Practice reading authentic materials like newspaper editorials and literary texts. (4) Use mock tests to simulate exam conditions. KanjiTest.Online provides N1 flashcards, vocabulary, and practice quizzes to help you prepare.`,
+      },
+    },
+  ],
+}
 ---
 
 <DefaultLayout
-  title="Free JLPT Kanji Study, Quiz & Test — N5, N4, N3, N2 & N1"
-  description="Master JLPT N5, N4, N3, N2, and N1 kanji with KanjiTest.Online — study with example words, flip flashcards, test your knowledge. Free forever."
+  title="Free JLPT Kanji Test Online — Practice Test, Quiz & Flashcards for N5 to N1"
+  description="Free JLPT kanji test online and practice test with mock exams for N5 to N1. Take a JLPT kanji quiz free, study with flashcards, and prepare for the Japanese kanji test online. No account needed."
 >
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
   <!-- ———————— Hero ———————— -->
   <section class="relative overflow-hidden">

@@ -2,7 +2,7 @@
 import DefaultLayout from "@/layouts/DefaultLayout.astro"
 import type { Level } from "@/lib/kanji"
 import { levelMeta, SETS_PER_LEVEL, QUESTIONS_PER_SET } from "@/lib/levels"
-import { collectionPageSchema } from "@/lib/seo"
+import { collectionPageSchema, breadcrumbSchema } from "@/lib/seo"
 import { getCollection } from "astro:content"
 
 export interface Props {
@@ -20,17 +20,23 @@ const blogPosts = allBlogPosts
   .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
   .slice(0, 3)
 
-const title = `JLPT ${meta.label} Kanji Tests — ${SETS_PER_LEVEL} Practice Quizzes`
-const description = `${SETS_PER_LEVEL} test sets of ${QUESTIONS_PER_SET} questions each. Practice reading and meaning recognition for JLPT ${meta.label} kanji with real sentence context.`
-const pageSchema = collectionPageSchema(title, `${SETS_PER_LEVEL} test sets of ${QUESTIONS_PER_SET} questions each for JLPT ${meta.label} kanji.`, `${prefix}/sets`)
+const title = `JLPT ${meta.label} Kanji Practice Test & Mock Quiz — ${SETS_PER_LEVEL} Free Online Exams`
+const description = `Free JLPT ${meta.label} kanji mock test online and practice quiz with ${SETS_PER_LEVEL} sets of ${QUESTIONS_PER_SET} questions each. Practice reading and meaning recognition with real sentence context.`
+const pageSchema = collectionPageSchema(title, `Free JLPT ${meta.label} kanji mock test online and practice quiz — ${SETS_PER_LEVEL} sets with ${QUESTIONS_PER_SET} questions each.`, `${prefix}/sets`)
+const breadSchema = breadcrumbSchema([
+  { name: "Home", url: "/" },
+  { name: meta.label, url: `${prefix}/` },
+  { name: "Tests", url: `${prefix}/sets/` },
+])
 ---
 
 <DefaultLayout title={title} description={description} level={level}>
   <script type="application/ld+json" set:html={JSON.stringify(pageSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadSchema)} />
 
   <div class="px-4 py-6 sm:py-8">
     <div class="mb-6 animate-fade-up">
-      <h1 class="text-xl sm:text-2xl font-black text-ink">JLPT {meta.label} Kanji Practice Tests</h1>
+      <h1 class="text-xl sm:text-2xl font-black text-ink">JLPT {meta.label} Kanji Practice Test & Quiz</h1>
       <p class="text-xs sm:text-sm text-ink/55 mt-1">{SETS_PER_LEVEL} sets · {QUESTIONS_PER_SET} questions each · {meta.tagline}</p>
     </div>
 

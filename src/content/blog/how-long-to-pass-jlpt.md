@@ -3,7 +3,7 @@ title: "How Long Does It Take to Pass Each JLPT Level?"
 description: "Realistic time estimates for passing each JLPT level — from N5 to N1 — with study hour recommendations and sample study plans."
 date: 2026-03-01
 author: "KanjiTest.Online"
-tags: ["JLPT", "all-levels", "planning", "motivation"]
+tags: ["JLPT", "N5", "all-levels", "planning", "motivation"]
 draft: false
 ---
 

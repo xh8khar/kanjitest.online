@@ -3,7 +3,7 @@ title: "How to Stay Motivated Learning Japanese: A Long-Term Strategy"
 description: "Practical strategies to maintain motivation — SMART goals, habit building, tracking progress, community, and overcoming plateaus."
 date: 2026-04-18
 author: "KanjiTest.Online"
-tags: ["all-levels", "motivation", "study-tips"]
+tags: ["N5", "all-levels", "motivation", "study-tips"]
 draft: false
 ---
 

@@ -3,7 +3,7 @@ title: "Common Mistakes When Learning Kanji (And How to Avoid Them)"
 description: "Avoid the most common pitfalls Japanese learners face when studying kanji — from stroke order confusion to reading mix-ups."
 date: 2026-02-15
 author: "KanjiTest.Online"
-tags: ["kanji", "mistakes", "all-levels", "study-tips"]
+tags: ["kanji", "mistakes", "N5", "N5", "all-levels", "study-tips"]
 draft: false
 ---
 

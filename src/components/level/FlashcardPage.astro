@@ -24,8 +24,8 @@ const k = all[idx]!
 // card in every page made N1 pages ~2MB each and the site 6GB.
 const entry = toDeckCard(k)
 
-const title = `Flashcard: ${k.kanji} (${k.meanings[0]}) — JLPT ${meta.label}`
-const description = `Flashcard for JLPT ${meta.label} kanji ${k.kanji} (${k.meanings[0]}). Flip to see readings, meanings, and example words.`
+const title = `${k.kanji} (${k.meanings[0]}) — JLPT ${meta.label} Kanji Flashcard | Kanji Test Online`
+const description = `Free JLPT ${meta.label} kanji flashcard for ${k.kanji} (${k.meanings[0]}). Flip to see readings, meanings, and example words. Practice and memorize kanji online.`
 
 const termSchema = definedTermSchema(k.kanji, k.meanings.join(", "), k.id, meta.label)
 const breadSchema = breadcrumbSchema([

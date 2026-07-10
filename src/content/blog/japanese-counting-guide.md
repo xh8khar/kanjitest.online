@@ -3,7 +3,7 @@ title: "Japanese Counting System: A Complete Guide to Counters"
 description: "Master Japanese counters — from basic numbers to the complex world of hitotsu, futatsu, and dozens of counter suffixes for every object type."
 date: 2026-03-12
 author: "KanjiTest.Online"
-tags: ["beginner", "intermediate", "grammar"]
+tags: ["N5", "beginner", "intermediate", "grammar"]
 draft: false
 ---
 

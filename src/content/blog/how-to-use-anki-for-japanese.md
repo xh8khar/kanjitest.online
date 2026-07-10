@@ -3,7 +3,7 @@ title: "How to Use Anki for Japanese: The Ultimate Setup Guide"
 description: "Master Anki for Japanese study with our complete setup guide — card types, add-ons, pre-made decks, and review strategies for JLPT success."
 date: 2026-03-10
 author: "KanjiTest.Online"
-tags: ["study-tips", "anki", "all-levels"]
+tags: ["study-tips", "anki", "N5", "all-levels"]
 draft: false
 ---
 

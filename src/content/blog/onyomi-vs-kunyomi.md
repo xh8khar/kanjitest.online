@@ -3,7 +3,7 @@ title: "On'yomi vs Kun'yomi: Understanding Japanese Kanji Readings"
 description: "Learn the difference between on'yomi and kun'yomi readings — when to use each, common patterns, and tips for mastering Japanese kanji readings."
 date: 2026-01-20
 author: "KanjiTest.Online"
-tags: ["kanji", "readings", "beginner", "intermediate"]
+tags: ["kanji", "readings", "N5", "beginner", "intermediate"]
 draft: false
 ---
 

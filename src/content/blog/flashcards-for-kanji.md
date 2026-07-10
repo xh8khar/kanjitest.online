@@ -3,7 +3,7 @@ title: "How to Use Flashcards for Kanji: A Complete Guide"
 description: "Learn how to use flashcards effectively for kanji study — from spaced repetition systems to active recall techniques that triple retention."
 date: 2026-02-01
 author: "KanjiTest.Online"
-tags: ["kanji", "flashcards", "study-tips", "all-levels"]
+tags: ["kanji", "flashcards", "study-tips", "N5", "all-levels"]
 draft: false
 ---
 

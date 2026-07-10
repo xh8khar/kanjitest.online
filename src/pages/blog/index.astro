@@ -1,6 +1,6 @@
 ---
 import DefaultLayout from "@/layouts/DefaultLayout.astro"
-import { siteUrl, collectionPageSchema, webPageSchema } from "@/lib/seo"
+import { siteUrl, collectionPageSchema, webPageSchema, breadcrumbSchema } from "@/lib/seo"
 import { getCollection } from "astro:content"
 import { LEVELS, LEVEL_IDS } from "@/lib/levels"
 
@@ -11,17 +11,24 @@ const published = allPosts
   .map((p) => ({ ...p, slug: p.id }))
 
 const jsonLd = collectionPageSchema(
-  "Blog — KanjiTest.Online",
-  "Learn Japanese with KanjiTest.Online's blog — JLPT study tips, kanji learning guides, and Japanese language resources.",
+  "JLPT Kanji Blog — KanjiTest.Online",
+  "Learn Japanese with KanjiTest.Online's blog — JLPT study tips, kanji learning guides, free practice resources, and Japanese language strategies.",
   "/blog/"
 )
 ---
 
 <DefaultLayout
-  title="Blog — KanjiTest.Online"
-  description="Learn Japanese with expert articles on JLPT study tips, kanji memorization techniques, vocabulary building, and Japanese language learning strategies."
+  title="JLPT Kanji Blog — Study Tips, Practice Guides & Japanese Learning Resources"
+  description="Learn Japanese kanji with expert articles on JLPT study tips, kanji memorization techniques, vocabulary building, and free online practice strategies for N5 to N1."
 >
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify(breadcrumbSchema([
+      { name: "Home", url: siteUrl("/") },
+      { name: "Blog", url: siteUrl("/blog/") },
+    ]))}
+  />
 
   <div class="max-w-4xl mx-auto px-4 py-8 sm:py-12">
     <h1 class="text-3xl sm:text-4xl font-black text-ink mb-2">KanjiTest.Online Blog</h1>
@@ -53,9 +60,9 @@ const jsonLd = collectionPageSchema(
               <time datetime={data.date.toISOString()}>
                 {data.date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
               </time>
-              {data.tags.length > 0 && (
+              {data.tags.filter((t) => !["N5", "N4", "N3", "N2", "N1"].includes(t)).length > 0 && (
                 <span class="flex gap-1.5">
-                  {data.tags.map((tag) => (
+                  {data.tags.filter((t) => !["N5", "N4", "N3", "N2", "N1"].includes(t)).slice(0, 2).map((tag) => (
                     <span class:list={["px-2 py-0.5 rounded-full font-medium", tagColors[tag] || "bg-ink/5 text-ink/60"]}>
                       {tag}
                     </span>
