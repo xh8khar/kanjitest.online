@@ -3,6 +3,7 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
 import { getAll } from "@/lib/kanji"
 import type { Level } from "@/lib/kanji"
 import { levelMeta } from "@/lib/levels"
+import { collectionPageSchema } from "@/lib/seo"
 
 export interface Props {
   level: Level
@@ -15,9 +16,11 @@ const prefix = `/${level}`
 
 const title = `JLPT ${meta.label} Kanji Flashcards — Flip & Memorize`
 const description = `Flip through all ${all.length} JLPT ${meta.label} kanji flashcards. Tap to reveal readings and meanings. Track your progress with Know/Again.`
+const pageSchema = collectionPageSchema(title, `All ${all.length} JLPT ${meta.label} kanji flashcards.`, `${prefix}/flashcards`)
 ---
 
 <DefaultLayout title={title} description={description} level={level}>
+  <script type="application/ld+json" set:html={JSON.stringify(pageSchema)} />
   <div class="px-4 py-6 sm:py-8">
     <div class="flex items-end justify-between mb-6 animate-fade-up">
       <div>

@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar.astro"
 import Sidebar from "@/components/Sidebar.astro"
 import Footer from "@/components/Footer.astro"
 import { websiteSchema, organizationSchema, siteUrl } from "@/lib/seo"
+import { pageKeywords } from "@/lib/seo"
 import type { Level } from "@/lib/kanji"
 
 export interface Props {
@@ -13,9 +14,10 @@ export interface Props {
   noIndex?: boolean
   level?: Level
   ogImage?: string
+  keywords?: string
 }
 
-const { title, description, noIndex, level, ogImage } = Astro.props
+const { title, description, noIndex, level, ogImage, keywords: kw } = Astro.props
 const prefix = level ? `/${level}` : ""
 const canonical = Astro.url.pathname.endsWith("/") ? Astro.url.pathname : `${Astro.url.pathname}/`
 const finalTitle = title || "KanjiTest.Online"
@@ -38,6 +40,7 @@ const subLinks = [
     <meta name="generator" content={Astro.generator} />
     <title>{finalTitle}</title>
     <meta name="description" content={finalDesc} />
+    <meta name="keywords" content={kw || pageKeywords(path)} />
     {noIndex ? (
       <meta name="robots" content="noindex" />
     ) : (

@@ -95,3 +95,54 @@ export function itemListSchema(items: { name: string; url: string }[]) {
 export function keywords(list: string[]): string {
   return list.join(", ")
 }
+
+const LEVEL_NAMES: Record<string, string> = {
+  n5: "N5", n4: "N4", n3: "N3", n2: "N2", n1: "N1",
+}
+
+export function pageKeywords(pathname: string): string {
+  const segs = pathname.replace(/\/+$/, "").split("/").filter(Boolean)
+  const level = segs[0] && LEVEL_NAMES[segs[0]] ? segs[0] : null
+  const label = level ? LEVEL_NAMES[level] : ""
+  const pageType = segs[1] ?? ""
+  const param = decodeURIComponent(segs[2] ?? "")
+
+  const base = level
+    ? [`JLPT ${label}`, `JLPT ${label} kanji`, "learn Japanese", "Japanese language"]
+    : ["kanji", "JLPT", "learn Japanese", "Japanese writing"]
+
+  switch (pageType) {
+    case "study": {
+      if (param && !param.includes("index")) {
+        const extras = [param, `${label} ${param}`, "kanji meaning", "kanji readings", "kunyomi", "onyomi"]
+        return keywords([...base, ...extras])
+      }
+      return keywords([...base, "kanji list", "kanji readings", "kunyomi", "onyomi", "study kanji"])
+    }
+    case "flashcards": {
+      if (param && !param.includes("index")) {
+        const extras = [param, `${label} ${param}`, "kanji flashcard", "flashcard", "memorize kanji"]
+        return keywords([...base, ...extras])
+      }
+      return keywords([...base, "kanji flashcards", "flip cards", "memorize kanji", "flashcard deck"])
+    }
+    case "vocabulary": {
+      if (param && !param.includes("index")) {
+        return keywords([...base, param, "Japanese vocabulary", "Japanese word", "vocabulary"].filter(Boolean))
+      }
+      return keywords([...base, "Japanese vocabulary", "vocabulary list", "Japanese words", "word list"])
+    }
+    case "sets": {
+      if (param && !isNaN(Number(param))) {
+        return keywords([...base, `set ${param}`, "kanji quiz", "kanji test", "practice test", "JLPT quiz", `${label} set ${param}`])
+      }
+      return keywords([...base, "kanji test", "kanji quiz", "practice test", "JLPT practice", "test your knowledge"])
+    }
+    default: {
+      if (level) {
+        return keywords([...base, "kanji list", "learn kanji", "Japanese characters", "kanji study"])
+      }
+      return keywords(["JLPT", "kanji", "learn Japanese", "Japanese study", "kanji flashcards", "kanji quiz"])
+    }
+  }
+}

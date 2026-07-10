@@ -4,6 +4,7 @@ import TestClient from "@/components/TestClient"
 import { getSetQuestions } from "@/lib/kanji"
 import type { Level } from "@/lib/kanji"
 import { levelMeta, QUESTIONS_PER_SET } from "@/lib/levels"
+import { breadcrumbSchema, webPageSchema } from "@/lib/seo"
 
 export interface Props {
   level: Level
@@ -12,6 +13,7 @@ export interface Props {
 
 const { level, setNum } = Astro.props
 const meta = levelMeta(level)
+const prefix = `/${level}`
 
 // Questions are generated at build time and serialized as island props,
 // so the level's full JSON dataset never ships to the browser.
@@ -19,8 +21,18 @@ const questions = getSetQuestions(setNum, level)
 
 const title = `Kanji Test Online – JLPT ${meta.label} Kanji Quiz Set ${setNum} (${QUESTIONS_PER_SET} Questions)`
 const description = `Practice JLPT ${meta.label} kanji with Set ${setNum} of ${QUESTIONS_PER_SET} questions. Test your kanji-to-reading and reading-to-kanji skills with real sentence context.`
+
+const pageSchema = webPageSchema(title, description)
+const breadSchema = breadcrumbSchema([
+  { name: "Home", url: "/" },
+  { name: meta.label, url: `${prefix}/` },
+  { name: "Tests", url: `${prefix}/sets/` },
+  { name: `Set ${setNum}`, url: `${prefix}/sets/${setNum}/` },
+])
 ---
 
 <DefaultLayout title={title} description={description} level={level}>
+  <script type="application/ld+json" set:html={JSON.stringify(pageSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadSchema)} />
   <TestClient client:load level={level} setNum={setNum} questions={questions} />
 </DefaultLayout>

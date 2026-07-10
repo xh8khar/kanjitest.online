@@ -77,6 +77,13 @@ export interface Question {
   sentenceEnglish: string
 }
 
+export function getSetKanjiList(setNum: number, level: Level = "n5"): string[] {
+  const all = getData(level)
+  const qCount = 20
+  const rng = seededShuffle(all, setNum)
+  return rng.slice(0, qCount).map((k) => k.kanji)
+}
+
 export function getSetQuestions(setNum: number, level: Level = "n5"): Question[] {
   const all = getData(level)
   const qCount = 20

@@ -4,6 +4,7 @@ import FlashcardsClient from "@/components/FlashcardsClient"
 import { getAll } from "@/lib/kanji"
 import type { Level } from "@/lib/kanji"
 import { levelMeta } from "@/lib/levels"
+import { breadcrumbSchema, definedTermSchema } from "@/lib/seo"
 
 export interface Props {
   level: Level
@@ -12,6 +13,7 @@ export interface Props {
 
 const { level, kanji } = Astro.props
 const meta = levelMeta(level)
+const prefix = `/${level}`
 const all = getAll(level)
 const idx = all.findIndex((x) => x.kanji === kanji)
 const k = all[idx]!
@@ -32,9 +34,19 @@ const allKanji = all.map((x) => ({ kanji: x.kanji, id: x.id, meaning: x.meanings
 
 const title = `Flashcard: ${k.kanji} (${k.meanings[0]}) — JLPT ${meta.label}`
 const description = `Flashcard for JLPT ${meta.label} kanji ${k.kanji} (${k.meanings[0]}). Flip to see readings, meanings, and example words.`
+
+const termSchema = definedTermSchema(k.kanji, k.meanings.join(", "), k.id, meta.label)
+const breadSchema = breadcrumbSchema([
+  { name: "Home", url: "/" },
+  { name: meta.label, url: `${prefix}/` },
+  { name: "Flashcards", url: `${prefix}/flashcards/` },
+  { name: k.kanji, url: `${prefix}/flashcards/${k.kanji}/` },
+])
 ---
 
 <DefaultLayout title={title} description={description} level={level}>
+  <script type="application/ld+json" set:html={JSON.stringify(breadSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(termSchema)} />
   <FlashcardsClient
     client:load
     level={level}

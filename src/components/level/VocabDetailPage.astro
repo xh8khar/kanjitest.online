@@ -3,6 +3,7 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
 import { getVocabulary } from "@/lib/kanji"
 import type { Level } from "@/lib/kanji"
 import { levelMeta } from "@/lib/levels"
+import { breadcrumbSchema, definedTermSchema } from "@/lib/seo"
 
 export interface Props {
   level: Level
@@ -20,9 +21,19 @@ const next = idx < allVocab.length - 1 ? allVocab[idx + 1] : null
 
 const title = `${vocab.word} (${vocab.reading}) — JLPT ${meta.label} Vocabulary`
 const description = `${vocab.word} (${vocab.reading}) — ${vocab.english}. Example sentences and associated kanji for JLPT ${meta.label}.`
+
+const termSchema = definedTermSchema(vocab.word, `${vocab.reading} — ${vocab.english}`, vocab.kanjiIds[0], meta.label)
+const breadSchema = breadcrumbSchema([
+  { name: "Home", url: "/" },
+  { name: meta.label, url: `${prefix}/` },
+  { name: "Vocabulary", url: `${prefix}/vocabulary/` },
+  { name: vocab.word, url: `${prefix}/vocabulary/${vocab.slug}/` },
+])
 ---
 
 <DefaultLayout title={title} description={description} level={level}>
+  <script type="application/ld+json" set:html={JSON.stringify(breadSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(termSchema)} />
   <div class="px-4 py-6 sm:py-8">
     <a href={`${prefix}/vocabulary/`} class="inline-flex items-center gap-1 text-xs text-ink/55 hover:text-vermilion transition-colors animate-fade-in">
       &larr; All vocabulary
