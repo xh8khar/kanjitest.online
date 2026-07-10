@@ -41,7 +41,7 @@ const blogOgImage = blogSpecificOg || kanjiOg || (levelTag ? `/og/og-${levelTag.
 const jsonLdArticle = articleSchema(data.title, data.description, blogOgImage.startsWith("http") ? blogOgImage : siteUrl(blogOgImage), data.date.toISOString())
 ---
 
-<DefaultLayout title={`${data.title} — KanjiTest.Online Blog`} description={data.description} ogImage={blogOgImage} keywords={["JLPT", "kanji", "learn Japanese", ...data.tags].join(", ")}>
+<DefaultLayout title={`${data.title} — KanjiTest.Online Blog`} description={data.description} ogImage={blogOgImage} keywords={data.keywords.length > 0 ? data.keywords.join(", ") : ["JLPT", "kanji", "learn Japanese", ...data.tags].join(", ")}>
   <script type="application/ld+json" set:html={JSON.stringify(jsonLdBreadcrumb)} />
   <script type="application/ld+json" set:html={JSON.stringify(jsonLdArticle)} />
 

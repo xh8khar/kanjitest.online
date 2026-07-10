@@ -4,6 +4,7 @@ description: "Learn the difference between on'yomi and kun'yomi readings — whe
 date: 2026-01-20
 author: "KanjiTest.Online"
 tags: ["kanji", "readings", "N5", "beginner", "intermediate"]
+keywords: ["JLPT", "kanji", "onyomi", "kunyomi", "N5", "learn Japanese"]
 draft: false
 ---
 

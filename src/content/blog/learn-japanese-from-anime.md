@@ -4,6 +4,7 @@ description: "Learn Japanese through anime and manga — subtitle strategies, se
 date: 2026-04-15
 author: "KanjiTest.Online"
 tags: ["N5", "beginner", "intermediate", "study-tips"]
+keywords: ["JLPT", "learn Japanese", "anime", "manga", "N5", "study tips"]
 draft: false
 ---
 

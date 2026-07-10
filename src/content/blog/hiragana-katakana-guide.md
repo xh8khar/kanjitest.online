@@ -4,6 +4,7 @@ description: "Master hiragana and katakana with our complete guide — charts, r
 date: 2026-01-15
 author: "KanjiTest.Online"
 tags: ["N5", "beginner", "hiragana", "katakana", "Japanese-scripts"]
+keywords: ["JLPT", "hiragana", "katakana", "N5", "beginner", "learn Japanese"]
 draft: false
 ---
 

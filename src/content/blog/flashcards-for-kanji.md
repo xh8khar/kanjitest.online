@@ -4,6 +4,7 @@ description: "Learn how to use flashcards effectively for kanji study — from s
 date: 2026-02-01
 author: "KanjiTest.Online"
 tags: ["kanji", "flashcards", "study-tips", "N5", "all-levels"]
+keywords: ["JLPT", "kanji", "flashcards", "SRS", "N5", "learn Japanese"]
 draft: false
 ---
 

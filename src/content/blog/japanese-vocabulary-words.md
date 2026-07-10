@@ -4,6 +4,7 @@ description: "Master the 100 most essential Japanese vocabulary words for JLPT s
 date: 2026-01-25
 author: "KanjiTest.Online"
 tags: ["vocabulary", "JLPT", "N5", "all-levels"]
+keywords: ["JLPT", "Japanese vocabulary", "common words", "N5", "learn Japanese", "word list"]
 draft: false
 ---
 

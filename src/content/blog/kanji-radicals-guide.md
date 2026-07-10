@@ -4,6 +4,7 @@ description: "Learn the 214 kanji radicals and how they unlock the meaning and r
 date: 2026-03-01
 author: "KanjiTest.Online"
 tags: ["kanji", "radicals", "beginner", "N5", "all-levels"]
+keywords: ["JLPT", "kanji", "radicals", "bushu", "N5", "learn Japanese"]
 draft: false
 ---
 

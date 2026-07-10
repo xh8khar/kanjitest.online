@@ -4,6 +4,7 @@ description: "A strategic guide to passing JLPT N2 — master advanced kanji, co
 date: 2026-01-10
 author: "KanjiTest.Online"
 tags: ["JLPT", "N2", "advanced", "study-guide"]
+keywords: ["JLPT", "N2", "advanced", "study guide", "kanji", "learn Japanese"]
 draft: false
 ---
 

@@ -4,6 +4,7 @@ description: "Practical strategies to boost your JLPT listening score — shadow
 date: 2026-04-05
 author: "KanjiTest.Online"
 tags: ["JLPT", "listening", "N5", "all-levels"]
+keywords: ["JLPT", "listening", "N5", "study tips", "learn Japanese", "test preparation"]
 draft: false
 ---
 

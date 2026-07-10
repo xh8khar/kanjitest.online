@@ -4,6 +4,7 @@ description: "Understand Japanese pitch accent patterns and improve your pronunc
 date: 2026-03-05
 author: "KanjiTest.Online"
 tags: ["pronunciation", "N5", "beginner", "intermediate"]
+keywords: ["JLPT", "pitch accent", "pronunciation", "N5", "beginner", "learn Japanese"]
 draft: false
 ---
 

@@ -5,6 +5,7 @@ date: 2026-05-05
 author: "KanjiTest.Online"
 kanji: "前"
 tags: ["JLPT", "N5", "N4", "N3", "N2", "N1", "resources"]
+keywords: ["JLPT", "kanji practice", "online", "N5", "resources", "learn Japanese"]
 draft: false
 ---
 

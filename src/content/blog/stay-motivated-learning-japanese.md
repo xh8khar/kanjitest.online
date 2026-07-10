@@ -4,6 +4,7 @@ description: "Practical strategies to maintain motivation — SMART goals, habit
 date: 2026-04-18
 author: "KanjiTest.Online"
 tags: ["N5", "all-levels", "motivation", "study-tips"]
+keywords: ["JLPT", "motivation", "N5", "study tips", "learn Japanese", "language learning"]
 draft: false
 ---
 

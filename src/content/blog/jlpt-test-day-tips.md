@@ -4,6 +4,7 @@ description: "Everything you need to know for JLPT test day — what to bring, t
 date: 2026-03-25
 author: "KanjiTest.Online"
 tags: ["JLPT", "N5", "all-levels", "study-tips"]
+keywords: ["JLPT", "test day", "N5", "study tips", "learn Japanese", "exam tips"]
 draft: false
 ---
 

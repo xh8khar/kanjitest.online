@@ -4,6 +4,7 @@ description: "A complete JLPT N3 study guide covering kanji, vocabulary, grammar
 date: 2026-03-15
 author: "KanjiTest.Online"
 tags: ["JLPT", "N3", "intermediate", "study-guide"]
+keywords: ["JLPT", "N3", "study guide", "intermediate", "kanji", "learn Japanese"]
 draft: false
 ---
 

@@ -13,6 +13,7 @@ const blog = defineCollection({
       image: image().optional(),
       kanji: z.string().optional(),
       tags: z.array(z.string()).default([]),
+      keywords: z.array(z.string()).default([]),
       draft: z.boolean().default(false),
     }),
 })

@@ -4,6 +4,7 @@ description: "The definitive guide to passing JLPT N1 — advanced kanji mastery
 date: 2026-01-15
 author: "KanjiTest.Online"
 tags: ["JLPT", "N1", "advanced", "study-guide"]
+keywords: ["JLPT", "N1", "advanced", "kanji", "study guide", "learn Japanese"]
 draft: false
 ---
 

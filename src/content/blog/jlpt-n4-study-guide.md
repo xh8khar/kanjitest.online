@@ -4,6 +4,7 @@ description: "A comprehensive guide to JLPT N4 kanji — learn the 171 kanji cha
 date: 2026-02-01
 author: "KanjiTest.Online"
 tags: ["JLPT", "N4", "beginner", "study-guide"]
+keywords: ["JLPT", "N4", "beginner", "study guide", "kanji", "learn Japanese"]
 draft: false
 ---
 

@@ -4,6 +4,7 @@ description: "Practical strategies to improve Japanese reading comprehension for
 date: 2026-02-20
 author: "KanjiTest.Online"
 tags: ["reading", "JLPT", "N3", "intermediate", "advanced"]
+keywords: ["JLPT", "reading comprehension", "N3", "intermediate", "learn Japanese", "Japanese reading"]
 draft: false
 ---
 

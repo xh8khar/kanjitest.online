@@ -4,6 +4,7 @@ description: "Master proper kanji stroke order — essential rules, common patte
 date: 2026-04-10
 author: "KanjiTest.Online"
 tags: ["kanji", "N5", "beginner", "study-tips"]
+keywords: ["JLPT", "kanji", "stroke order", "N5", "handwriting", "learn Japanese"]
 draft: false
 ---
 

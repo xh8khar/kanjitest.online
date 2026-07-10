@@ -3,7 +3,8 @@ title: "Essential Japanese Grammar for JLPT Success"
 description: "Master the essential Japanese grammar patterns needed for JLPT N5 through N1 — from basic particles to advanced sentence structures."
 date: 2026-02-25
 author: "KanjiTest.Online"
-tags: ["grammar", "JLPT", "N5", "N5", "beginner", "intermediate"]
+tags: ["grammar", "JLPT", "N5", "beginner", "intermediate"]
+keywords: ["JLPT", "Japanese grammar", "N5", "beginner", "intermediate", "learn Japanese"]
 draft: false
 ---
 

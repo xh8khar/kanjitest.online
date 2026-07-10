@@ -4,6 +4,7 @@ description: "Learn Japanese sentence structure from scratch — SOV word order,
 date: 2026-04-08
 author: "KanjiTest.Online"
 tags: ["N5", "beginner", "grammar"]
+keywords: ["JLPT", "Japanese grammar", "sentence structure", "N5", "beginner", "learn Japanese"]
 draft: false
 ---
 

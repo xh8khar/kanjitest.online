@@ -4,6 +4,7 @@ description: "A honest look at JLPT N3 kanji difficulty — how many characters 
 date: 2026-05-10
 author: "KanjiTest.Online"
 tags: ["JLPT", "N3", "intermediate", "study-guide"]
+keywords: ["JLPT", "N3", "kanji difficulty", "intermediate", "study guide", "learn Japanese"]
 draft: false
 ---
 

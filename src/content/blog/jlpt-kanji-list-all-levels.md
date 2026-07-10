@@ -4,6 +4,7 @@ description: "The complete JLPT kanji list from N5 to N1 — counts, example cha
 date: 2026-04-25
 author: "KanjiTest.Online"
 tags: ["JLPT", "kanji", "N5", "all-levels", "study-guide"]
+keywords: ["JLPT", "kanji list", "N5", "study guide", "learn Japanese", "all levels"]
 draft: false
 ---
 

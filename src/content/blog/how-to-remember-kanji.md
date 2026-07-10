@@ -4,6 +4,7 @@ description: "Discover powerful mnemonic techniques to memorize kanji faster and
 date: 2026-02-15
 author: "KanjiTest.Online"
 tags: ["kanji", "mnemonics", "study-tips", "N5", "all-levels"]
+keywords: ["JLPT", "kanji", "mnemonics", "memory techniques", "N5", "learn Japanese"]
 draft: false
 ---
 

@@ -4,6 +4,7 @@ description: "Master Anki for Japanese study with our complete setup guide — c
 date: 2026-03-10
 author: "KanjiTest.Online"
 tags: ["study-tips", "anki", "N5", "all-levels"]
+keywords: ["JLPT", "Anki", "SRS", "N5", "study tips", "learn Japanese"]
 draft: false
 ---
 

@@ -4,6 +4,7 @@ description: "Master keigo (Japanese honorific language) — sonkeigo, kenjougo,
 date: 2026-03-22
 author: "KanjiTest.Online"
 tags: ["N3", "intermediate", "advanced", "grammar"]
+keywords: ["JLPT", "keigo", "honorific Japanese", "N3", "grammar", "learn Japanese"]
 draft: false
 ---
 

@@ -4,6 +4,7 @@ description: "Realistic time estimates for passing each JLPT level — from N5 t
 date: 2026-03-01
 author: "KanjiTest.Online"
 tags: ["JLPT", "N5", "all-levels", "planning", "motivation"]
+keywords: ["JLPT", "study time", "N5", "planning", "learn Japanese", "language learning"]
 draft: false
 ---
 

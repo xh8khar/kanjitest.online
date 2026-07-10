@@ -4,6 +4,7 @@ description: "Master Japanese onomatopoeia — giongo (sound words) and gitaigo 
 date: 2026-04-22
 author: "KanjiTest.Online"
 tags: ["N5", "beginner", "intermediate", "vocabulary"]
+keywords: ["JLPT", "onomatopoeia", "giongo", "gitaigo", "N5", "learn Japanese"]
 draft: false
 ---
 

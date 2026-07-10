@@ -4,6 +4,7 @@ description: "Essential Japanese vocabulary for daily life — greetings, shoppi
 date: 2026-04-28
 author: "KanjiTest.Online"
 tags: ["N5", "beginner", "vocabulary"]
+keywords: ["JLPT", "N5", "Japanese vocabulary", "daily life", "beginner", "learn Japanese"]
 draft: false
 ---
 

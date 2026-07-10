@@ -4,6 +4,7 @@ description: "Navigate Japanese politeness levels — plain form, polite masu, h
 date: 2026-04-12
 author: "KanjiTest.Online"
 tags: ["N5", "beginner", "intermediate", "grammar"]
+keywords: ["JLPT", "Japanese politeness", "keigo", "N5", "grammar", "learn Japanese"]
 draft: false
 ---
 

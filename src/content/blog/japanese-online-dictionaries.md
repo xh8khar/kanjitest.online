@@ -4,6 +4,7 @@ description: "The ultimate guide to Japanese dictionaries online — from Jisho 
 date: 2026-04-20
 author: "KanjiTest.Online"
 tags: ["resources", "N5", "all-levels", "study-tips"]
+keywords: ["JLPT", "Japanese dictionary", "resources", "N5", "learn Japanese", "study tools"]
 draft: false
 ---
 

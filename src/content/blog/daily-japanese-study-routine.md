@@ -3,7 +3,8 @@ title: "Daily Japanese Study Routine: How to Learn Kanji in 30 Minutes a Day"
 description: "Build an effective daily Japanese study routine that fits your schedule — 30-minute daily sessions for consistent kanji and vocabulary progress."
 date: 2026-02-10
 author: "KanjiTest.Online"
-tags: ["study-tips", "routine", "N5", "N5", "all-levels", "motivation"]
+tags: ["study-tips", "routine", "N5", "all-levels", "motivation"]
+keywords: ["JLPT", "study routine", "N5", "motivation", "learn Japanese", "study tips"]
 draft: false
 ---
 

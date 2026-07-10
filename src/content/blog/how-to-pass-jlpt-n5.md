@@ -4,6 +4,7 @@ description: "Everything you need to know to pass the JLPT N5 exam — from kanj
 date: 2026-01-01
 author: "KanjiTest.Online"
 tags: ["JLPT", "N5", "beginner", "study-guide"]
+keywords: ["JLPT", "N5", "study guide", "beginner", "kanji", "learn Japanese"]
 draft: false
 ---
 

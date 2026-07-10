@@ -4,6 +4,7 @@ description: "The ultimate guide to JLPT study resources — from free online to
 date: 2026-02-05
 author: "KanjiTest.Online"
 tags: ["JLPT", "resources", "N5", "all-levels", "study-guide"]
+keywords: ["JLPT", "resources", "N5", "study guide", "learn Japanese", "test preparation"]
 draft: false
 ---
 

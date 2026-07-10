@@ -5,6 +5,7 @@ date: 2026-05-01
 author: "KanjiTest.Online"
 kanji: "一"
 tags: ["JLPT", "N5", "N4", "N3", "N2", "N1", "study-guide"]
+keywords: ["JLPT", "kanji count", "N5", "N4", "N3", "N2", "N1", "learn Japanese"]
 draft: false
 ---
 

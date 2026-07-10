@@ -4,6 +4,7 @@ description: "Master Japanese counters — from basic numbers to the complex wor
 date: 2026-03-12
 author: "KanjiTest.Online"
 tags: ["N5", "beginner", "intermediate", "grammar"]
+keywords: ["JLPT", "Japanese counters", "N5", "grammar", "counting", "learn Japanese"]
 draft: false
 ---
 
