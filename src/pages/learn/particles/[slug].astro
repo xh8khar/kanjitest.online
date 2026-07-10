@@ -1,0 +1,109 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import { particles, toSlug, getBySlug, TYPES } from "@/lib/particles"
+
+export function getStaticPaths() {
+  return particles.map((p) => ({ params: { slug: toSlug(p) } }))
+}
+
+const slug = Astro.params.slug!
+const particle = getBySlug(slug)!
+const idx = particles.indexOf(particle)
+const prev = idx > 0 ? particles[idx - 1] : null
+const next = idx < particles.length - 1 ? particles[idx + 1] : null
+---
+
+<DefaultLayout
+  title={`${particle.particle} (${particle.meaning}) — Japanese Particle — KanjiTest.Online`}
+  description={`Learn about the Japanese particle ${particle.particle} (${particle.reading}, ${particle.meaning}). ${particle.summary}`}
+  keywords={`Japanese particle, ${particle.particle}, ${particle.reading}, ${particle.meaning}, JLPT ${particle.jlpt.toUpperCase()}, Japanese grammar`}
+>
+  <div class="max-w-2xl mx-auto px-4 py-8 sm:py-12">
+    <nav class="text-[11px] sm:text-xs text-ink/45 mb-5 flex items-center gap-1 animate-fade-in">
+      <a href="/" class="hover:text-ink transition-colors">Home</a>
+      <span>/</span>
+      <a href="/learn/" class="hover:text-ink transition-colors">Learn</a>
+      <span>/</span>
+      <a href="/learn/particles/" class="hover:text-ink transition-colors">Particles</a>
+      <span>/</span>
+      <span class="text-ink/70 font-jp">{particle.particle}</span>
+    </nav>
+
+    <div class="flex justify-between items-center mb-6">
+      {prev ? (
+        <a href={`/learn/particles/${toSlug(prev)}/`} class="flex items-center gap-1.5 text-xs text-ink/50 hover:text-ink transition-colors">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+          {prev.particle} {prev.meaning}
+        </a>
+      ) : <div />}
+      <span class="text-xs text-ink/30">{idx + 1} / {particles.length}</span>
+      {next ? (
+        <a href={`/learn/particles/${toSlug(next)}/`} class="flex items-center gap-1.5 text-xs text-ink/50 hover:text-ink transition-colors">
+          {next.particle} {next.meaning}
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+        </a>
+      ) : <div />}
+    </div>
+
+    <div class="card overflow-hidden animate-fade-up">
+      <div class="bg-gradient-to-r from-vermilion/10 to-vermilion/5 h-1.5" />
+      <div class="p-6 sm:p-8 text-center">
+        <span class="text-7xl sm:text-8xl font-jp font-black text-ink leading-none block animate-ink-in">{particle.particle}</span>
+        <h1 class="text-lg sm:text-xl font-bold text-ink mt-3">{particle.meaning}</h1>
+        <p class="text-sm text-ink/45 font-mono mt-1">{particle.reading}</p>
+      </div>
+    </div>
+
+    <div class="grid sm:grid-cols-2 gap-3 mt-5 animate-fade-up" style="animation-delay: 80ms">
+      <div class="card p-4 text-center">
+        <span class="block text-xs text-ink/40 uppercase tracking-wider font-medium">Type</span>
+        <span class="block text-sm font-bold text-ink mt-1">{particle.type}</span>
+      </div>
+      <div class="card p-4 text-center">
+        <span class="block text-xs text-ink/40 uppercase tracking-wider font-medium">JLPT Level</span>
+        <span class="block text-sm font-bold text-ink mt-1 uppercase">{particle.jlpt}</span>
+      </div>
+    </div>
+
+    <div class="card p-5 mt-3 animate-fade-up" style="animation-delay: 100ms">
+      <h2 class="text-xs font-bold text-ink/40 uppercase tracking-wider mb-2">Summary</h2>
+      <p class="text-sm text-ink/70 leading-relaxed">{particle.summary}</p>
+    </div>
+
+    <div class="card p-5 mt-3 animate-fade-up" style="animation-delay: 120ms">
+      <h2 class="text-xs font-bold text-ink/40 uppercase tracking-wider mb-3">Usage Rules</h2>
+      <ul class="space-y-1.5">
+        {particle.rules.map((rule) => (
+          <li class="text-[13px] text-ink/65 flex items-start gap-2">
+            <span class="text-vermilion/60 mt-0.5 shrink-0">•</span>
+            <span>{rule}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="card p-5 mt-3 animate-fade-up" style="animation-delay: 140ms">
+      <h2 class="text-xs font-bold text-ink/40 uppercase tracking-wider mb-3">Example Sentences</h2>
+      <div class="space-y-2">
+        {particle.examples.map((ex) => (
+          <div class="rounded-lg bg-ink/[0.03] px-4 py-2.5">
+            <p class="text-sm text-ink font-jp">{ex.jp}</p>
+            <p class="text-[12px] text-ink/55 mt-0.5">{ex.en}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="mt-3 rounded-xl bg-amber-50 border border-amber-200/70 px-5 py-4 animate-fade-up" style="animation-delay: 160ms">
+      <p class="text-[11px] font-bold uppercase tracking-widest text-amber-700">Common Mistake</p>
+      <p class="text-[13px] text-amber-800/80 mt-1">{particle.mistake}</p>
+    </div>
+
+    <div class="text-center mt-8 animate-fade-up" style="animation-delay: 180ms">
+      <a href="/learn/particles/" class="inline-flex items-center gap-1.5 text-xs text-ink/50 hover:text-ink transition-colors">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+        Back to all particles
+      </a>
+    </div>
+  </div>
+</DefaultLayout>

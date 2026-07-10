@@ -1,0 +1,80 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import { particles, getByType, TYPES } from "@/lib/particles"
+
+const TYPE_LABELS: Record<string, string> = {
+  Case: "Case Particles (格助詞)",
+  Focus: "Focus Particles (取り立て助詞)",
+  Conjunctive: "Conjunctive Particles (接続助詞)",
+  Final: "Sentence-Final Particles (終助詞)",
+  Adverbial: "Adverbial Particles (副助詞)",
+  Compound: "Compound Particles",
+}
+
+const TYPE_DESCS: Record<string, string> = {
+  Case: "Mark the grammatical role of nouns in a sentence — subject, object, direction, location, and more.",
+  Focus: "Add emphasis, limitation, or additional meaning to the element they attach to.",
+  Conjunctive: "Connect clauses together, expressing sequence, reason, condition, contrast, and more.",
+  Final: "Come at the very end of sentences to convey tone, emotion, or the speaker's attitude.",
+  Adverbial: "Modify the scope, extent, or distribution of quantities and actions.",
+  Compound: "Multi-particle combinations that function as single grammatical units with specific meanings.",
+}
+---
+
+<DefaultLayout
+  title="Japanese Particles — Complete Reference — KanjiTest.Online"
+  description="Complete reference for all Japanese particles — case, focus, conjunctive, sentence-final, adverbial, and compound particles with examples and usage."
+  keywords="Japanese particles, Japanese grammar particles, wa ga, Japanese particle list, JLPT particles, Japanese particle guide"
+>
+  <div class="max-w-5xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink tracking-tight">Particles <span class="text-lg sm:text-xl font-medium text-ink/40">助詞</span></h1>
+      <p class="text-sm text-ink/60 mt-2 max-w-2xl mx-auto leading-relaxed">
+        Particles are the grammatical glue of Japanese — small words that mark the role of each element in a sentence.
+        Here you will find every major particle, grouped by type, with detailed rules, examples, and common mistakes.
+      </p>
+    </div>
+
+    <div class="space-y-8">
+      {TYPES.map((type, ti) => {
+        const items = getByType(type)
+        return (
+          <section class="animate-fade-up" style={`animation-delay: ${ti * 60}ms`}>
+            <div class="flex items-center gap-3 mb-3">
+              <h2 class="text-sm font-bold text-ink/50 uppercase tracking-widest">{TYPE_LABELS[type]}</h2>
+              <span class="flex-1 h-px bg-ink/10" />
+              <span class="text-xs text-ink/30">{items.length} particles</span>
+            </div>
+            <p class="text-[13px] text-ink/50 leading-relaxed mb-3">{TYPE_DESCS[type]}</p>
+            <div class="grid gap-2.5" style="grid-template-columns: repeat(auto-fill, minmax(240px, 1fr))">
+              {items.map((p) => (
+                <a href={`/learn/particles/${p.id}/`} class="card p-3 group hover:border-vermilion/30 transition-all duration-200 no-underline">
+                  <div class="flex items-start gap-3">
+                    <span class="text-2xl font-jp font-bold text-ink leading-none shrink-0 mt-0.5 group-hover:text-vermilion transition-colors">{p.particle}</span>
+                    <div class="min-w-0 flex-1">
+                      <div class="flex items-baseline gap-1.5">
+                        <span class="font-bold text-sm text-ink">{p.meaning}</span>
+                        <span class="text-[10px] font-mono text-ink/35 uppercase">{p.jlpt}</span>
+                      </div>
+                      <div class="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 mt-0.5">
+                        <span class="text-[11px] font-mono text-ink/40">{p.reading}</span>
+                      </div>
+                      <p class="text-[12px] text-ink/60 mt-1 leading-relaxed line-clamp-2">{p.summary}</p>
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+        )
+      })}
+    </div>
+
+    <div class="text-center mt-8 animate-fade-up" style="animation-delay: 500ms">
+      <a href="/learn/" class="inline-flex items-center gap-1.5 text-xs text-ink/50 hover:text-ink transition-colors">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+        Back to Learn
+      </a>
+    </div>
+  </div>
+</DefaultLayout>

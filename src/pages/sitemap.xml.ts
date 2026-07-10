@@ -3,6 +3,7 @@ import { siteUrl } from "@/lib/seo"
 import { getAll, getVocabulary } from "@/lib/kanji"
 import { getCollection } from "astro:content"
 import { radicals, toSlug } from "@/lib/radicals"
+import { particles, toSlug as particleSlug } from "@/lib/particles"
 import { getAllGrammar } from "@/lib/grammar"
 
 export const GET: APIRoute = async () => {
@@ -54,7 +55,12 @@ const entries: UrlEntry[] = [
     })),
     { loc: `${BASE}/learn/hiragana/`, priority: "0.7", changefreq: "monthly" },
     { loc: `${BASE}/learn/katakana/`, priority: "0.7", changefreq: "monthly" },
-    { loc: `${BASE}/learn/particle-guide/`, priority: "0.7", changefreq: "monthly" },
+    { loc: `${BASE}/learn/particles/`, priority: "0.7", changefreq: "monthly" },
+    ...particles.map((p) => ({
+      loc: `${BASE}/learn/particles/${particleSlug(p)}/`,
+      priority: "0.6" as const,
+      changefreq: "monthly" as const,
+    })),
     { loc: `${BASE}/about/`, priority: "0.5", changefreq: "monthly" },
     { loc: `${BASE}/privacy/`, priority: "0.3", changefreq: "monthly" },
     { loc: `${BASE}/terms/`, priority: "0.3", changefreq: "monthly" },
