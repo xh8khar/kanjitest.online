@@ -1,8 +1,9 @@
 import type { APIRoute } from "astro"
 import { siteUrl } from "@/lib/seo"
 import { getAll, getVocabulary } from "@/lib/kanji"
+import { getCollection } from "astro:content"
 
-export const GET: APIRoute = () => {
+export const GET: APIRoute = async () => {
   const BASE = siteUrl()
   const now = new Date().toISOString().split("T")[0]
 
@@ -12,8 +13,17 @@ export const GET: APIRoute = () => {
     changefreq: string
   }
 
+  const blogPosts = await getCollection("blog")
+  const publishedBlogPosts = blogPosts.filter((p) => !p.data.draft)
+
   const entries: UrlEntry[] = [
     { loc: BASE, priority: "1.0", changefreq: "weekly" },
+    { loc: `${BASE}/blog/`, priority: "0.8", changefreq: "weekly" },
+    ...publishedBlogPosts.map((p) => ({
+      loc: `${BASE}/blog/${p.id}/`,
+      priority: "0.7" as const,
+      changefreq: "monthly" as const,
+    })),
     { loc: `${BASE}/about/`, priority: "0.5", changefreq: "monthly" },
     { loc: `${BASE}/privacy/`, priority: "0.3", changefreq: "monthly" },
     { loc: `${BASE}/terms/`, priority: "0.3", changefreq: "monthly" },

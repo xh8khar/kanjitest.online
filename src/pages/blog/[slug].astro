@@ -1,0 +1,240 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import { siteUrl, breadcrumbSchema, webPageSchema } from "@/lib/seo"
+import { getCollection, render } from "astro:content"
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog")
+  return posts
+    .filter((p) => !p.data.draft)
+    .map((post) => ({
+      params: { slug: post.id },
+      props: { post },
+    }))
+}
+
+const { post } = Astro.props
+const { Content, headings } = await render(post)
+const { data, id } = post
+
+const allPosts = await getCollection("blog")
+const published = allPosts.filter((p) => !p.data.draft).sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+const currentIndex = published.findIndex((p) => p.id === id)
+const prevPost = currentIndex > 0 ? published[currentIndex - 1] : null
+const nextPost = currentIndex < published.length - 1 ? published[currentIndex + 1] : null
+
+const related = published
+  .filter((p) => p.id !== id && p.data.tags.some((t) => data.tags.includes(t)))
+  .slice(0, 3)
+  .sort(() => 0.5 - Math.random())
+
+const canonical = siteUrl(`/blog/${id}/`)
+const jsonLdBreadcrumb = breadcrumbSchema([
+  { name: "Home", url: siteUrl("/") },
+  { name: "Blog", url: siteUrl("/blog/") },
+  { name: data.title, url: canonical },
+])
+const jsonLdWebPage = webPageSchema(data.title, data.description)
+---
+
+<DefaultLayout title={`${data.title} — KanjiTest.Online Blog`} description={data.description} keywords={["JLPT", "kanji", "learn Japanese", ...data.tags].join(", ")}>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLdBreadcrumb)} />
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLdWebPage)} />
+
+  <article class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <div class="mb-8">
+      <a href="/blog/" class="text-sm text-ink/50 hover:text-vermilion transition-colors">&larr; Back to blog</a>
+    </div>
+
+    <header class="mb-8">
+      <div class="flex flex-wrap items-center gap-2.5 text-xs text-ink/40 mb-3">
+        <time datetime={data.date.toISOString()}>
+          {data.date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+        </time>
+        <span>&middot;</span>
+        <span>{data.author}</span>
+      </div>
+
+      <h1 class="text-2xl sm:text-3xl md:text-4xl font-black text-ink leading-tight">
+        {data.title}
+      </h1>
+
+      <p class="text-sm sm:text-base text-ink/60 mt-4 leading-relaxed">
+        {data.description}
+      </p>
+
+      {data.tags.length > 0 && (
+        <div class="flex flex-wrap gap-2 mt-4">
+          {data.tags.map((tag) => (
+            <span class="chip">{tag}</span>
+          ))}
+        </div>
+      )}
+    </header>
+
+    <div class="prose prose-sm sm:prose-base prose-ink max-w-none">
+      <Content />
+    </div>
+
+    <nav aria-label="Pagination" class="mt-12 pt-8 border-t border-ink/10">
+      <div class="flex justify-between gap-4">
+        {prevPost ? (
+          <a href={`/blog/${prevPost.id}/`} class="flex-1 card card-hover p-4 group">
+            <span class="text-xs text-ink/40">&larr; Previous</span>
+            <span class="block text-sm font-semibold text-ink group-hover:text-vermilion transition-colors mt-1 line-clamp-2">
+              {prevPost.data.title}
+            </span>
+          </a>
+        ) : <div class="flex-1" />}
+        {nextPost ? (
+          <a href={`/blog/${nextPost.id}/`} class="flex-1 card card-hover p-4 group text-right">
+            <span class="text-xs text-ink/40">Next &rarr;</span>
+            <span class="block text-sm font-semibold text-ink group-hover:text-vermilion transition-colors mt-1 line-clamp-2">
+              {nextPost.data.title}
+            </span>
+          </a>
+        ) : <div class="flex-1" />}
+      </div>
+    </nav>
+
+    {related.length > 0 && (
+      <aside class="mt-10 pt-8 border-t border-ink/10">
+        <h2 class="text-lg font-bold text-ink mb-4">Related Articles</h2>
+        <div class="grid sm:grid-cols-3 gap-4">
+          {related.map((r) => (
+            <a href={`/blog/${r.id}/`} class="card card-hover p-4 group">
+              <h3 class="text-sm font-semibold text-ink group-hover:text-vermilion transition-colors line-clamp-2">
+                {r.data.title}
+              </h3>
+              <p class="text-xs text-ink/50 mt-2 line-clamp-2">
+                {r.data.description}
+              </p>
+            </a>
+          ))}
+        </div>
+      </aside>
+    )}
+  </article>
+</DefaultLayout>
+
+<style is:global>
+  .prose h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--color-ink);
+    margin-top: 2.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .prose h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-ink);
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  .prose p {
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+    line-height: 1.8;
+    color: color-mix(in srgb, var(--color-ink) 80%, transparent);
+  }
+  .prose a {
+    color: #2563eb;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.15s ease;
+  }
+  .prose a:hover {
+    color: #1d4ed8;
+  }
+  .prose ul, .prose ol {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+    color: color-mix(in srgb, var(--color-ink) 80%, transparent);
+    line-height: 1.8;
+  }
+  .prose ul {
+    list-style-type: disc;
+  }
+  .prose ol {
+    list-style-type: decimal;
+  }
+  .prose li {
+    margin-top: 0.375rem;
+    margin-bottom: 0.375rem;
+  }
+  .prose li::marker {
+    color: var(--color-vermilion);
+  }
+  .prose strong {
+    font-weight: 700;
+    color: var(--color-ink);
+  }
+  .prose blockquote {
+    border-left: 3px solid var(--color-vermilion);
+    padding-left: 1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+    color: color-mix(in srgb, var(--color-ink) 65%, transparent);
+  }
+  .prose code {
+    font-size: 0.875em;
+    background: color-mix(in srgb, var(--color-ink) 6%, transparent);
+    padding: 0.2em 0.4em;
+    border-radius: 0.375rem;
+    font-family: ui-monospace, monospace;
+  }
+  .prose pre {
+    background: var(--color-ink);
+    color: #fff;
+    border-radius: 0.75rem;
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+    line-height: 1.7;
+  }
+  .prose pre code {
+    background: none;
+    padding: 0;
+    font-size: inherit;
+    color: inherit;
+  }
+  .prose hr {
+    border: none;
+    border-top: 1px solid color-mix(in srgb, var(--color-ink) 10%, transparent);
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+  }
+  .prose table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+  }
+  .prose th {
+    background: color-mix(in srgb, var(--color-ink) 6%, transparent);
+    font-weight: 700;
+    color: var(--color-ink);
+    text-align: left;
+    padding: 0.625rem 0.75rem;
+    border: 1px solid color-mix(in srgb, var(--color-ink) 12%, transparent);
+  }
+  .prose td {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid color-mix(in srgb, var(--color-ink) 10%, transparent);
+    color: color-mix(in srgb, var(--color-ink) 75%, transparent);
+  }
+  .prose tr:nth-child(even) td {
+    background: color-mix(in srgb, var(--color-ink) 3%, transparent);
+  }
+  .prose img {
+    border-radius: 0.75rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+</style>

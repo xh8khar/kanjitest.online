@@ -1,0 +1,82 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import { siteUrl, collectionPageSchema, webPageSchema } from "@/lib/seo"
+import { getCollection } from "astro:content"
+import { LEVELS, LEVEL_IDS } from "@/lib/levels"
+
+const allPosts = await getCollection("blog")
+const published = allPosts
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .map((p) => ({ ...p, slug: p.id }))
+
+const jsonLd = collectionPageSchema(
+  "Blog — KanjiTest.Online",
+  "Learn Japanese with KanjiTest.Online's blog — JLPT study tips, kanji learning guides, and Japanese language resources.",
+  "/blog/"
+)
+---
+
+<DefaultLayout
+  title="Blog — KanjiTest.Online"
+  description="Learn Japanese with expert articles on JLPT study tips, kanji memorization techniques, vocabulary building, and Japanese language learning strategies."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <div class="max-w-4xl mx-auto px-4 py-8 sm:py-12">
+    <h1 class="text-3xl sm:text-4xl font-black text-ink mb-2">KanjiTest.Online Blog</h1>
+    <p class="text-sm sm:text-base text-ink/60 max-w-2xl">
+      Learn Japanese more effectively with study guides, kanji tips, JLPT strategies, and resources curated by language learners.
+    </p>
+
+    <div class="mt-8 sm:mt-10 space-y-6">
+      {published.map((post, i) => {
+        const { data, slug } = post
+        const tagColors: Record<string, string> = {
+          JLPT: "bg-emerald-500/10 text-emerald-700",
+          N5: "bg-emerald-500/10 text-emerald-700",
+          N4: "bg-sky-500/10 text-sky-700",
+          N3: "bg-violet-500/10 text-violet-700",
+          N2: "bg-orange-500/10 text-orange-700",
+          N1: "bg-rose-500/10 text-rose-700",
+          beginner: "bg-emerald-500/10 text-emerald-700",
+          intermediate: "bg-violet-500/10 text-violet-700",
+          advanced: "bg-rose-500/10 text-rose-700",
+        }
+        return (
+          <a
+            href={`/blog/${slug}/`}
+            class="card card-hover block p-5 sm:p-6 reveal"
+            style={`--reveal-delay: ${i * 60}ms`}
+          >
+            <div class="flex items-center gap-3 text-xs text-ink/40 mb-2.5">
+              <time datetime={data.date.toISOString()}>
+                {data.date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+              </time>
+              {data.tags.length > 0 && (
+                <span class="flex gap-1.5">
+                  {data.tags.map((tag) => (
+                    <span class:list={["px-2 py-0.5 rounded-full font-medium", tagColors[tag] || "bg-ink/5 text-ink/60"]}>
+                      {tag}
+                    </span>
+                  ))}
+                </span>
+              )}
+            </div>
+            <h2 class="text-lg sm:text-xl font-bold text-ink group-hover:text-vermilion transition-colors">
+              {data.title}
+            </h2>
+            <p class="text-sm text-ink/60 mt-2 leading-relaxed line-clamp-2">
+              {data.description}
+            </p>
+            <div class="mt-3 flex items-center gap-2 text-xs text-ink/40">
+              <span>{data.author}</span>
+              <span>&middot;</span>
+              <span class="text-vermilion font-medium">Read more &rarr;</span>
+            </div>
+          </a>
+        )
+      })}
+    </div>
+  </div>
+</DefaultLayout>
