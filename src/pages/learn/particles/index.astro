@@ -47,7 +47,7 @@ const TYPE_COLORS: Record<string, string> = {
             <div class="space-y-2">
               {items.map((p) => (
                 <a href={`/learn/particles/${p.id}/`} class="card card-hover group px-3 sm:px-5 py-2.5 sm:py-3 flex items-center gap-3 sm:gap-4 no-underline reveal">
-                  <span class={`w-10 h-10 sm:w-11 sm:h-11 rounded-xl ${TYPE_COLORS[type]} flex items-center justify-center shrink-0 text-lg sm:text-xl font-jp font-bold transition-transform duration-300 group-hover:scale-110`}>
+                  <span class={`min-w-9 sm:min-w-10 h-9 sm:h-10 px-2 sm:px-2.5 rounded-full ${TYPE_COLORS[type]} inline-flex items-center justify-center shrink-0 text-sm sm:text-base font-jp font-bold leading-none transition-transform duration-300 group-hover:scale-110`}>
                     {p.particle}
                   </span>
                   <span class="flex-1 min-w-0">

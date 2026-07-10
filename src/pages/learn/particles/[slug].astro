@@ -45,10 +45,10 @@ const next = idx < particles.length - 1 ? particles[idx + 1] : null
       ) : <div />}
     </div>
 
-    <div class="card overflow-hidden animate-fade-up">
-      <div class="bg-gradient-to-r from-vermilion/10 to-vermilion/5 h-1.5" />
-      <div class="p-6 sm:p-8 text-center">
-        <span class="text-7xl sm:text-8xl font-jp font-black text-ink leading-none block animate-ink-in">{particle.particle}</span>
+      <div class="card overflow-hidden animate-fade-up">
+        <div class="bg-gradient-to-r from-vermilion/10 to-vermilion/5 h-1.5" />
+        <div class="p-6 sm:p-8 text-center">
+          <span class={`font-jp font-black text-ink leading-none block animate-ink-in ${particle.particle.length > 2 ? "text-5xl sm:text-6xl" : "text-7xl sm:text-8xl"}`}>{particle.particle}</span>
         <h1 class="text-lg sm:text-xl font-bold text-ink mt-3">{particle.meaning}</h1>
         <p class="text-sm text-ink/45 font-mono mt-1">{particle.reading}</p>
       </div>
