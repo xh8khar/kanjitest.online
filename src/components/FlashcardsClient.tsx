@@ -80,10 +80,15 @@ export default function FlashcardsClient({ level, entry: initialEntry, startInde
   const deckSize = cards?.length ?? total
   const entry = cards ? cards[currentIdx] : initialEntry
 
-  // Sync URL without navigation
+  // Sync URL without navigation. Two rules keep the browser back button
+  // working: never replace on initial mount (the URL already matches), and
+  // always carry over history.state — Astro's ClientRouter stores its
+  // navigation index there, and nulling it strands back/forward on mobile.
   useEffect(() => {
-    if (entry) {
-      window.history.replaceState(null, "", `${prefix}/flashcards/${entry.kanji}/`)
+    if (!entry) return
+    const url = `${prefix}/flashcards/${entry.kanji}/`
+    if (decodeURIComponent(window.location.pathname) !== url) {
+      window.history.replaceState(window.history.state, "", url)
     }
   }, [entry, prefix])
 
