@@ -233,3 +233,14 @@ Supplement with daily activities like reading one news article (10 minutes) and 
 The best resource is the one you will use consistently. Start with a simple stack and add resources as you build your study habit. For level-specific guidance, see our guides for [passing N5](/blog/how-to-pass-jlpt-n5/), [N4 study](/blog/jlpt-n4-study-guide/), and [N3 study](/blog/jlpt-n3-study-guide/).
 
 Good luck with your JLPT preparation. Every resource you use, every flashcard you review, and every sentence you read brings you closer to passing the exam.
+
+## Practice Your Skills
+
+Ready to apply what you learned? KanjiTest.Online has everything you need:
+
+- **[Study](/n5/study/)** — Browse all N5 kanji with readings and examples
+- **[Flashcards](/n5/flashcards/)** — Flip through interactive flashcards
+- **[Vocabulary](/n5/vocabulary/)** — Learn essential N5 words
+- **[Practice Tests](/n5/sets/1/)** — Test your knowledge with timed quizzes
+
+Don't stop here — check out our guides on [how to pass JLPT N5](/blog/how-to-pass-jlpt-n5/), [JLPT N3 study guide](/blog/jlpt-n3-study-guide/), and [how to use Anki for Japanese](/blog/how-to-use-anki-for-japanese/) for more.

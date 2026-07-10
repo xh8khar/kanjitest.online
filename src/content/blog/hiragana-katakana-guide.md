@@ -289,3 +289,15 @@ Do not rush through kana. Many learners spend only a few days on hiragana and ka
 Mastering kana is the single highest-ROI activity in Japanese learning. It unlocks everything else. Every word you encounter, every sentence you read, and every kanji you study will be easier if your kana foundation is solid.
 
 Start today with the [N5 learning materials](/n5/study/) and build a foundation that will carry you through the JLPT and beyond.
+
+## Practice Your Skills
+
+Ready to apply what you learned? KanjiTest.Online has everything you need:
+
+- **[Study](/n5/study/)** — Browse all N5 kanji with readings and examples
+- **[Flashcards](/n5/flashcards/)** — Flip through interactive flashcards
+- **[Vocabulary](/n5/vocabulary/)** — Learn essential N5 words
+- **[Practice Tests](/n5/sets/1/)** — Test your knowledge with timed quizzes
+
+For more guidance, check out our guides on [How to Pass JLPT N5](/blog/how-to-pass-jlpt-n5/) and [How to Remember Kanji](/blog/how-to-remember-kanji/).
+

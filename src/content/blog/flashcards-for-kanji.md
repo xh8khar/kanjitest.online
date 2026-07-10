@@ -240,3 +240,15 @@ Flashcards are not a magic solution — they are a tool that excels when used co
 Start with our [free flashcard system](/n5/flashcards/) today. Whether you are preparing for N5 or N1, a well-designed flashcard routine will accelerate your progress and build kanji knowledge that lasts. For additional study strategies, see our guides to [passing N5](/blog/how-to-pass-jlpt-n5/), [common kanji mistakes to avoid](/blog/common-kanji-mistakes/), and [onyomi vs kunyomi](/blog/onyomi-vs-kunyomi/).
 
 Every kanji you master brings you closer to fluency. Open your first deck and start reviewing.
+
+## Practice Your Skills
+
+Ready to apply what you learned? KanjiTest.Online has everything you need:
+
+- **[Study](/n5/study/)** — Browse all N5 kanji with readings and examples
+- **[Flashcards](/n5/flashcards/)** — Flip through interactive flashcards
+- **[Vocabulary](/n5/vocabulary/)** — Learn essential N5 words
+- **[Practice Tests](/n5/sets/1/)** — Test your knowledge with timed quizzes
+
+For more guidance, check out our guides on [How to Remember Kanji](/blog/how-to-remember-kanji/), [Common Kanji Mistakes](/blog/common-kanji-mistakes/), and [Daily Japanese Study Routine](/blog/daily-japanese-study-routine/).
+

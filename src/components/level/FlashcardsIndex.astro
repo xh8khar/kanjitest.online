@@ -4,6 +4,13 @@ import { getAll } from "@/lib/kanji"
 import type { Level } from "@/lib/kanji"
 import { levelMeta } from "@/lib/levels"
 import { collectionPageSchema } from "@/lib/seo"
+import { getCollection } from "astro:content"
+
+const allBlogPosts = await getCollection("blog")
+const blogPosts = allBlogPosts
+  .filter((p) => !p.data.draft && p.data.tags.some((t) => ["flashcards", "kanji", "study-tips"].includes(t)))
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .slice(0, 3)
 
 export interface Props {
   level: Level
@@ -44,5 +51,19 @@ const pageSchema = collectionPageSchema(title, `All ${all.length} JLPT ${meta.la
         </a>
       ))}
     </div>
+
+    {blogPosts.length > 0 && (
+      <div class="mt-8">
+        <h2 class="text-sm font-bold uppercase tracking-widest text-ink/40 mb-3 reveal">Flashcard tips</h2>
+        <div class="grid sm:grid-cols-3 gap-3">
+          {blogPosts.map((post, i) => (
+            <a href={`/blog/${post.id}/`} class="card card-hover p-3.5 reveal" style={`--reveal-delay: ${i * 50}ms`}>
+              <h3 class="text-[13px] font-bold text-ink group-hover:text-vermilion transition-colors line-clamp-2">{post.data.title}</h3>
+              <p class="text-[11px] text-ink/50 mt-1 line-clamp-2">{post.data.description}</p>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
   </div>
 </DefaultLayout>

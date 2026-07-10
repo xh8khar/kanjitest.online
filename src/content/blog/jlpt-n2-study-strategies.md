@@ -177,3 +177,15 @@ JLPT N2 is a challenging but achievable goal. With approximately 1,500 kanji, 6,
 For a broader perspective on JLPT study resources, including textbooks, apps, and mock tests, read our [complete JLPT preparation guide](/blog/jlpt-preparation-resources/). And once you pass N2, the journey continues — see our guide to [conquering JLPT N1](/blog/jlpt-n1-preparation/) for the next step.
 
 Start your N2 journey today with our [free N2 study materials](/n2/study/) and take the first step toward advanced Japanese fluency.
+
+## Practice Your Skills
+
+Ready to apply what you learned? KanjiTest.Online has everything you need:
+
+- **[Study](/n2/study/)** — Browse all N2 kanji with readings and examples
+- **[Flashcards](/n2/flashcards/)** — Flip through interactive flashcards
+- **[Vocabulary](/n2/vocabulary/)** — Learn essential N2 words
+- **[Practice Tests](/n2/sets/1/)** — Test your knowledge with timed quizzes
+
+For more guidance, check out our guides on [JLPT N3 Study Guide](/blog/jlpt-n3-study-guide/), [JLPT N1 Preparation](/blog/jlpt-n1-preparation/), and [Japanese Reading Comprehension](/blog/japanese-reading-comprehension/).
+

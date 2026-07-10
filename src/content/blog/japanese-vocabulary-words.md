@@ -386,3 +386,15 @@ This list of 100 words is a starting point. To pass the JLPT at any level, you n
 Expand your vocabulary daily by reading, listening, and using tools like our [N1 vocabulary page](/n1/vocabulary/). For additional study strategies, read our guides for [N5 preparation](/blog/how-to-pass-jlpt-n5/), [N4 study](/blog/jlpt-n4-study-guide/), and the [on'yomi vs kun'yomi breakdown](/blog/onyomi-vs-kunyomi/) to master kanji readings alongside vocabulary.
 
 Consistent daily exposure to Japanese, combined with structured study using frequency-based word lists, is the most reliable path to JLPT success. Start with these 100 words and build from there.
+
+## Practice Your Skills
+
+Ready to apply what you learned? KanjiTest.Online has everything you need:
+
+- **[Study](/n5/study/)** — Browse all N5 kanji with readings and examples
+- **[Flashcards](/n5/flashcards/)** — Flip through interactive flashcards
+- **[Vocabulary](/n5/vocabulary/)** — Learn essential N5 words
+- **[Practice Tests](/n5/sets/1/)** — Test your knowledge with timed quizzes
+
+For more guidance, check out our guides on [Flashcards for Kanji](/blog/flashcards-for-kanji/), [How to Pass JLPT N5](/blog/how-to-pass-jlpt-n5/), and [Essential Japanese Grammar](/blog/essential-japanese-grammar/).
+

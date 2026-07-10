@@ -196,3 +196,15 @@ Improving Japanese reading comprehension is a gradual process that requires cons
 The JLPT reading section is challenging, but with systematic preparation, you can build the skills needed to succeed. Our [JLPT N3 study guide](/blog/jlpt-n3-study-guide/), [JLPT N2 study strategies](/blog/jlpt-n2-study-strategies/), and [JLPT N1 preparation](/blog/jlpt-n1-preparation/) guides provide level-specific advice for each stage of the journey.
 
 Remember: every page you read makes the next page easier. Start reading today, and watch your comprehension grow.
+
+## Practice Your Skills
+
+Ready to apply what you learned? KanjiTest.Online has everything you need:
+
+- **[Study](/n3/study/)** — Browse all N3 kanji with readings and examples
+- **[Flashcards](/n3/flashcards/)** — Flip through interactive flashcards
+- **[Vocabulary](/n3/vocabulary/)** — Learn essential N3 words
+- **[Practice Tests](/n3/sets/1/)** — Test your knowledge with timed quizzes
+
+For more guidance, check out our guides on [JLPT N3 Study Guide](/blog/jlpt-n3-study-guide/), [JLPT N2 Study Strategies](/blog/jlpt-n2-study-strategies/), and [Japanese Vocabulary Words](/blog/japanese-vocabulary-words/).
+

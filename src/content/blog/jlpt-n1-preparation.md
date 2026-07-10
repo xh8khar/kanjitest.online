@@ -229,3 +229,15 @@ JLPT N1 is the most challenging standardized Japanese exam, but it is absolutely
 Use every tool at your disposal. Our [free N1 materials](/n1/study/) are designed to help you master the full kanji and vocabulary syllabus efficiently. Combine them with authentic reading and listening practice, and you will be ready for test day.
 
 The journey to N1 is long, but every character you learn, every passage you read, and every sentence you listen to brings you closer to fluency. Start today.
+
+## Practice Your Skills
+
+Ready to apply what you learned? KanjiTest.Online has everything you need:
+
+- **[Study](/n1/study/)** — Browse all N1 kanji with readings and examples
+- **[Flashcards](/n1/flashcards/)** — Flip through interactive flashcards
+- **[Vocabulary](/n1/vocabulary/)** — Learn essential N1 words
+- **[Practice Tests](/n1/sets/1/)** — Test your knowledge with timed quizzes
+
+For more guidance, check out our guides on [JLPT N2 Study Strategies](/blog/jlpt-n2-study-strategies/), [How Long to Pass JLPT](/blog/how-long-to-pass-jlpt/), and [JLPT Preparation Resources](/blog/jlpt-preparation-resources/).
+

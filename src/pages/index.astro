@@ -3,6 +3,12 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
 import { getAll, getVocabulary } from "@/lib/kanji"
 import { LEVELS, LEVEL_IDS, SETS_PER_LEVEL, QUESTIONS_PER_SET } from "@/lib/levels"
 import { collectionPageSchema } from "@/lib/seo"
+import { getCollection } from "astro:content"
+
+const featuredPosts = (await getCollection("blog"))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .slice(0, 6)
 
 const levels = LEVEL_IDS.map((id) => ({
   ...LEVELS[id],
@@ -182,6 +188,35 @@ const jsonLd = collectionPageSchema(
       </div>
     </div>
   </section>
+
+  <!-- ———————— Blog ———————— -->
+  {featuredPosts.length > 0 && (
+    <section class="border-t border-ink/5">
+      <div class="max-w-5xl mx-auto px-4 py-16 sm:py-24">
+        <h2 class="text-2xl sm:text-4xl font-black text-ink text-center reveal">From the blog</h2>
+        <p class="text-sm sm:text-base text-ink/60 text-center mt-3 max-w-xl mx-auto reveal" style="--reveal-delay: 80ms">
+          Study guides, kanji tips, and JLPT strategies to help you learn Japanese.
+        </p>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 mt-10 sm:mt-12">
+          {featuredPosts.map((post, i) => (
+            <a href={`/blog/${post.id}/`} class="card card-hover p-5 sm:p-6 reveal" style={`--reveal-delay: ${i * 60}ms`}>
+              <h3 class="text-base font-bold text-ink group-hover:text-vermilion transition-colors">{post.data.title}</h3>
+              <p class="text-[13px] text-ink/60 mt-1.5 line-clamp-2 leading-relaxed">{post.data.description}</p>
+              <span class="inline-flex items-center gap-1 text-xs text-vermilion font-medium mt-3">
+                Read more &rarr;
+              </span>
+            </a>
+          ))}
+        </div>
+        <div class="flex justify-center mt-8">
+          <a href="/blog/" class="btn btn-ghost h-11 sm:h-12 px-7 text-sm font-semibold reveal">
+            View all articles
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+  )}
 
   <!-- ———————— Test CTA ———————— -->
   <section class="relative bg-ink text-white overflow-hidden">

@@ -201,3 +201,14 @@ Learning Japanese to a high level takes time -- there is no way around it. But t
 The key is consistency, not speed. A sustainable daily practice of 30 minutes will take you further than a burned-out sprint. Use the [daily study routine guide](/blog/daily-japanese-study-routine/), the [N5 test sets](/n5/sets/1/), and all the resources on KanjiTest.Online to build your practice.
 
 The time will pass anyway. You might as well spend it learning Japanese.
+
+## Practice Your Skills
+
+Ready to apply what you learned? KanjiTest.Online has everything you need:
+
+- **[Study](/n3/study/)** — Browse all N3 kanji with readings and examples
+- **[Flashcards](/n3/flashcards/)** — Flip through interactive flashcards
+- **[Vocabulary](/n3/vocabulary/)** — Learn essential N3 words
+- **[Practice Tests](/n3/sets/1/)** — Test your knowledge with timed quizzes
+
+Don't stop here — check out our guides on [how to pass JLPT N5](/blog/how-to-pass-jlpt-n5/), [daily Japanese study routine](/blog/daily-japanese-study-routine/), and [JLPT preparation resources](/blog/jlpt-preparation-resources/) for more.

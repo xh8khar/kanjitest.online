@@ -4,6 +4,7 @@ import { getVocabulary } from "@/lib/kanji"
 import type { Level } from "@/lib/kanji"
 import { levelMeta } from "@/lib/levels"
 import { collectionPageSchema, itemListSchema } from "@/lib/seo"
+import { getCollection } from "astro:content"
 
 export interface Props {
   level: Level
@@ -12,6 +13,13 @@ export interface Props {
 const { level } = Astro.props
 const meta = levelMeta(level)
 const prefix = `/${level}`
+
+const allBlogPosts = await getCollection("blog")
+const levelTag = meta.label
+const blogPosts = allBlogPosts
+  .filter((p) => !p.data.draft && (p.data.tags.includes(levelTag) || p.data.tags.includes("vocabulary")))
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .slice(0, 3)
 const vocab = getVocabulary(level)
 const sorted = [...vocab].sort((a, b) => a.reading.localeCompare(b.reading, "ja"))
 
@@ -58,5 +66,19 @@ const listSchema = itemListSchema(items)
         </a>
       ))}
     </div>
+
+    {blogPosts.length > 0 && (
+      <div class="mt-8">
+        <h2 class="text-sm font-bold uppercase tracking-widest text-ink/40 mb-3 reveal">Vocabulary guides</h2>
+        <div class="grid sm:grid-cols-3 gap-3">
+          {blogPosts.map((post, i) => (
+            <a href={`/blog/${post.id}/`} class="card card-hover p-3.5 reveal" style={`--reveal-delay: ${i * 50}ms`}>
+              <h3 class="text-[13px] font-bold text-ink group-hover:text-vermilion transition-colors line-clamp-2">{post.data.title}</h3>
+              <p class="text-[11px] text-ink/50 mt-1 line-clamp-2">{post.data.description}</p>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
   </div>
 </DefaultLayout>

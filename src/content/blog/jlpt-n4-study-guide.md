@@ -264,3 +264,15 @@ The JLPT N4 is a challenging but achievable goal. With 171 new kanji, 800 new vo
 Every kanji you learn at this level is a building block toward intermediate and advanced Japanese. The reading skills you develop for N4 will serve you well when you tackle N3 and beyond.
 
 Start your N4 preparation at our [N4 study hub](/n4/) today.
+
+## Practice Your Skills
+
+Ready to apply what you learned? KanjiTest.Online has everything you need:
+
+- **[Study](/n4/study/)** — Browse all N4 kanji with readings and examples
+- **[Flashcards](/n4/flashcards/)** — Flip through interactive flashcards
+- **[Vocabulary](/n4/vocabulary/)** — Learn essential N4 words
+- **[Practice Tests](/n4/sets/1/)** — Test your knowledge with timed quizzes
+
+For more guidance, check out our guides on [How to Pass JLPT N5](/blog/how-to-pass-jlpt-n5/), [Kanji Radicals Guide](/blog/kanji-radicals-guide/), and [On'yomi vs Kun'yomi](/blog/onyomi-vs-kunyomi/).
+

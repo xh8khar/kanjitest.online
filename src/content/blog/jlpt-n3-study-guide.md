@@ -434,3 +434,15 @@ Remember why you started learning Japanese. Whether it is for work, study, trave
 Before beginning N3 preparation, ensure you have a solid foundation at N4. Review the [N4 study guide](/blog/jlpt-n4-study-guide/) if you need to strengthen your base. Use efficient kanji learning methods from our [how to remember kanji guide](/blog/how-to-remember-kanji/) and develop your reading skills with our [Japanese reading comprehension tips](/blog/japanese-reading-comprehension/).
 
 Start your N3 preparation today at the [N3 level hub](/n3/).
+
+## Practice Your Skills
+
+Ready to apply what you learned? KanjiTest.Online has everything you need:
+
+- **[Study](/n3/study/)** — Browse all N3 kanji with readings and examples
+- **[Flashcards](/n3/flashcards/)** — Flip through interactive flashcards
+- **[Vocabulary](/n3/vocabulary/)** — Learn essential N3 words
+- **[Practice Tests](/n3/sets/1/)** — Test your knowledge with timed quizzes
+
+For more guidance, check out our guides on [JLPT N4 Study Guide](/blog/jlpt-n4-study-guide/), [Japanese Reading Comprehension](/blog/japanese-reading-comprehension/), and [JLPT N2 Study Strategies](/blog/jlpt-n2-study-strategies/).
+

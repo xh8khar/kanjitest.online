@@ -234,3 +234,15 @@ Japanese grammar is a vast system, but it is highly systematic. The patterns are
 The KanjiTest.Online [N5 study pages](/n5/study/) and [N3 study pages](/n3/study/) provide example sentences and vocabulary that reinforce grammar patterns at your level. For a complete study path from beginner to advanced, refer to the [JLPT N4 study guide](/blog/jlpt-n4-study-guide/), [JLPT N3 study guide](/blog/jlpt-n3-study-guide/), and our guides to all JLPT levels.
 
 Grammar is practice, not perfection. Keep reading, keep writing, and keep speaking. Every sentence you understand is a step toward mastery.
+
+## Practice Your Skills
+
+Ready to apply what you learned? KanjiTest.Online has everything you need:
+
+- **[Study](/n5/study/)** — Browse all N5 kanji with readings and examples
+- **[Flashcards](/n5/flashcards/)** — Flip through interactive flashcards
+- **[Vocabulary](/n5/vocabulary/)** — Learn essential N5 words
+- **[Practice Tests](/n5/sets/1/)** — Test your knowledge with timed quizzes
+
+For more guidance, check out our guides on [How to Pass JLPT N5](/blog/how-to-pass-jlpt-n5/), [How to Use Anki for Japanese](/blog/how-to-use-anki-for-japanese/), and [JLPT N3 Study Guide](/blog/jlpt-n3-study-guide/).
+

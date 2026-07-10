@@ -243,3 +243,15 @@ Remember that passing the N5 is not just about the certificate — it is about b
 Start with our [N5 study materials](/n5/study/) today and take the first step on your Japanese learning journey. For a broader perspective on your learning path, check out our [JLPT preparation resources guide](/blog/jlpt-preparation-resources/).
 
 Good luck with your studies!
+
+## Practice Your Skills
+
+Ready to apply what you learned? KanjiTest.Online has everything you need:
+
+- **[Study](/n5/study/)** — Browse all N5 kanji with readings and examples
+- **[Flashcards](/n5/flashcards/)** — Flip through interactive flashcards
+- **[Vocabulary](/n5/vocabulary/)** — Learn essential N5 words
+- **[Practice Tests](/n5/sets/1/)** — Test your knowledge with timed quizzes
+
+For more guidance, check out our guides on [Hiragana and Katakana Guide](/blog/hiragana-katakana-guide/), [Daily Japanese Study Routine](/blog/daily-japanese-study-routine/), and [JLPT Preparation Resources](/blog/jlpt-preparation-resources/).
+

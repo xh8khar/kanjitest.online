@@ -3,6 +3,7 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
 import type { Level } from "@/lib/kanji"
 import { levelMeta, SETS_PER_LEVEL, QUESTIONS_PER_SET } from "@/lib/levels"
 import { collectionPageSchema } from "@/lib/seo"
+import { getCollection } from "astro:content"
 
 export interface Props {
   level: Level
@@ -11,6 +12,13 @@ export interface Props {
 const { level } = Astro.props
 const meta = levelMeta(level)
 const prefix = `/${level}`
+
+const allBlogPosts = await getCollection("blog")
+const levelTag = meta.label
+const blogPosts = allBlogPosts
+  .filter((p) => !p.data.draft && (p.data.tags.includes(levelTag) || p.data.tags.includes("study-guide")))
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .slice(0, 3)
 
 const title = `JLPT ${meta.label} Kanji Tests — ${SETS_PER_LEVEL} Practice Quizzes`
 const description = `${SETS_PER_LEVEL} test sets of ${QUESTIONS_PER_SET} questions each. Practice reading and meaning recognition for JLPT ${meta.label} kanji with real sentence context.`
@@ -41,5 +49,19 @@ const pageSchema = collectionPageSchema(title, `${SETS_PER_LEVEL} test sets of $
         </a>
       ))}
     </div>
+
+    {blogPosts.length > 0 && (
+      <div class="mt-8">
+        <h2 class="text-sm font-bold uppercase tracking-widest text-ink/40 mb-3 reveal">Study guides</h2>
+        <div class="grid sm:grid-cols-3 gap-3">
+          {blogPosts.map((post, i) => (
+            <a href={`/blog/${post.id}/`} class="card card-hover p-3.5 reveal" style={`--reveal-delay: ${i * 50}ms`}>
+              <h3 class="text-[13px] font-bold text-ink group-hover:text-vermilion transition-colors line-clamp-2">{post.data.title}</h3>
+              <p class="text-[11px] text-ink/50 mt-1 line-clamp-2">{post.data.description}</p>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
   </div>
 </DefaultLayout>

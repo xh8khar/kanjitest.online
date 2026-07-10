@@ -151,3 +151,14 @@ Making mistakes is part of learning kanji, but you can avoid the most damaging o
 The [how to remember kanji](/blog/how-to-remember-kanji/) guide has additional techniques for building a robust kanji vocabulary. And when you are ready to test your knowledge, the [N4 study pages](/n4/study/) and [N5 study pages](/n5/study/) on KanjiTest.Online have everything you need to practice.
 
 Every mistake is a learning opportunity. Recognize it, adjust your approach, and keep moving forward.
+
+## Practice Your Skills
+
+Ready to apply what you learned? KanjiTest.Online has everything you need:
+
+- **[Study](/n5/study/)** — Browse all N5 kanji with readings and examples
+- **[Flashcards](/n5/flashcards/)** — Flip through interactive flashcards
+- **[Vocabulary](/n5/vocabulary/)** — Learn essential N5 words
+- **[Practice Tests](/n5/sets/1/)** — Test your knowledge with timed quizzes
+
+Don't stop here — check out our guides on [how to remember kanji](/blog/how-to-remember-kanji/), [kanji radicals](/blog/kanji-radicals-guide/), and [flashcards for kanji](/blog/flashcards-for-kanji/) for more.

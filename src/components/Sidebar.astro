@@ -2,6 +2,7 @@
 import { getAll } from "@/lib/kanji"
 import type { Level } from "@/lib/kanji"
 import { levelMeta, SETS_PER_LEVEL } from "@/lib/levels"
+import { getCollection } from "astro:content"
 
 export interface Props {
   level: Level
@@ -12,6 +13,11 @@ const meta = levelMeta(level)
 const all = getAll(level)
 const prefix = `/${level}`
 const path = decodeURIComponent(Astro.url.pathname)
+
+const blogPosts = (await getCollection("blog"))
+  .filter((p) => !p.data.draft && p.data.tags.includes(meta.label))
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .slice(0, 2)
 
 const isActive = (href: string) => path.startsWith(href)
 
@@ -72,6 +78,22 @@ const tools = [
       ))}
     </div>
   </div>
+
+  {blogPosts.length > 0 && (
+    <div>
+      <p class="sb-head">From the blog</p>
+      <div class="space-y-1.5">
+        {blogPosts.map((post) => (
+          <a href={`/blog/${post.id}/`} class="block px-1 text-[11px] font-semibold text-ink/45 hover:text-vermilion transition-colors leading-relaxed">
+            {post.data.title}
+          </a>
+        ))}
+      </div>
+      <a href="/blog/" class="inline-flex items-center gap-1 mt-2 px-1 text-[11px] font-semibold text-ink/45 hover:text-vermilion transition-colors">
+        All articles →
+      </a>
+    </div>
+  )}
 </div>
 
 <style>

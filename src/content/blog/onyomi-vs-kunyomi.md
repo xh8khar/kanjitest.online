@@ -237,3 +237,14 @@ At advanced levels, focus on edge cases: hybrid readings, gikun, and proper noun
 Understanding on'yomi and kun'yomi transforms kanji study from memorizing arbitrary pronunciations to recognizing a logical system. For more kanji study strategies, see our [comprehensive vocabulary guide](/blog/japanese-vocabulary-words/) and our [flashcard methodology guide](/blog/flashcards-for-kanji/).
 
 With consistent practice and the right tools, mastering both reading systems is entirely achievable. Start today with one character at a time, and the patterns will reveal themselves.
+
+## Practice Your Skills
+
+Ready to apply what you learned? KanjiTest.Online has everything you need:
+
+- **[Study](/n5/study/)** — Browse all N5 kanji with readings and examples
+- **[Flashcards](/n5/flashcards/)** — Flip through interactive flashcards
+- **[Vocabulary](/n5/vocabulary/)** — Learn essential N5 words
+- **[Practice Tests](/n5/sets/1/)** — Test your knowledge with timed quizzes
+
+Don't stop here — check out our guides on [kanji radicals](/blog/kanji-radicals-guide/), [how to remember kanji](/blog/how-to-remember-kanji/), and [Japanese vocabulary](/blog/japanese-vocabulary-words/) for more.

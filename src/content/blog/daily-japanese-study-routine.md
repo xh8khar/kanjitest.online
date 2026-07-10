@@ -135,3 +135,14 @@ Learning Japanese -- and kanji in particular -- is a marathon, not a sprint. A c
 Start today. Pick a time that works for you, set up your [flashcards](/blog/flashcards-for-kanji/), and commit to 30 minutes. In three months, you will be amazed at how much progress you have made. And when you are ready to level up, our [JLPT N3 study guide](/blog/jlpt-n3-study-guide/) and [how to remember kanji](/blog/how-to-remember-kanji/) guide are waiting for you.
 
 The best time to start was yesterday. The second best time is right now.
+
+## Practice Your Skills
+
+Ready to apply what you learned? KanjiTest.Online has everything you need:
+
+- **[Study](/n5/study/)** — Browse all N5 kanji with readings and examples
+- **[Flashcards](/n5/flashcards/)** — Flip through interactive flashcards
+- **[Vocabulary](/n5/vocabulary/)** — Learn essential N5 words
+- **[Practice Tests](/n5/sets/1/)** — Test your knowledge with timed quizzes
+
+Don't stop here — check out our guides on [how to pass JLPT N5](/blog/how-to-pass-jlpt-n5/), [flashcards for kanji](/blog/flashcards-for-kanji/), and [how long to pass JLPT](/blog/how-long-to-pass-jlpt/) for more.

@@ -315,3 +315,14 @@ Kanji memorization does not have to be the bottleneck in your Japanese learning.
 Start with the fundamental radicals — learn them systematically in our [kanji radicals guide](/blog/kanji-radicals-guide/). Then apply these mnemonic techniques to the kanji you need for your JLPT level. Whether you are preparing for [N5](/n5/study/), [N4](/n4/study/), N3, or beyond, consistent mnemonic practice will transform kanji from your biggest obstacle into one of your greatest strengths.
 
 Visit [KanjiTest.Online](/n5/flashcards/) to get started with mnemonic-enhanced kanji practice today.
+
+## Practice Your Skills
+
+Ready to apply what you learned? KanjiTest.Online has everything you need:
+
+- **[Study](/n5/study/)** — Browse all N5 kanji with readings and examples
+- **[Flashcards](/n5/flashcards/)** — Flip through interactive flashcards
+- **[Vocabulary](/n5/vocabulary/)** — Learn essential N5 words
+- **[Practice Tests](/n5/sets/1/)** — Test your knowledge with timed quizzes
+
+Don't stop here — check out our guides on [kanji radicals](/blog/kanji-radicals-guide/), [flashcards for kanji](/blog/flashcards-for-kanji/), and [common kanji mistakes](/blog/common-kanji-mistakes/) for more.

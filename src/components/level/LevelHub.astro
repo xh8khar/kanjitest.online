@@ -4,6 +4,7 @@ import { getAll, getVocabulary } from "@/lib/kanji"
 import type { Level } from "@/lib/kanji"
 import { levelMeta, SETS_PER_LEVEL } from "@/lib/levels"
 import { collectionPageSchema, itemListSchema } from "@/lib/seo"
+import { getCollection } from "astro:content"
 
 export interface Props {
   level: Level
@@ -14,6 +15,13 @@ const meta = levelMeta(level)
 const all = getAll(level)
 const vocabCount = getVocabulary(level).length
 const prefix = `/${level}`
+
+const allBlogPosts = await getCollection("blog")
+const levelTag = meta.label
+const blogPosts = allBlogPosts
+  .filter((p) => !p.data.draft && p.data.tags.includes(levelTag))
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .slice(0, 3)
 
 const title = `JLPT ${meta.label} Kanji — All ${all.length} Characters`
 const description = `Browse all ${all.length} JLPT ${meta.label} kanji with kun/on readings, example words, and daily-life sentences. Study, flashcard, and test yourself.`
@@ -67,6 +75,21 @@ const tools = [
         </a>
       ))}
     </div>
+
+    <!-- Blog -->
+    {blogPosts.length > 0 && (
+      <div class="mb-8 sm:mb-10">
+        <h2 class="text-sm font-bold uppercase tracking-widest text-ink/40 mb-3 reveal">From the blog</h2>
+        <div class="grid sm:grid-cols-3 gap-3 sm:gap-4">
+          {blogPosts.map((post, i) => (
+            <a href={`/blog/${post.id}/`} class="card card-hover p-4 reveal" style={`--reveal-delay: ${i * 60}ms`}>
+              <h3 class="text-sm font-bold text-ink group-hover:text-vermilion transition-colors line-clamp-2">{post.data.title}</h3>
+              <p class="text-xs text-ink/50 mt-1.5 line-clamp-2">{post.data.description}</p>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
 
     <!-- Kanji grid -->
     <h2 class="text-sm font-bold uppercase tracking-widest text-ink/40 mb-3 reveal">All {all.length.toLocaleString()} kanji</h2>

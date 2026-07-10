@@ -263,3 +263,15 @@ Start by learning the four basic patterns: heiban (flat), atamadaka (head-high),
 The [JLPT N3 study guide](/blog/jlpt-n3-study-guide/), [JLPT N2 study strategies](/blog/jlpt-n2-study-strategies/), and other level-specific guides on KanjiTest.Online can help you integrate pronunciation practice into your overall study plan.
 
 Your goal is not perfection. Your goal is progress. Every word you learn with correct pitch accent is a step toward Japanese that sounds natural and is easily understood.
+
+## Practice Your Skills
+
+Ready to apply what you learned? KanjiTest.Online has everything you need:
+
+- **[Study](/n5/study/)** — Browse all N5 kanji with readings and examples
+- **[Flashcards](/n5/flashcards/)** — Flip through interactive flashcards
+- **[Vocabulary](/n5/vocabulary/)** — Learn essential N5 words
+- **[Practice Tests](/n5/sets/1/)** — Test your knowledge with timed quizzes
+
+For more guidance, check out our guides on [How to Pass JLPT N5](/blog/how-to-pass-jlpt-n5/), [JLPT N3 Study Guide](/blog/jlpt-n3-study-guide/), and [How to Use Anki for Japanese](/blog/how-to-use-anki-for-japanese/).
+

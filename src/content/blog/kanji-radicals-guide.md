@@ -333,3 +333,14 @@ Radicals are the key that unlocks the kanji writing system. By learning the 50-6
 Start with the radicals in the [N5 study pages](/n5/study/), practice recognizing them in context, and build up to [N4](/n4/study/) and beyond. Combine radical knowledge with mnemonic techniques from our [how to remember kanji guide](/blog/how-to-remember-kanji/) and understanding of [on'yomi vs kun'yomi](/blog/onyomi-vs-kunyomi/) for a complete kanji learning system.
 
 The radicals are not obstacles — they are the building blocks. Start learning them today and watch your kanji comprehension grow exponentially.
+
+## Practice Your Skills
+
+Ready to apply what you learned? KanjiTest.Online has everything you need:
+
+- **[Study](/n5/study/)** — Browse all N5 kanji with readings and examples
+- **[Flashcards](/n5/flashcards/)** — Flip through interactive flashcards
+- **[Vocabulary](/n5/vocabulary/)** — Learn essential N5 words
+- **[Practice Tests](/n5/sets/1/)** — Test your knowledge with timed quizzes
+
+Don't stop here — check out our guides on [how to remember kanji](/blog/how-to-remember-kanji/), [on'yomi vs kun'yomi](/blog/onyomi-vs-kunyomi/), and [how to pass JLPT N5](/blog/how-to-pass-jlpt-n5/) for more.
