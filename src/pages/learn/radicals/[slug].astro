@@ -1,20 +1,22 @@
 ---
 import DefaultLayout from "@/layouts/DefaultLayout.astro"
-import radicals from "@/data/radicals.json"
+import { radicals, toSlug, getBySlug, getKanjiByChar } from "@/lib/radicals"
 
 export function getStaticPaths() {
-  return radicals.map((r) => ({ params: { id: String(r.id) } }))
+  return radicals.map((r) => ({ params: { slug: toSlug(r.meaning, r.id) } }))
 }
 
-const id = Number(Astro.params.id)
-const radical = radicals.find((r) => r.id === id)!
-const prev = radicals.find((r) => r.id === id - 1) || null
-const next = radicals.find((r) => r.id === id + 1) || null
+const slug = Astro.params.slug!
+const radical = getBySlug(slug)!
+const idx = radicals.indexOf(radical)
+const prev = idx > 0 ? radicals[idx - 1] : null
+const next = idx < radicals.length - 1 ? radicals[idx + 1] : null
 ---
 
-<DefaultLayout title={`${radical.radical} (${radical.meaning}) — Radical ${radical.id} — KanjiTest.Online`} description={`Learn about the Kangxi radical ${radical.radical} (${radical.meaning}, ${radical.reading}). ${radical.desc}`} keywords={`Kangxi radical, ${radical.meaning}, ${radical.radical}, kanji radical, ${radical.reading}, Japanese radicals`}>
+<DefaultLayout title={`${radical.radical} (${radical.meaning}) — Radical ${radical.id} — KanjiTest.Online`}
+  description={`Learn about the Kangxi radical ${radical.radical} (${radical.meaning}, ${radical.reading}). ${radical.desc}`}
+  keywords={`Kangxi radical, ${radical.meaning}, ${radical.radical}, kanji radical, ${radical.reading}, Japanese radicals`}>
   <div class="max-w-2xl mx-auto px-4 py-8 sm:py-12">
-    <!-- Breadcrumb -->
     <nav class="text-[11px] sm:text-xs text-ink/45 mb-5 flex items-center gap-1 animate-fade-in">
       <a href="/" class="hover:text-ink transition-colors">Home</a>
       <span>/</span>
@@ -25,24 +27,22 @@ const next = radicals.find((r) => r.id === id + 1) || null
       <span class="text-ink/70 font-jp">{radical.radical}</span>
     </nav>
 
-    <!-- Prev / Next -->
     <div class="flex justify-between items-center mb-6">
       {prev ? (
-        <a href={`/learn/radicals/${prev.id}/`} class="flex items-center gap-1.5 text-xs text-ink/50 hover:text-ink transition-colors">
+        <a href={`/learn/radicals/${toSlug(prev.meaning, prev.id)}/`} class="flex items-center gap-1.5 text-xs text-ink/50 hover:text-ink transition-colors">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
           {prev.radical} {prev.meaning}
         </a>
       ) : <div />}
       <span class="text-xs text-ink/30">#{radical.id} / 214</span>
       {next ? (
-        <a href={`/learn/radicals/${next.id}/`} class="flex items-center gap-1.5 text-xs text-ink/50 hover:text-ink transition-colors">
+        <a href={`/learn/radicals/${toSlug(next.meaning, next.id)}/`} class="flex items-center gap-1.5 text-xs text-ink/50 hover:text-ink transition-colors">
           {next.radical} {next.meaning}
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
         </a>
       ) : <div />}
     </div>
 
-    <!-- Hero card -->
     <div class="card overflow-hidden animate-fade-up">
       <div class="bg-gradient-to-r from-vermilion/10 to-vermilion/5 h-1.5" />
       <div class="p-6 sm:p-8 text-center">
@@ -52,7 +52,6 @@ const next = radicals.find((r) => r.id === id + 1) || null
       </div>
     </div>
 
-    <!-- Info grid -->
     <div class="grid sm:grid-cols-2 gap-3 mt-5 animate-fade-up" style="animation-delay: 80ms">
       <div class="card p-4 text-center">
         <span class="block text-xs text-ink/40 uppercase tracking-wider font-medium">Stroke Count</span>
@@ -64,13 +63,11 @@ const next = radicals.find((r) => r.id === id + 1) || null
       </div>
     </div>
 
-    <!-- Description -->
     <div class="card p-5 mt-3 animate-fade-up" style="animation-delay: 100ms">
       <h2 class="text-xs font-bold text-ink/40 uppercase tracking-wider mb-2">About this radical</h2>
       <p class="text-sm text-ink/70 leading-relaxed">{radical.desc}</p>
     </div>
 
-    <!-- Variants -->
     {radical.variants.length > 0 && (
       <div class="card p-5 mt-3 animate-fade-up" style="animation-delay: 120ms">
         <h2 class="text-xs font-bold text-ink/40 uppercase tracking-wider mb-2">Variant forms</h2>
@@ -85,20 +82,54 @@ const next = radicals.find((r) => r.id === id + 1) || null
       </div>
     )}
 
-    <!-- Example kanji -->
     <div class="card p-5 mt-3 animate-fade-up" style="animation-delay: 140ms">
       <h2 class="text-xs font-bold text-ink/40 uppercase tracking-wider mb-2">Example kanji</h2>
-      <p class="text-sm text-ink/60 mb-3">Common kanji that use the radical {radical.radical}.</p>
-      <div class="flex flex-wrap gap-3">
-        {radical.examples.map((ex) => (
-          <div class="flex flex-col items-center gap-1 p-3 rounded-xl bg-ink/[0.03] min-w-[4rem]">
-            <span class="text-2xl font-jp font-bold text-ink">{ex}</span>
-          </div>
-        ))}
+      <p class="text-sm text-ink/60 mb-4">Common kanji that use the radical {radical.radical}.</p>
+      <div class="space-y-3">
+        {radical.examples.map((ex) => {
+          const k = getKanjiByChar(ex)
+          if (!k) {
+            return (
+              <div class="flex items-center gap-3 p-3 rounded-xl bg-ink/[0.03]">
+                <span class="text-2xl font-jp font-bold text-ink w-10 text-center">{ex}</span>
+                <span class="text-xs text-ink/50">(data unavailable)</span>
+              </div>
+            )
+          }
+          const firstExample = k.examples[0]
+          const showReadings = [...k.on.map((o) => ` ${o}`), ...k.kun.map((u) => ` ${u}`)]
+          return (
+            <div class="p-4 rounded-xl bg-ink/[0.03] border border-ink/5">
+              <div class="flex items-start gap-4">
+                <span class="text-3xl font-jp font-bold text-ink leading-none shrink-0 mt-0.5">{k.kanji}</span>
+                <div class="min-w-0 flex-1">
+                  <div class="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                    <span class="font-bold text-sm text-ink">{k.meanings.join(", ")}</span>
+                    <span class="text-[11px] font-mono text-ink/40">{showReadings}</span>
+                  </div>
+                  {firstExample && (
+                    <div class="mt-2 pt-2 border-t border-ink/5">
+                      <p class="text-[13px] text-ink/70">
+                        <span class="font-bold text-ink">{firstExample.word}</span>
+                        <span class="text-ink/40 mx-1">({firstExample.reading})</span>
+                        <span class="text-ink/60">— {firstExample.english}</span>
+                      </p>
+                      {firstExample.sentence && (
+                        <p class="text-[12px] text-ink/50 mt-1 font-jp leading-relaxed">{firstExample.sentence}</p>
+                      )}
+                      {firstExample.sentenceEnglish && (
+                        <p class="text-[11px] text-ink/40 mt-0.5 italic">{firstExample.sentenceEnglish}</p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )
+        })}
       </div>
     </div>
 
-    <!-- Back link -->
     <div class="text-center mt-8 animate-fade-up" style="animation-delay: 160ms">
       <a href="/learn/radicals/" class="inline-flex items-center gap-1.5 text-xs text-ink/50 hover:text-ink transition-colors">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>

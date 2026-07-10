@@ -2,7 +2,7 @@ import type { APIRoute } from "astro"
 import { siteUrl } from "@/lib/seo"
 import { getAll, getVocabulary } from "@/lib/kanji"
 import { getCollection } from "astro:content"
-import radicals from "@/data/radicals.json"
+import { radicals, toSlug } from "@/lib/radicals"
 
 export const GET: APIRoute = async () => {
   const BASE = siteUrl()
@@ -30,7 +30,7 @@ export const GET: APIRoute = async () => {
     "vocab-quiz", "weather-vocab", "word-counter", "word-match",
   ]
 
-  const entries: UrlEntry[] = [
+const entries: UrlEntry[] = [
     { loc: BASE, priority: "1.0", changefreq: "weekly" },
     { loc: `${BASE}/blog/`, priority: "0.8", changefreq: "weekly" },
     ...publishedBlogPosts.map((p) => ({
@@ -47,7 +47,7 @@ export const GET: APIRoute = async () => {
     { loc: `${BASE}/learn/`, priority: "0.8", changefreq: "weekly" },
     { loc: `${BASE}/learn/radicals/`, priority: "0.7", changefreq: "monthly" },
     ...radicals.map((r) => ({
-      loc: `${BASE}/learn/radicals/${r.id}/`,
+      loc: `${BASE}/learn/radicals/${toSlug(r.meaning, r.id)}/`,
       priority: "0.6" as const,
       changefreq: "monthly" as const,
     })),
