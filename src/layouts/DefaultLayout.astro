@@ -20,7 +20,11 @@ export interface Props {
 const { title, description, noIndex, level, ogImage, keywords: kw } = Astro.props
 const prefix = level ? `/${level}` : ""
 const canonical = Astro.url.pathname.endsWith("/") ? Astro.url.pathname : `${Astro.url.pathname}/`
-const finalTitle = title || "KanjiTest.Online"
+const finalTitle = title
+  ? title.includes("KanjiTest.Online") || title.includes("Kanji Test Online")
+    ? title
+    : `${title} — KanjiTest.Online`
+  : "KanjiTest.Online"
 const finalDesc = description || "Free JLPT N5, N4, N3, N2, and N1 kanji study with flashcards, vocabulary, and practice tests."
 const image = ogImage || "/icon.svg"
 const path = Astro.url.pathname

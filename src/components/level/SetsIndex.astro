@@ -22,8 +22,8 @@ const pageSchema = collectionPageSchema(title, `${SETS_PER_LEVEL} test sets of $
 
   <div class="px-4 py-6 sm:py-8">
     <div class="mb-6 animate-fade-up">
-      <h1 class="text-xl sm:text-2xl font-black text-ink">Practice tests</h1>
-      <p class="text-xs sm:text-sm text-ink/55 mt-1">{SETS_PER_LEVEL} sets · {QUESTIONS_PER_SET} questions each · JLPT {meta.label}</p>
+      <h1 class="text-xl sm:text-2xl font-black text-ink">JLPT {meta.label} Kanji Practice Tests</h1>
+      <p class="text-xs sm:text-sm text-ink/55 mt-1">{SETS_PER_LEVEL} sets · {QUESTIONS_PER_SET} questions each · {meta.tagline}</p>
     </div>
 
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 sm:gap-3">

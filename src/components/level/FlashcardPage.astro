@@ -47,6 +47,7 @@ const breadSchema = breadcrumbSchema([
 <DefaultLayout title={title} description={description} level={level}>
   <script type="application/ld+json" set:html={JSON.stringify(breadSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(termSchema)} />
+  <h1 class="sr-only">{k.kanji} — Flashcard — JLPT {meta.label}</h1>
   <FlashcardsClient
     client:load
     level={level}

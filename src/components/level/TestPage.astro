@@ -34,5 +34,6 @@ const breadSchema = breadcrumbSchema([
 <DefaultLayout title={title} description={description} level={level}>
   <script type="application/ld+json" set:html={JSON.stringify(pageSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(breadSchema)} />
+  <h1 class="sr-only">Kanji Test Online — JLPT {meta.label} Set {setNum}</h1>
   <TestClient client:load level={level} setNum={setNum} questions={questions} />
 </DefaultLayout>

@@ -24,8 +24,8 @@ const pageSchema = collectionPageSchema(title, `All ${all.length} JLPT ${meta.la
   <div class="px-4 py-6 sm:py-8">
     <div class="flex items-end justify-between mb-6 animate-fade-up">
       <div>
-        <h1 class="text-xl sm:text-2xl font-black text-ink">Flashcards</h1>
-        <p class="text-xs sm:text-sm text-ink/55 mt-1">{all.length.toLocaleString()} cards · JLPT {meta.label}</p>
+        <h1 class="text-xl sm:text-2xl font-black text-ink">JLPT {meta.label} Kanji Flashcards</h1>
+        <p class="text-xs sm:text-sm text-ink/55 mt-1">{all.length.toLocaleString()} cards · {meta.tagline}</p>
       </div>
       <a href={`${prefix}/flashcards/${all[0]?.kanji}/`} class="btn btn-accent h-10 px-4 text-xs sm:text-sm">
         Start deck →

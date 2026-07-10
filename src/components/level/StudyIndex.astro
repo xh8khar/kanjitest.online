@@ -32,8 +32,8 @@ const listSchema = itemListSchema(items)
   <div class="px-4 py-6 sm:py-8">
     <div class="flex items-end justify-between mb-6 animate-fade-up">
       <div>
-        <h1 class="text-xl sm:text-2xl font-black text-ink">Study</h1>
-        <p class="text-xs sm:text-sm text-ink/55 mt-1">{all.length.toLocaleString()} kanji · JLPT {meta.label}</p>
+        <h1 class="text-xl sm:text-2xl font-black text-ink">JLPT {meta.label} Kanji Study</h1>
+        <p class="text-xs sm:text-sm text-ink/55 mt-1">{all.length.toLocaleString()} kanji · {meta.tagline}</p>
       </div>
       <a href={`${prefix}/flashcards/${all[0]?.kanji}/`} class="btn btn-primary h-10 px-4 text-xs sm:text-sm">
         🃏 Start deck
