@@ -113,20 +113,37 @@ function JumpSetOverlay({
   )
 }
 
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr]
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[a[i], a[j]] = [a[j], a[i]]
+  }
+  return a
+}
+
 export default function TestClient({ level, setNum, questions }: Props) {
+  // Question AND option order reshuffle on every attempt so nobody can
+  // memorize "question 3 is answer B". Initial state mirrors the server
+  // HTML (no hydration mismatch); the shuffle lands right after mount.
+  const [quiz, setQuiz] = useState<QuizQuestion[]>(questions)
   const [idx, setIdx] = useState(0)
   const [answers, setAnswers] = useState<(string | null)[]>(() => questions.map(() => null))
   const [finished, setFinished] = useState(false)
   const [showJump, setShowJump] = useState(false)
   const prefix = `/${level}`
 
-  const q = questions[idx]
+  useEffect(() => {
+    setQuiz(shuffle(questions).map((qq) => ({ ...qq, options: shuffle(qq.options) })))
+  }, [questions])
+
+  const q = quiz[idx]
   const selected = answers[idx]
   const isAnswered = selected !== null
   const answeredCount = answers.filter((a) => a !== null).length
   const correctCount = useMemo(
-    () => questions.reduce((s, qq, i) => s + (answers[i] === qq.correct ? 1 : 0), 0),
-    [questions, answers]
+    () => quiz.reduce((s, qq, i) => s + (answers[i] === qq.correct ? 1 : 0), 0),
+    [quiz, answers]
   )
 
   const select = (opt: string) => {
@@ -139,11 +156,13 @@ export default function TestClient({ level, setNum, questions }: Props) {
   }
 
   const advance = () => {
-    if (idx < questions.length - 1) setIdx(idx + 1)
+    if (idx < quiz.length - 1) setIdx(idx + 1)
     else setFinished(true)
   }
 
   const restart = () => {
+    // fresh order every retry
+    setQuiz(shuffle(questions).map((qq) => ({ ...qq, options: shuffle(qq.options) })))
     setAnswers(questions.map(() => null))
     setIdx(0)
     setFinished(false)
@@ -156,7 +175,7 @@ export default function TestClient({ level, setNum, questions }: Props) {
         return
       }
       if (finished) return
-      const current = questions[idx]
+      const current = quiz[idx]
       const currentAnswer = answers[idx]
       if (currentAnswer === null && ["1", "2", "3", "4"].includes(e.key)) {
         const opt = current.options[Number(e.key) - 1]
@@ -171,8 +190,8 @@ export default function TestClient({ level, setNum, questions }: Props) {
 
   /* ————— Results screen ————— */
   if (finished) {
-    const pct = Math.round((correctCount / questions.length) * 100)
-    const wrong = questions.map((qq, i) => ({ q: qq, given: answers[i] })).filter((w) => w.given !== w.q.correct)
+    const pct = Math.round((correctCount / quiz.length) * 100)
+    const wrong = quiz.map((qq, i) => ({ q: qq, given: answers[i] })).filter((w) => w.given !== w.q.correct)
     const message =
       pct === 100 ? "Perfect score! 完璧です！" : pct >= 80 ? "Great job! すごい！" : pct >= 50 ? "Keep practicing! がんばって！" : "Review and try again — 一歩ずつ。"
 
@@ -185,7 +204,7 @@ export default function TestClient({ level, setNum, questions }: Props) {
             </p>
             <ScoreRing pct={pct} />
             <p className="text-lg font-black text-ink mt-4 animate-pop" style={{ animationDelay: "300ms" }}>
-              {correctCount} / {questions.length}
+              {correctCount} / {quiz.length}
             </p>
             <p className="text-sm text-ink/60 mt-1">{message}</p>
 
@@ -297,7 +316,7 @@ export default function TestClient({ level, setNum, questions }: Props) {
         <div>
           <h1 className="text-xl font-black text-ink">Set {setNum}</h1>
           <p className="text-xs text-ink/55 mt-0.5">
-            Question {idx + 1} of {questions.length}
+            Question {idx + 1} of {quiz.length} · 🔀 shuffled every attempt
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -311,7 +330,7 @@ export default function TestClient({ level, setNum, questions }: Props) {
       </div>
 
       <div className="flex gap-1 mb-6" aria-hidden="true">
-        {questions.map((qq, i) => {
+        {quiz.map((qq, i) => {
           const a = answers[i]
           return (
             <span
@@ -404,7 +423,7 @@ export default function TestClient({ level, setNum, questions }: Props) {
                 selected === q.correct ? "btn-primary" : "btn-accent"
               }`}
             >
-              {idx < questions.length - 1 ? "Next question →" : "See results 🎉"}
+              {idx < quiz.length - 1 ? "Next question →" : "See results 🎉"}
             </button>
           </div>
         )}
