@@ -49,6 +49,6 @@ ${entries.map((e) => `  <url><loc>${e.loc}</loc><lastmod>${now}</lastmod><change
 </urlset>`
 
   return new Response(sitemap, {
-    headers: { "Content-Type": "application/xml" },
+    headers: { "Content-Type": "application/xml; charset=utf-8" },
   })
 }
