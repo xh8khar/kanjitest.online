@@ -247,6 +247,16 @@ html.js .reveal.is-visible {
     color: var(--color-ink);
   }
 
+  /* Active state for toggle button groups (JLPT level selectors) */
+  .on.btn {
+    background: var(--color-ink);
+    color: #fff;
+    border-color: var(--color-ink);
+  }
+  .on.btn:hover {
+    box-shadow: 0 8px 20px -8px color-mix(in srgb, var(--color-ink) 55%, transparent);
+  }
+
   /* Small pill chip */
   .chip {
     display: inline-flex;
