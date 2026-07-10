@@ -1,0 +1,78 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import radicals from "@/data/radicals.json"
+
+const groups = radicals.reduce<{ strokes: number; items: typeof radicals }[]>((acc, r) => {
+  const g = acc.find((g) => g.strokes === r.strokes)
+  if (g) g.items.push(r)
+  else acc.push({ strokes: r.strokes, items: [r] })
+  return acc
+}, [])
+---
+
+<DefaultLayout title="Japanese Radicals — KanjiTest.Online" description="The 214 traditional Kangxi radicals used in Japanese kanji. Complete reference with stroke counts and meanings." keywords="Kangxi radicals, Japanese radicals, kanji radicals, radical chart, 214 radicals, kanji components, bujō">
+  <div class="max-w-5xl mx-auto px-4 py-8 sm:py-12">
+    <!-- Intro -->
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink tracking-tight">Radicals <span class="text-lg sm:text-xl font-medium text-ink/40">部首</span></h1>
+      <p class="text-sm text-ink/60 mt-2 max-w-2xl mx-auto leading-relaxed">
+        Radicals are the building blocks of kanji — like letters in the alphabet.
+        There are 214 traditional <strong>Kangxi radicals</strong> used across thousands of kanji.
+        Learn them, and you will start to recognise patterns and meanings in unfamiliar characters.
+      </p>
+    </div>
+
+    <!-- How radicals work -->
+    <div class="card p-5 mb-8 animate-fade-up max-w-2xl mx-auto" style="animation-delay: 40ms">
+      <h2 class="text-sm font-bold text-ink mb-3">How to use this guide</h2>
+      <ul class="space-y-1.5 text-[13px] text-ink/70 leading-relaxed">
+        <li><span class="font-bold text-ink">Reading</span> — the Japanese name for the radical (how it is referred to)</li>
+        <li><span class="font-bold text-ink">Variants</span> — alternative shapes the radical takes (e.g. 人 → 亻 when on the left)</li>
+        <li><span class="font-bold text-ink">Examples</span> — common kanji that use this radical</li>
+        <li><span class="font-bold text-ink">Tips</span> — mnemonic hints to help you remember the meaning</li>
+      </ul>
+    </div>
+
+    <!-- Stroke groups -->
+    <div class="space-y-8">
+      {groups.map((g, gi) => (
+        <section class="animate-fade-up" style={`animation-delay: ${gi * 30 + 80}ms`}>
+          <div class="flex items-center gap-3 mb-3">
+            <h2 class="text-sm font-bold text-ink/50 uppercase tracking-widest">{g.strokes} stroke{g.strokes > 1 ? "s" : ""}</h2>
+            <span class="flex-1 h-px bg-ink/10" />
+            <span class="text-xs text-ink/30">{g.items.length} radicals</span>
+          </div>
+          <div class="grid gap-2.5" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr))">
+            {g.items.map((r) => (
+              <div class="card p-3 group hover:border-vermilion/30 transition-all duration-200">
+                <div class="flex items-start gap-3">
+                  <span class="text-2xl font-jp font-bold text-ink leading-none shrink-0 mt-0.5 group-hover:text-vermilion transition-colors">{r.radical}</span>
+                  <div class="min-w-0 flex-1">
+                    <div class="flex items-baseline gap-1.5">
+                      <span class="font-bold text-sm text-ink">{r.meaning}</span>
+                      <span class="text-[10px] text-ink/35">#{r.id}</span>
+                    </div>
+                    <div class="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 mt-0.5">
+                      <span class="text-[11px] font-mono text-ink/40">{r.reading}</span>
+                      {r.variants.length > 0 && (
+                        <span class="text-[11px] text-ink/35">
+                          variants: {r.variants.map((v) => <span class="font-jp">{v}</span>).join(" ")}
+                        </span>
+                      )}
+                    </div>
+                    <p class="text-[12px] text-ink/60 mt-1 leading-relaxed">{r.desc}</p>
+                    <div class="flex flex-wrap gap-1 mt-1.5">
+                      {r.examples.map((ex) => (
+                        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-ink/[0.04] text-[11px] font-jp font-medium text-ink/50">{ex}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  </div>
+</DefaultLayout>

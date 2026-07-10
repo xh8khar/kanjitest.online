@@ -1,0 +1,57 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+
+const katakana = [
+  { row: "a", chars: [{ kana: "ア", roma: "a" }, { kana: "イ", roma: "i" }, { kana: "ウ", roma: "u" }, { kana: "エ", roma: "e" }, { kana: "オ", roma: "o" }] },
+  { row: "ka", chars: [{ kana: "カ", roma: "ka" }, { kana: "キ", roma: "ki" }, { kana: "ク", roma: "ku" }, { kana: "ケ", roma: "ke" }, { kana: "コ", roma: "ko" }] },
+  { row: "sa", chars: [{ kana: "サ", roma: "sa" }, { kana: "シ", roma: "shi" }, { kana: "ス", roma: "su" }, { kana: "セ", roma: "se" }, { kana: "ソ", roma: "so" }] },
+  { row: "ta", chars: [{ kana: "タ", roma: "ta" }, { kana: "チ", roma: "chi" }, { kana: "ツ", roma: "tsu" }, { kana: "テ", roma: "te" }, { kana: "ト", roma: "to" }] },
+  { row: "na", chars: [{ kana: "ナ", roma: "na" }, { kana: "ニ", roma: "ni" }, { kana: "ヌ", roma: "nu" }, { kana: "ネ", roma: "ne" }, { kana: "ノ", roma: "no" }] },
+  { row: "ha", chars: [{ kana: "ハ", roma: "ha" }, { kana: "ヒ", roma: "hi" }, { kana: "フ", roma: "fu" }, { kana: "ヘ", roma: "he" }, { kana: "ホ", roma: "ho" }] },
+  { row: "ma", chars: [{ kana: "マ", roma: "ma" }, { kana: "ミ", roma: "mi" }, { kana: "ム", roma: "mu" }, { kana: "メ", roma: "me" }, { kana: "モ", roma: "mo" }] },
+  { row: "ya", chars: [{ kana: "ヤ", roma: "ya" }, { kana: "", roma: "" }, { kana: "ユ", roma: "yu" }, { kana: "", roma: "" }, { kana: "ヨ", roma: "yo" }] },
+  { row: "ra", chars: [{ kana: "ラ", roma: "ra" }, { kana: "リ", roma: "ri" }, { kana: "ル", roma: "ru" }, { kana: "レ", roma: "re" }, { kana: "ロ", roma: "ro" }] },
+  { row: "wa", chars: [{ kana: "ワ", roma: "wa" }, { kana: "ヰ", roma: "wi" }, { kana: "", roma: "" }, { kana: "ヱ", roma: "we" }, { kana: "ヲ", roma: "wo" }] },
+  { row: "n", chars: [{ kana: "ン", roma: "n" }, { kana: "", roma: "" }, { kana: "", roma: "" }, { kana: "", roma: "" }, { kana: "", roma: "" }] },
+]
+
+const vowels = ["a", "i", "u", "e", "o"]
+---
+
+<DefaultLayout title="Katakana Chart — KanjiTest.Online" description="Complete katakana chart with romaji readings. Learn katakana for foreign words and emphasis." keywords="katakana chart, katakana, Japanese alphabet, Japanese writing, kana">
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">Katakana Chart</h1>
+      <p class="text-sm text-ink/60 mt-2">Used for foreign words, loanwords, and emphasis — 46 basic characters.</p>
+    </div>
+
+    <div class="animate-fade-up" style="animation-delay: 80ms">
+      <div class="overflow-x-auto">
+        <table class="kana-table">
+          <thead>
+            <tr class="border-b border-ink/10">
+              <th class="text-left text-xs text-ink/40 font-medium pb-2">row</th>
+              {vowels.map((v) => <th class="text-xs text-ink/50 font-medium pb-2">{v}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {katakana.map((r) => (
+              <tr>
+                <td class="text-xs text-ink/40 font-medium w-10 py-2">{r.row}</td>
+                {r.chars.map((c) => (
+                  <td class={`text-center py-3 ${c.kana ? "bg-white border border-ink/10 rounded-xl" : ""}`}>
+                    {c.kana && <><span class="block text-2xl font-jp font-bold text-ink leading-tight">{c.kana}</span><span class="block text-xs text-ink/50 mt-0.5">{c.roma}</span></>}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="mt-8 text-center text-xs text-ink/40">
+      <p>Katakana is used for foreign loanwords, scientific terms, onomatopoeia, and emphasis.</p>
+    </div>
+  </div>
+</DefaultLayout>

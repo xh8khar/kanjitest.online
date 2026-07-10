@@ -1,0 +1,57 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+
+const hiragana = [
+  { row: "a", chars: [{ kana: "あ", roma: "a" }, { kana: "い", roma: "i" }, { kana: "う", roma: "u" }, { kana: "え", roma: "e" }, { kana: "お", roma: "o" }] },
+  { row: "ka", chars: [{ kana: "か", roma: "ka" }, { kana: "き", roma: "ki" }, { kana: "く", roma: "ku" }, { kana: "け", roma: "ke" }, { kana: "こ", roma: "ko" }] },
+  { row: "sa", chars: [{ kana: "さ", roma: "sa" }, { kana: "し", roma: "shi" }, { kana: "す", roma: "su" }, { kana: "せ", roma: "se" }, { kana: "そ", roma: "so" }] },
+  { row: "ta", chars: [{ kana: "た", roma: "ta" }, { kana: "ち", roma: "chi" }, { kana: "つ", roma: "tsu" }, { kana: "て", roma: "te" }, { kana: "と", roma: "to" }] },
+  { row: "na", chars: [{ kana: "な", roma: "na" }, { kana: "に", roma: "ni" }, { kana: "ぬ", roma: "nu" }, { kana: "ね", roma: "ne" }, { kana: "の", roma: "no" }] },
+  { row: "ha", chars: [{ kana: "は", roma: "ha" }, { kana: "ひ", roma: "hi" }, { kana: "ふ", roma: "fu" }, { kana: "へ", roma: "he" }, { kana: "ほ", roma: "ho" }] },
+  { row: "ma", chars: [{ kana: "ま", roma: "ma" }, { kana: "み", roma: "mi" }, { kana: "む", roma: "mu" }, { kana: "め", roma: "me" }, { kana: "も", roma: "mo" }] },
+  { row: "ya", chars: [{ kana: "や", roma: "ya" }, { kana: "", roma: "" }, { kana: "ゆ", roma: "yu" }, { kana: "", roma: "" }, { kana: "よ", roma: "yo" }] },
+  { row: "ra", chars: [{ kana: "ら", roma: "ra" }, { kana: "り", roma: "ri" }, { kana: "る", roma: "ru" }, { kana: "れ", roma: "re" }, { kana: "ろ", roma: "ro" }] },
+  { row: "wa", chars: [{ kana: "わ", roma: "wa" }, { kana: "ゐ", roma: "wi" }, { kana: "", roma: "" }, { kana: "ゑ", roma: "we" }, { kana: "を", roma: "wo" }] },
+  { row: "n", chars: [{ kana: "ん", roma: "n" }, { kana: "", roma: "" }, { kana: "", roma: "" }, { kana: "", roma: "" }, { kana: "", roma: "" }] },
+]
+
+const vowels = ["a", "i", "u", "e", "o"]
+---
+
+<DefaultLayout title="Hiragana Chart — KanjiTest.Online" description="Complete hiragana chart with romaji readings. Learn hiragana, the foundation of Japanese writing." keywords="hiragana chart, hiragana, Japanese alphabet, Japanese writing, kana">
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">Hiragana Chart</h1>
+      <p class="text-sm text-ink/60 mt-2">The foundation of Japanese writing — 46 basic characters.</p>
+    </div>
+
+    <div class="animate-fade-up" style="animation-delay: 80ms">
+      <div class="overflow-x-auto">
+        <table class="kana-table">
+          <thead>
+            <tr class="border-b border-ink/10">
+              <th class="text-left text-xs text-ink/40 font-medium pb-2">row</th>
+              {vowels.map((v) => <th class="text-xs text-ink/50 font-medium pb-2">{v}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {hiragana.map((r) => (
+              <tr>
+                <td class="text-xs text-ink/40 font-medium w-10 py-2">{r.row}</td>
+                {r.chars.map((c) => (
+                  <td class={`text-center py-3 ${c.kana ? "bg-white border border-ink/10 rounded-xl" : ""}`}>
+                    {c.kana && <><span class="block text-2xl font-jp font-bold text-ink leading-tight">{c.kana}</span><span class="block text-xs text-ink/50 mt-0.5">{c.roma}</span></>}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="mt-8 text-center text-xs text-ink/40">
+      <p>Hiragana is used for native Japanese words, grammatical particles, and verb endings.</p>
+    </div>
+  </div>
+</DefaultLayout>

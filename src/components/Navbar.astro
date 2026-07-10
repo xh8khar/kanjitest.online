@@ -3,6 +3,12 @@ import { LEVELS, LEVEL_IDS } from "@/lib/levels"
 
 const path = Astro.url.pathname
 
+const LEARN_LINKS = [
+  { href: "/learn/radicals/", label: "Radicals", icon: "⼀" },
+  { href: "/learn/hiragana/", label: "Hiragana", icon: "あ" },
+  { href: "/learn/katakana/", label: "Katakana", icon: "ア" },
+]
+
 const SUB_LINKS = [
   { id: "study", label: "Study", icon: "📖" },
   { id: "flashcards", label: "Flashcards", icon: "🃏" },
@@ -34,6 +40,25 @@ const isSubActive = (id: string, sub: string) => path.startsWith(`/${id}/${sub}/
         Tools
         <span class="nav-bar" />
       </a>
+      <div class="relative h-full group">
+        <a href="/learn/" class:list={["nav-lv", { on: path.startsWith("/learn/") }]}>
+          Learn
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+          </svg>
+          <span class="nav-bar" />
+        </a>
+        <div class="nav-drop">
+          <div class="nav-drop-in">
+            {LEARN_LINKS.map((s) => (
+              <a href={s.href} class:list={["nav-sub", { on: path.startsWith(s.href) }]}>
+                <span class="text-base">{s.icon}</span>
+                {s.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
       {LEVEL_IDS.map((id) => (
         <div class="relative h-full group">
           <a href={`/${id}/`} class:list={["nav-lv", { on: isLevelActive(id) }]}>
@@ -81,6 +106,29 @@ const isSubActive = (id: string, sub: string) => path.startsWith(`/${id}/${sub}/
           <span class="text-base">🔧</span>
           Tools
         </a>
+        <div class="rounded-2xl overflow-hidden bg-white border border-ink/10 mb-1.5">
+          <button data-acc-toggle class="acc-btn">
+            <span class="flex items-center gap-2.5">
+              <span class="text-base">📚</span>
+              Learn
+            </span>
+            <svg class="acc-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div class="acc-panel">
+            <div class="overflow-hidden min-h-0">
+              <div class="grid grid-cols-2 gap-1.5 px-3 pb-3">
+                {LEARN_LINKS.map((s) => (
+                  <a href={s.href} class:list={["m-sub", { on: path.startsWith(s.href) }]}>
+                    <span>{s.icon}</span>
+                    {s.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
         {LEVEL_IDS.map((id) => {
           const lv = LEVELS[id]
           return (

@@ -1,0 +1,45 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+
+const sections = [
+  {
+    href: "/learn/radicals/",
+    icon: "⼀",
+    title: "Radicals",
+    desc: "The 214 traditional Kangxi radicals. Learn the building blocks of kanji characters.",
+  },
+  {
+    href: "/learn/hiragana/",
+    icon: "あ",
+    title: "Hiragana",
+    desc: "Complete hiragana chart with romaji readings. The foundation of Japanese writing.",
+  },
+  {
+    href: "/learn/katakana/",
+    icon: "ア",
+    title: "Katakana",
+    desc: "Complete katakana chart with romaji readings. Used for foreign words and emphasis.",
+  },
+]
+---
+
+<DefaultLayout title="Learn Japanese — KanjiTest.Online" description="Learn the basics of Japanese: radicals, hiragana, and katakana." keywords="learn Japanese, radicals, hiragana chart, katakana chart, Japanese basics, Kangxi radicals">
+  <div class="max-w-4xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-10 sm:mb-14 animate-fade-up">
+      <h1 class="text-3xl sm:text-5xl font-black text-ink tracking-tight">Learn</h1>
+      <p class="text-sm sm:text-base text-ink/60 mt-3 max-w-2xl mx-auto leading-relaxed">
+        Master the foundations of Japanese — radicals, hiragana, and katakana.
+      </p>
+    </div>
+
+    <div class="grid sm:grid-cols-3 gap-4 sm:gap-5">
+      {sections.map((s, i) => (
+        <a href={s.href} class="card card-hover group p-5 sm:p-6 animate-fade-up text-center" style={`animation-delay: ${i * 80}ms`}>
+          <span class="inline-flex w-14 h-14 items-center justify-center rounded-xl bg-ink/[0.04] text-3xl transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6 font-jp">{s.icon}</span>
+          <h2 class="text-base font-bold text-ink mt-4 group-hover:text-vermilion transition-colors">{s.title}</h2>
+          <p class="text-[13px] text-ink/60 mt-1.5 leading-relaxed">{s.desc}</p>
+        </a>
+      ))}
+    </div>
+  </div>
+</DefaultLayout>
