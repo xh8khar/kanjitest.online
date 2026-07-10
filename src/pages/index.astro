@@ -39,13 +39,6 @@ const sampleKanji = [
   { char: "美", meaning: "beauty", level: "N3", url: "/n3/study/美/" },
 ]
 
-const features = [
-  { icon: "📖", title: "Study", desc: "Browse every kanji with kun/on readings, meanings, and real example sentences.", url: "/n5/study/" },
-  { icon: "🃏", title: "Flashcards", desc: "Flip 3D cards and mark “I know this” or “Don't know” — your progress is saved on your device.", url: "/n5/flashcards/" },
-  { icon: "📝", title: "Vocabulary", desc: "Learn words with readings, kanji breakdowns, and example sentences.", url: "/n5/vocabulary/" },
-  { icon: "✍️", title: "Practice Tests", desc: `${SETS_PER_LEVEL} sets per level with instant, animated feedback on every answer.`, url: "/n5/sets/1/" },
-]
-
 const jsonLd = collectionPageSchema(
   "Free JLPT Kanji Test Online — KanjiTest.Online",
   "Free JLPT N5, N4, N3, N2, and N1 kanji tests with answers. Study with flashcards, vocabulary, and practice quizzes.",
@@ -214,29 +207,7 @@ const faqSchema = {
     </div>
   </section>
 
-  <!-- ———————— How it works ———————— -->
-  <section class="border-t border-ink/5 bg-white/50">
-    <div class="max-w-5xl mx-auto px-4 py-16 sm:py-24">
-      <h2 class="text-2xl sm:text-4xl font-black text-ink text-center reveal">Four tools. One goal.</h2>
-      <p class="text-sm sm:text-base text-ink/60 text-center mt-3 max-w-xl mx-auto reveal" style="--reveal-delay: 80ms">
-        Everything you need to go from recognizing your first character to passing N1.
-      </p>
 
-      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mt-10 sm:mt-12">
-        {features.map((f, i) => (
-          <a
-            href={f.url}
-            class="card card-hover group p-5 sm:p-6 reveal"
-            style={`--reveal-delay: ${i * 90}ms`}
-          >
-            <span class="inline-flex w-11 h-11 items-center justify-center rounded-xl bg-ink/[0.04] text-2xl transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6">{f.icon}</span>
-            <h3 class="text-base font-bold text-ink mt-4 group-hover:text-vermilion transition-colors">{f.title}</h3>
-            <p class="text-[13px] text-ink/60 mt-1.5 leading-relaxed">{f.desc}</p>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
 
   <!-- ———————— Tools ———————— -->
   <section class="border-t border-ink/5 bg-white/30">

@@ -44,7 +44,7 @@ const groups = radicals.reduce<{ strokes: number; items: typeof radicals }[]>((a
           </div>
           <div class="grid gap-2.5" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr))">
             {g.items.map((r) => (
-              <a href={`/learn/radicals/${toSlug(r.meaning, r.id)}/`} class="card p-3 group hover:border-vermilion/30 transition-all duration-200 no-underline">
+              <a href={`/learn/radicals/${toSlug(r.meaning, r.id, r.slug)}/`} class="card p-3 group hover:border-vermilion/30 transition-all duration-200 no-underline">
                 <div class="flex items-start gap-3">
                   <span class="text-2xl font-jp font-bold text-ink leading-none shrink-0 mt-0.5 group-hover:text-vermilion transition-colors">{r.radical}</span>
                   <div class="min-w-0 flex-1">

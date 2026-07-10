@@ -48,7 +48,7 @@ const entries: UrlEntry[] = [
     { loc: `${BASE}/learn/`, priority: "0.8", changefreq: "weekly" },
     { loc: `${BASE}/learn/radicals/`, priority: "0.7", changefreq: "monthly" },
     ...radicals.map((r) => ({
-      loc: `${BASE}/learn/radicals/${toSlug(r.meaning, r.id)}/`,
+      loc: `${BASE}/learn/radicals/${toSlug(r.meaning, r.id, r.slug)}/`,
       priority: "0.6" as const,
       changefreq: "monthly" as const,
     })),
