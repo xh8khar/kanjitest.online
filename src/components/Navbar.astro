@@ -17,7 +17,10 @@ const isSubActive = (id: string, sub: string) => path.startsWith(`/${id}/${sub}/
 <header class="sticky top-0 z-50 bg-paper/85 backdrop-blur-md border-b border-ink/10">
   <nav class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
     <a href="/" class="flex items-center gap-2.5 shrink-0 group" aria-label="KanjiTest.Online home">
-      <span class="hanko w-8 h-8 text-lg transition-transform duration-300 group-hover:rotate-[8deg] group-hover:scale-105">漢</span>
+      <svg viewBox="0 0 512 512" class="w-8 h-8 transition-transform duration-300 group-hover:rotate-[8deg] group-hover:scale-105" aria-hidden="true">
+        <circle cx="256" cy="256" r="240" fill="#d9482f"/>
+        <text x="256" y="256" dominant-baseline="central" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="280" fill="white">日</text>
+      </svg>
       <span class="text-lg font-black text-ink tracking-tight">KanjiTest<span class="text-vermilion">.online</span></span>
     </a>
 
