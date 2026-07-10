@@ -10,7 +10,9 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
     </div>
     <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay:80ms">
       <div class="flex flex-wrap justify-center gap-2 mb-4">
-        {["All","N5","N4","N3","N2","N1"].map(l=>`<button class="vq-lvl on btn h-8 px-3.5 text-xs rounded-full" data-lvl="${l==="All"?"all":l.toLowerCase()}">${l}</button>`).join("")}
+        {["All","N5","N4","N3","N2","N1"].map((l, i) => (
+          <button class:list={["vq-lvl", "btn", "h-8", "px-3.5", "text-xs", "rounded-full", { on: i === 0 }]} data-lvl={l === "All" ? "all" : l.toLowerCase()}>{l}</button>
+        ))}
       </div>
       <div class="flex items-center justify-between mb-3 text-xs text-ink/40"><span id="vq-score">0 correct</span><span id="vq-total">0 answered</span></div>
       <div class="text-center">

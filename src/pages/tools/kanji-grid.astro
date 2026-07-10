@@ -11,7 +11,9 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
 
     <div class="flex flex-wrap items-center justify-center gap-3 mb-6 animate-fade-up" style="animation-delay:80ms">
       <div class="flex flex-wrap justify-center gap-1.5">
-        {["All","N5","N4","N3","N2","N1"].map((l,i)=>`<button class="kg-lvl on btn h-8 px-3.5 text-xs rounded-full" data-lvl="${l==="All"?"all":l.toLowerCase()}">${l}</button>`).join("")}
+        {["All","N5","N4","N3","N2","N1"].map((l, i) => (
+          <button class:list={["kg-lvl", "btn", "h-8", "px-3.5", "text-xs", "rounded-full", { on: i === 0 }]} data-lvl={l === "All" ? "all" : l.toLowerCase()}>{l}</button>
+        ))}
       </div>
       <input id="kg-search" class="h-9 rounded-xl border border-ink/15 bg-white px-3.5 text-xs w-40 focus:outline-none focus:ring-2 focus:ring-vermilion/40 focus:border-vermilion/60 transition-all" placeholder="Search kanji…" />
       <span id="kg-count" class="text-xs text-ink/40 font-medium">0 kanji</span>

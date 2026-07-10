@@ -10,7 +10,9 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
     </div>
     <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay:80ms">
       <div class="flex flex-wrap justify-center gap-2 mb-4">
-        {["N5","N4","N3","N2","N1"].map(l=>`<button class="wm-lvl on btn h-8 px-3.5 text-xs rounded-full" data-lvl="${l.toLowerCase()}">${l}</button>`).join("")}
+        {["N5","N4","N3","N2","N1"].map((l, i) => (
+          <button class:list={["wm-lvl", "btn", "h-8", "px-3.5", "text-xs", "rounded-full", { on: i === 0 }]} data-lvl={l.toLowerCase()}>{l}</button>
+        ))}
       </div>
       <div id="wm-score" class="text-xs text-ink/40 mb-4">0 matched / 0 total</div>
       <div id="wm-grid" class="grid grid-cols-2 gap-2 max-w-sm mx-auto"></div>

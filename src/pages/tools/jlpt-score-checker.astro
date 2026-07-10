@@ -12,8 +12,8 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
     <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay: 80ms">
       <label class="text-xs font-bold uppercase tracking-widest text-ink/40 mb-3 block">Select your JLPT level</label>
       <div class="flex flex-wrap gap-2 mb-6">
-        {["N5", "N4", "N3", "N2", "N1"].map((l) => (
-          <button class="sc-lvl on btn h-9 px-4 text-xs rounded-full" data-lvl={l.toLowerCase()}>{l}</button>
+        {["N5", "N4", "N3", "N2", "N1"].map((l, i) => (
+          <button class:list={["sc-lvl", "btn", "h-9", "px-4", "text-xs", "rounded-full", { on: i === 0 }]} data-lvl={l.toLowerCase()}>{l}</button>
         ))}
       </div>
 

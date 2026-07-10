@@ -11,14 +11,18 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
 
     <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay:80ms">
       <div class="flex flex-wrap justify-center gap-2 mb-5">
-        {["N5","N4","N3","N2","N1"].map((l,i)=>`<button class="fc-lvl on btn h-8 px-3.5 text-xs rounded-full" data-lvl="${l.toLowerCase()}">${l}</button>`).join("")}
+        {["N5","N4","N3","N2","N1"].map((l, i) => (
+          <button class:list={["fc-lvl", "btn", "h-8", "px-3.5", "text-xs", "rounded-full", { on: i === 0 }]} data-lvl={l.toLowerCase()}>{l}</button>
+        ))}
       </div>
 
       <div class="flex flex-wrap items-center justify-center gap-4 mb-5">
         <label class="flex items-center gap-2 text-xs text-ink/60">
           <span>Cards:</span>
           <select id="fc-count" class="h-8 rounded-lg border border-ink/15 bg-white px-2 text-xs focus:outline-none focus:ring-2 focus:ring-vermilion/40">
-            {[10,20,30,50,100].map(n => `<option value="${n}" ${n===30?"selected":""}>${n}</option>`).join("")}
+            {[10,20,30,50,100].map((n) => (
+              <option value={n} selected={n === 30}>{n}</option>
+            ))}
           </select>
         </label>
         <label class="flex items-center gap-2 text-xs text-ink/60">

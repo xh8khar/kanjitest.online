@@ -10,7 +10,9 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
     </div>
     <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay:80ms">
       <div class="flex flex-wrap justify-center gap-2 mb-6">
-        {["Hiragana","Katakana","Mixed"].map(l=>`<button class="tp-mode on btn h-8 px-3.5 text-xs rounded-full" data-mode="${l.toLowerCase()}">${l}</button>`).join("")}
+        {["Hiragana","Katakana","Mixed"].map((l, i) => (
+          <button class:list={["tp-mode", "btn", "h-8", "px-3.5", "text-xs", "rounded-full", { on: i === 0 }]} data-mode={l.toLowerCase()}>{l}</button>
+        ))}
       </div>
       <div class="text-center">
         <div id="tp-char" class="text-6xl sm:text-7xl font-jp font-black text-ink min-h-[5rem] flex items-center justify-center">あ</div>

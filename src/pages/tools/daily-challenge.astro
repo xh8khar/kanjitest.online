@@ -12,7 +12,9 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
     <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay:80ms">
       <div class="flex flex-wrap items-center justify-center gap-3 mb-5">
         <div class="flex flex-wrap justify-center gap-1.5">
-          {["All","N5","N4","N3","N2","N1"].map((l,i)=>`<button class="dc-lvl on btn h-8 px-3.5 text-xs rounded-full" data-lvl="${l==="All"?"all":l.toLowerCase()}">${l}</button>`).join("")}
+          {["All","N5","N4","N3","N2","N1"].map((l, i) => (
+            <button class:list={["dc-lvl", "btn", "h-8", "px-3.5", "text-xs", "rounded-full", { on: i === 0 }]} data-lvl={l === "All" ? "all" : l.toLowerCase()}>{l}</button>
+          ))}
         </div>
         <span id="dc-date" class="text-xs text-ink/40 font-medium"></span>
       </div>

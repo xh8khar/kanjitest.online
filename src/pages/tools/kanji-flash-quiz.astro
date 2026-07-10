@@ -11,8 +11,8 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
 
     <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay: 80ms">
       <div class="flex flex-wrap justify-center gap-2 mb-6">
-        {["All", "N5", "N4", "N3", "N2", "N1"].map((l) => (
-          <button class="fq-lvl on btn h-9 px-4 text-xs rounded-full" data-lvl={l === "All" ? "all" : l.toLowerCase()}>{l}</button>
+        {["All", "N5", "N4", "N3", "N2", "N1"].map((l, i) => (
+          <button class:list={["fq-lvl", "btn", "h-9", "px-4", "text-xs", "rounded-full", { on: i === 0 }]} data-lvl={l === "All" ? "all" : l.toLowerCase()}>{l}</button>
         ))}
       </div>
 
