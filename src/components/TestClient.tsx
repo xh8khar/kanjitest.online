@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useState, useCallback } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { navigate } from "astro:transitions/client"
-import Confetti from "./Confetti"
 
 export interface QuizQuestion {
   kanjiId: number
@@ -114,24 +113,11 @@ function JumpSetOverlay({
   )
 }
 
-const EMOJIS_CORRECT = ["🌟", "✨", "🎉", "⭐", "💯", "👏", "🌸", "🎊"]
-const EMOJIS_WRONG = ["😅", "💪", "🌱", "📖"]
-const EMOJI_COMBO: Record<number, string> = {
-  3: "🔥",
-  5: "⚡",
-  7: "💫",
-  10: "🌟",
-  15: "👑",
-  20: "🏆",
-}
-
 export default function TestClient({ level, setNum, questions }: Props) {
   const [idx, setIdx] = useState(0)
   const [answers, setAnswers] = useState<(string | null)[]>(() => questions.map(() => null))
   const [finished, setFinished] = useState(false)
   const [showJump, setShowJump] = useState(false)
-  const [reaction, setReaction] = useState<{ emoji: string; key: number } | null>(null)
-  const [streak, setStreak] = useState(0)
   const prefix = `/${level}`
 
   const q = questions[idx]
@@ -150,11 +136,6 @@ export default function TestClient({ level, setNum, questions }: Props) {
       next[idx] = opt
       return next
     })
-    const correct = opt === q.correct
-    const emojis = correct ? EMOJIS_CORRECT : EMOJIS_WRONG
-    const e = emojis[Math.floor(Math.random() * emojis.length)]
-    setReaction({ emoji: e, key: idx })
-    setStreak((s) => (correct ? s + 1 : 0))
   }
 
   const advance = () => {
@@ -192,15 +173,11 @@ export default function TestClient({ level, setNum, questions }: Props) {
   if (finished) {
     const pct = Math.round((correctCount / questions.length) * 100)
     const wrong = questions.map((qq, i) => ({ q: qq, given: answers[i] })).filter((w) => w.given !== w.q.correct)
-    const showConfetti = pct >= 70
-    const bestStreak = streak
-    const comboEmoji = Object.entries(EMOJI_COMBO).reverse().find(([k]) => bestStreak >= Number(k))
     const message =
       pct === 100 ? "Perfect score! 完璧です！" : pct >= 80 ? "Great job! すごい！" : pct >= 50 ? "Keep practicing! がんばって！" : "Review and try again — 一歩ずつ。"
 
     return (
       <>
-        {showConfetti && <Confetti active={showConfetti} />}
         <div className="max-w-xl mx-auto px-4 py-8 animate-fade-up">
           <div className="card p-6 sm:p-8 text-center shadow-lg shadow-ink/5">
             <p className="text-xs font-bold uppercase tracking-widest text-ink/40 mb-5">
@@ -211,13 +188,6 @@ export default function TestClient({ level, setNum, questions }: Props) {
               {correctCount} / {questions.length}
             </p>
             <p className="text-sm text-ink/60 mt-1">{message}</p>
-
-            {bestStreak >= 3 && (
-              <div className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-sm font-bold text-amber-700 animate-pop">
-                <span className="text-lg">{comboEmoji ? comboEmoji[1] : "🔥"}</span>
-                {bestStreak} streak{comboEmoji ? ` — ${comboEmoji[1]} combo!` : ""}
-              </div>
-            )}
 
             <div className="grid grid-cols-2 gap-2.5 mt-5">
               <button onClick={restart} className="btn btn-ghost h-12 text-sm">
@@ -318,16 +288,6 @@ export default function TestClient({ level, setNum, questions }: Props) {
           )
         })}
       </div>
-
-      {/* Reaction emoji */}
-      {reaction && reaction.key === idx && (
-        <div key={reaction.key} className="flex justify-center animate-fade-up">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-ink/8 text-sm shadow-sm">
-            <span className="text-lg">{reaction.emoji}</span>
-            <span className="text-xs font-semibold text-ink/50">{streak > 0 ? `${streak} streak` : ""}</span>
-          </span>
-        </div>
-      )}
 
       {/* Question card — keyed so each question animates in */}
       <div key={idx} className="card p-4 sm:p-6 shadow-lg shadow-ink/5 animate-fade-up">

@@ -44,8 +44,6 @@ function saveState(key: string, s: FlashcardState) {
   } catch {}
 }
 
-const EMOJIS = ["🌟", "✨", "🎉", "⭐", "💯", "👏", "🌸"]
-
 export default function FlashcardsClient({ level, cards, startIndex }: Props) {
   const prefix = `/${level}`
   const [mounted, setMounted] = useState(false)
@@ -57,8 +55,6 @@ export default function FlashcardsClient({ level, cards, startIndex }: Props) {
   const touchX = useRef<number | null>(null)
   const searchRef = useRef<HTMLInputElement>(null)
   const [state, setState] = useState<FlashcardState>({ known: [] })
-  const [reaction, setReaction] = useState<{ emoji: string; key: number } | null>(null)
-
   useEffect(() => { setMounted(true) }, [])
 
   const storageKey = `${STORAGE_KEY}_${level}`
@@ -121,9 +117,6 @@ export default function FlashcardsClient({ level, cards, startIndex }: Props) {
         saveState(storageKey, nextState)
         return nextState
       })
-      if (know) {
-        setReaction({ emoji: EMOJIS[Math.floor(Math.random() * EMOJIS.length)], key: currentIdx })
-      }
       const next = know ? "right" : "left"
       const target = next === "right" ? currentIdx + 1 : currentIdx - 1
       if (target >= 0 && target < cards.length) go(next)
@@ -182,9 +175,6 @@ export default function FlashcardsClient({ level, cards, startIndex }: Props) {
               Card {currentIdx + 1} of {cards.length} · {knownCount} known
             </p>
           </div>
-          {reaction && reaction.key === currentIdx && (
-            <span key={reaction.key} className="text-2xl animate-pop">{reaction.emoji}</span>
-          )}
         </div>
         <div className="flex items-center gap-2">
           <button onClick={() => { setShowJump(true); setSearch("") }} className="btn btn-ghost h-9 px-3 text-xs">
