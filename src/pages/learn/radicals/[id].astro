@@ -1,0 +1,109 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import radicals from "@/data/radicals.json"
+
+export function getStaticPaths() {
+  return radicals.map((r) => ({ params: { id: String(r.id) } }))
+}
+
+const id = Number(Astro.params.id)
+const radical = radicals.find((r) => r.id === id)!
+const prev = radicals.find((r) => r.id === id - 1) || null
+const next = radicals.find((r) => r.id === id + 1) || null
+---
+
+<DefaultLayout title={`${radical.radical} (${radical.meaning}) — Radical ${radical.id} — KanjiTest.Online`} description={`Learn about the Kangxi radical ${radical.radical} (${radical.meaning}, ${radical.reading}). ${radical.desc}`} keywords={`Kangxi radical, ${radical.meaning}, ${radical.radical}, kanji radical, ${radical.reading}, Japanese radicals`}>
+  <div class="max-w-2xl mx-auto px-4 py-8 sm:py-12">
+    <!-- Breadcrumb -->
+    <nav class="text-[11px] sm:text-xs text-ink/45 mb-5 flex items-center gap-1 animate-fade-in">
+      <a href="/" class="hover:text-ink transition-colors">Home</a>
+      <span>/</span>
+      <a href="/learn/" class="hover:text-ink transition-colors">Learn</a>
+      <span>/</span>
+      <a href="/learn/radicals/" class="hover:text-ink transition-colors">Radicals</a>
+      <span>/</span>
+      <span class="text-ink/70 font-jp">{radical.radical}</span>
+    </nav>
+
+    <!-- Prev / Next -->
+    <div class="flex justify-between items-center mb-6">
+      {prev ? (
+        <a href={`/learn/radicals/${prev.id}/`} class="flex items-center gap-1.5 text-xs text-ink/50 hover:text-ink transition-colors">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+          {prev.radical} {prev.meaning}
+        </a>
+      ) : <div />}
+      <span class="text-xs text-ink/30">#{radical.id} / 214</span>
+      {next ? (
+        <a href={`/learn/radicals/${next.id}/`} class="flex items-center gap-1.5 text-xs text-ink/50 hover:text-ink transition-colors">
+          {next.radical} {next.meaning}
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+        </a>
+      ) : <div />}
+    </div>
+
+    <!-- Hero card -->
+    <div class="card overflow-hidden animate-fade-up">
+      <div class="bg-gradient-to-r from-vermilion/10 to-vermilion/5 h-1.5" />
+      <div class="p-6 sm:p-8 text-center">
+        <span class="text-7xl sm:text-8xl font-jp font-black text-ink leading-none block animate-ink-in">{radical.radical}</span>
+        <h1 class="text-lg sm:text-xl font-bold text-ink mt-3">{radical.meaning}</h1>
+        <p class="text-sm text-ink/45 font-mono mt-1">{radical.reading}</p>
+      </div>
+    </div>
+
+    <!-- Info grid -->
+    <div class="grid sm:grid-cols-2 gap-3 mt-5 animate-fade-up" style="animation-delay: 80ms">
+      <div class="card p-4 text-center">
+        <span class="block text-xs text-ink/40 uppercase tracking-wider font-medium">Stroke Count</span>
+        <span class="block text-2xl font-bold text-ink mt-1">{radical.strokes}</span>
+      </div>
+      <div class="card p-4 text-center">
+        <span class="block text-xs text-ink/40 uppercase tracking-wider font-medium">Kangxi Number</span>
+        <span class="block text-2xl font-bold text-ink mt-1">#{radical.id}</span>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="card p-5 mt-3 animate-fade-up" style="animation-delay: 100ms">
+      <h2 class="text-xs font-bold text-ink/40 uppercase tracking-wider mb-2">About this radical</h2>
+      <p class="text-sm text-ink/70 leading-relaxed">{radical.desc}</p>
+    </div>
+
+    <!-- Variants -->
+    {radical.variants.length > 0 && (
+      <div class="card p-5 mt-3 animate-fade-up" style="animation-delay: 120ms">
+        <h2 class="text-xs font-bold text-ink/40 uppercase tracking-wider mb-2">Variant forms</h2>
+        <p class="text-sm text-ink/60 mb-3">This radical changes shape depending on its position in a kanji.</p>
+        <div class="flex flex-wrap gap-3">
+          {radical.variants.map((v) => (
+            <div class="flex flex-col items-center gap-1 p-3 rounded-xl bg-ink/[0.03] min-w-[4rem]">
+              <span class="text-2xl font-jp font-bold text-ink">{v}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <!-- Example kanji -->
+    <div class="card p-5 mt-3 animate-fade-up" style="animation-delay: 140ms">
+      <h2 class="text-xs font-bold text-ink/40 uppercase tracking-wider mb-2">Example kanji</h2>
+      <p class="text-sm text-ink/60 mb-3">Common kanji that use the radical {radical.radical}.</p>
+      <div class="flex flex-wrap gap-3">
+        {radical.examples.map((ex) => (
+          <div class="flex flex-col items-center gap-1 p-3 rounded-xl bg-ink/[0.03] min-w-[4rem]">
+            <span class="text-2xl font-jp font-bold text-ink">{ex}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Back link -->
+    <div class="text-center mt-8 animate-fade-up" style="animation-delay: 160ms">
+      <a href="/learn/radicals/" class="inline-flex items-center gap-1.5 text-xs text-ink/50 hover:text-ink transition-colors">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+        Back to all radicals
+      </a>
+    </div>
+  </div>
+</DefaultLayout>
