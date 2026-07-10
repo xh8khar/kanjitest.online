@@ -1,0 +1,85 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+---
+
+<DefaultLayout title="Flashcard Exporter — Generate Printable Kanji Flashcards" description="Create printable kanji flashcards from any JLPT level. Customize the number of cards and download as a print-friendly page." keywords="kanji flashcards, printable flashcards, JLPT flashcard generator, kanji flashcard PDF, Japanese study cards, print kanji flashcards, flashcard exporter, custom flashcards">
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">Flashcard Exporter</h1>
+      <p class="text-sm text-ink/60 mt-2">Generate printable kanji flashcards from any JLPT level.</p>
+    </div>
+
+    <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay:80ms">
+      <div class="flex flex-wrap justify-center gap-2 mb-5">
+        {["N5","N4","N3","N2","N1"].map((l,i)=>`<button class="fc-lvl on btn h-8 px-3.5 text-xs rounded-full" data-lvl="${l.toLowerCase()}">${l}</button>`).join("")}
+      </div>
+
+      <div class="flex flex-wrap items-center justify-center gap-4 mb-5">
+        <label class="flex items-center gap-2 text-xs text-ink/60">
+          <span>Cards:</span>
+          <select id="fc-count" class="h-8 rounded-lg border border-ink/15 bg-white px-2 text-xs focus:outline-none focus:ring-2 focus:ring-vermilion/40">
+            {[10,20,30,50,100].map(n => `<option value="${n}" ${n===30?"selected":""}>${n}</option>`).join("")}
+          </select>
+        </label>
+        <label class="flex items-center gap-2 text-xs text-ink/60">
+          <input type="checkbox" id="fc-reading" checked />
+          <span>Show reading</span>
+        </label>
+      </div>
+
+      <div class="flex justify-center gap-2">
+        <button id="fc-generate" class="btn btn-accent h-10 px-5 text-sm">Generate Flashcards</button>
+        <button id="fc-print" class="btn btn-ghost h-10 px-5 text-sm" disabled>Print / Save PDF</button>
+      </div>
+    </div>
+
+    <div id="fc-output" class="mt-6" hidden>
+      <div id="fc-cards" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"></div>
+    </div>
+  </div>
+</DefaultLayout>
+
+<script>
+  type Entry = { kanji: string; meanings: string[]; level: string; strokes: number; kun: string[]; on: string[] }
+  let data: Entry[] = [], activeLvl = "n5"
+
+  const cardsEl = document.getElementById("fc-cards")!
+  const outputEl = document.getElementById("fc-output")!
+  const countSel = document.getElementById("fc-count") as HTMLSelectElement
+  const readingCb = document.getElementById("fc-reading") as HTMLInputElement
+  const printBtn = document.getElementById("fc-print") as HTMLButtonElement
+
+  fetch("/api/kanji.json").then(r => r.json()).then(d => { data = d })
+
+  document.getElementById("fc-generate")!.onclick = () => {
+    const pool = data.filter(e => e.level === activeLvl).sort(() => Math.random() - 0.5).slice(0, parseInt(countSel.value))
+    if (!pool.length) return
+    const showReading = readingCb.checked
+    cardsEl.innerHTML = pool.map(e => `
+      <div class="fc-card rounded-xl border border-ink/15 bg-white p-3 text-center print:border-ink/30 print:break-inside-avoid">
+        <div class="text-3xl font-jp font-black text-ink">${e.kanji}</div>
+        <div class="text-[11px] text-ink/40 mt-1 uppercase tracking-wider">${e.level.toUpperCase()} · ${e.strokes} strokes</div>
+        <div class="text-xs text-ink/60 mt-1 leading-relaxed">${e.meanings.join(", ")}</div>
+        ${showReading ? `<div class="text-xs font-jp text-ink/50 mt-1.5 border-t border-ink/10 pt-1.5">${[...e.on, ...e.kun].filter(Boolean).join("、") || "—"}</div>` : ""}
+      </div>
+    `).join("")
+    outputEl.hidden = false
+    printBtn.disabled = false
+  }
+
+  printBtn.onclick = () => window.print()
+
+  document.querySelectorAll(".fc-lvl").forEach(b => b.addEventListener("click", function() {
+    document.querySelectorAll(".fc-lvl").forEach(x => x.classList.remove("on"))
+    this.classList.add("on")
+    activeLvl = (this as HTMLElement).dataset.lvl!
+  }))
+</script>
+
+<style is:global>
+  @media print {
+    body > *:not(#fc-cards, #fc-cards *) { display: none !important; }
+    #fc-cards { max-width: 100% !important; }
+    .fc-card { box-shadow: none !important; border: 1px solid #ccc !important; }
+  }
+</style>

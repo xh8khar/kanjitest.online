@@ -1,0 +1,37 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+---
+
+<DefaultLayout title="Japanese Clock \u2014 Current Time in Japanese" description="See the current time displayed in Japanese with kanji and kana readings. Live updating Japanese clock." keywords="Japanese clock, current time Japanese, Japanese digital clock, time in Japanese, Japanese time display, now in Japanese, ima nanji">
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">Japanese Clock</h1>
+      <p class="text-sm text-ink/60 mt-2">Current time displayed in Japanese with kanji and kana.</p>
+    </div>
+    <div class="card p-6 sm:p-8 animate-fade-up text-center" style="animation-delay:80ms">
+      <div id="clock-numbers" class="text-5xl sm:text-6xl font-black text-ink tabular-nums font-mono">00:00:00</div>
+      <div id="clock-jp" class="text-2xl sm:text-3xl font-jp font-bold text-ink/70 mt-4"></div>
+      <div id="clock-kana" class="text-lg text-ink/50 mt-2"></div>
+    </div>
+  </div>
+</DefaultLayout>
+
+<script>
+  const HOURS:Record<number,{jp:string,kana:string}>={0:{jp:"零時",kana:"れいじ"},1:{jp:"一時",kana:"いちじ"},2:{jp:"二時",kana:"にじ"},3:{jp:"三時",kana:"さんじ"},4:{jp:"四時",kana:"よじ"},5:{jp:"五時",kana:"ごじ"},6:{jp:"六時",kana:"ろくじ"},7:{jp:"七時",kana:"しちじ"},8:{jp:"八時",kana:"はちじ"},9:{jp:"九時",kana:"くじ"},10:{jp:"十時",kana:"じゅうじ"},11:{jp:"十一時",kana:"じゅういちじ"},12:{jp:"十二時",kana:"じゅうにじ"}}
+  const MIN_MAP:Record<number,string>={1:"いっぷん",2:"にふん",3:"さんぷん",4:"よんぷん",5:"ごふん",6:"ろっぷん",7:"ななふん",8:"はっぷん",9:"きゅうふん",10:"じゅっぷん"}
+  function getMin(n:number):string{
+    if(n===0)return "ちょうど";if(n===30)return "はん"
+    const t=Math.floor(n/10),o=n%10
+    const ts=["","じゅう","にじゅう","さんじゅう","よんじゅう","ごじゅう"]
+    return (ts[t]||"")+(o?MIN_MAP[o]||"":"")
+  }
+  const nEl=document.getElementById("clock-numbers")!,jEl=document.getElementById("clock-jp")!,kEl=document.getElementById("clock-kana")!
+  function tick(){
+    const d=new Date(),h=d.getHours()%12||12,m=d.getMinutes(),s=d.getSeconds()
+    nEl.textContent=`${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`
+    const ap=d.getHours()<12?"午前":"午後"
+    jEl.textContent=`${ap}${HOURS[h]?.jp||""}${m}分`
+    kEl.textContent=`${ap}${HOURS[h]?.kana||""}${getMin(m)}`
+  }
+  setInterval(tick,1000);tick()
+</script>

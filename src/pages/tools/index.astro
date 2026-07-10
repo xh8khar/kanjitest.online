@@ -2,6 +2,29 @@
 import DefaultLayout from "@/layouts/DefaultLayout.astro"
 
 const tools = [
+  // Reference tools (10)
+  { href: "/tools/color-names/", icon: "🎨", title: "Color Names", desc: "Japanese color names with kanji, readings, and cultural notes. Covers traditional and modern colors." },
+  { href: "/tools/particle-guide/", icon: "🔤", title: "Particle Guide", desc: "Complete Japanese particle reference with usage examples. Covers wa, ga, o, ni, de, e, to, and more." },
+  { href: "/tools/counter-reference/", icon: "🔢", title: "Counter Reference", desc: "Japanese counters reference - people, objects, animals, and more. Includes readings and example sentences." },
+  { href: "/tools/body-parts/", icon: "🧍", title: "Body Parts", desc: "Japanese vocabulary for body parts with kanji, readings, and example phrases. Head to toe coverage." },
+  { href: "/tools/family-terms/", icon: "👨‍👩‍👧‍👦", title: "Family Terms", desc: "Japanese family vocabulary with kanji and readings. Covers immediate, extended, and honorary terms." },
+  { href: "/tools/time-guide/", icon: "🕐", title: "Time Guide", desc: "Japanese time expressions - hours, minutes, days, months, relative time. With kanji and kana readings." },
+  { href: "/tools/direction-words/", icon: "🧭", title: "Direction Words", desc: "Japanese directional and positional vocabulary. Left, right, up, down, inside, outside, and more." },
+  { href: "/tools/weather-vocab/", icon: "🌤️", title: "Weather Vocab", desc: "Japanese weather and season vocabulary. Sunny, rainy, typhoon, seasons, and weather-related phrases." },
+  { href: "/tools/food-drink/", icon: "🍜", title: "Food & Drink", desc: "Japanese food and drink vocabulary with kanji. From sushi ingredients to restaurant phrases." },
+  { href: "/tools/professions/", icon: "💼", title: "Professions", desc: "Japanese job and profession vocabulary. Doctor, teacher, engineer, and more with kanji readings." },
+  // Interactive tools (10)
+  { href: "/tools/name-to-katakana/", icon: "✍️", title: "Name to Katakana", desc: "Convert any name to katakana. Uses common sound mappings for accurate Japanese name transcription." },
+  { href: "/tools/word-counter/", icon: "📝", title: "Word Counter", desc: "Count Japanese words, characters, kanji, and kana in any text. Includes per-minute reading estimates." },
+  { href: "/tools/streak-tracker/", icon: "🔥", title: "Streak Tracker", desc: "Track your daily Japanese study streak. Stay motivated by marking off each day you practice." },
+  { href: "/tools/age-converter/", icon: "🎂", title: "Age Converter", desc: "Convert ages to Japanese - how to say your age in Japanese. Covers traditional and modern age counting." },
+  { href: "/tools/japanese-clock/", icon: "⏰", title: "Japanese Clock", desc: "Live Japanese clock showing the current time in kanji and kana. Practice reading Japanese time notation." },
+  { href: "/tools/jlpt-countdown/", icon: "📆", title: "JLPT Countdown", desc: "Countdown to the next JLPT exam date. Track days remaining for N5 through N1 preparation." },
+  { href: "/tools/reading-time/", icon: "⏱️", title: "Reading Time", desc: "Estimate how long it takes to read Japanese text. Calculate reading speed for JLPT preparation." },
+  { href: "/tools/word-match/", icon: "🃏", title: "Word Match", desc: "Match Japanese words with their English meanings in a timed card game. Fun vocabulary practice." },
+  { href: "/tools/typing-practice/", icon: "⌨️", title: "Typing Practice", desc: "Practice typing Japanese characters with real-time feedback. Improve your kana and kanji typing speed." },
+  { href: "/tools/vocab-quiz/", icon: "📖", title: "Vocab Quiz", desc: "Test your Japanese vocabulary knowledge with multiple-choice quizzes using the JLPT database." },
+  // Original tools (10)
   { href: "/tools/kana-converter/", icon: "🔀", title: "Kana Converter", desc: "Convert between hiragana and katakana instantly. Paste any Japanese text and toggle scripts." },
   { href: "/tools/kana-chart/", icon: "📋", title: "Kana Chart", desc: "Full hiragana and katakana reference chart with stroke order. Print-friendly layout." },
   { href: "/tools/text-analyzer/", icon: "🔍", title: "Text Analyzer", desc: "Analyze any Japanese text - count kanji, hiragana, katakana, romaji characters and more." },
@@ -12,15 +35,21 @@ const tools = [
   { href: "/tools/kana-quiz/", icon: "🎯", title: "Kana Quiz", desc: "Test your kana knowledge with a flashcard-style quiz. Choose hiragana, katakana, or both." },
   { href: "/tools/kanji-by-level/", icon: "📚", title: "Kanji by Level", desc: "Browse all kanji grouped by JLPT level. Search, filter, and click any character for full details." },
   { href: "/tools/jlpt-level-guide/", icon: "📊", title: "JLPT Level Guide", desc: "Compare N5 to N1 at a glance - kanji counts, vocabulary, grammar, and estimated study hours." },
+  // Bonus tools (10)
   { href: "/tools/kanji-highlighter/", icon: "🎨", title: "Kanji Highlighter", desc: "Paste Japanese text and see each kanji color-coded by JLPT level. Instant level recognition." },
   { href: "/tools/jlpt-score-checker/", icon: "✅", title: "JLPT Score Checker", desc: "Input your section scores and check if you pass the JLPT. Uses official pass/fail criteria." },
   { href: "/tools/date-converter/", icon: "📅", title: "Date Converter", desc: "Convert dates to Japanese format with era names (Reiwa, Heisei, Showa) and kanji numerals." },
   { href: "/tools/study-timer/", icon: "⏱️", title: "Study Timer", desc: "Pomodoro-style timer for focused Japanese study. Customizable focus and break intervals." },
   { href: "/tools/kanji-flash-quiz/", icon: "⚡", title: "Kanji Flash Quiz", desc: "Quick-fire kanji meaning quiz using the full JLPT database. Practice any level." },
+  { href: "/tools/kanji-grid/", icon: "🔲", title: "Kanji Grid", desc: "Browse all kanji in a compact grid. Filter by level and click any character for full details." },
+  { href: "/tools/flashcard-exporter/", icon: "🖨️", title: "Flashcard Exporter", desc: "Generate printable kanji flashcards from any JLPT level. Customize and export for offline study." },
+  { href: "/tools/memory-match/", icon: "🧠", title: "Memory Match", desc: "Flip cards to match kanji with their English meanings in this classic concentration game." },
+  { href: "/tools/reading-quiz/", icon: "📖", title: "Reading Quiz", desc: "Practice reading comprehension with fill-in-the-blank quizzes from real Japanese sentences." },
+  { href: "/tools/daily-challenge/", icon: "🏆", title: "Daily Challenge", desc: "A fresh set of 10 kanji questions every day. Test your knowledge across all JLPT levels." },
 ]
 
-const desc = "Free Japanese study tools - kana converter, kanji dictionary, text analyzer, JLPT score checker, study timer, date converter, kanji highlighter, and more."
-const kw = "Japanese tools, JLPT study tools, Japanese learning tools, kanji dictionary, kana converter, Japanese text analyzer, JLPT score calculator, kanji highlighter"
+const desc = "40 free Japanese study tools - kana converter, kanji dictionary, text analyzer, JLPT score checker, study timer, kanji grid, daily challenge, and more."
+const kw = "Japanese tools, JLPT study tools, Japanese learning tools, kanji dictionary, kana converter, Japanese text analyzer, JLPT score calculator, kanji highlighter, kanji grid, daily kanji challenge, Japanese flashcards, memory match, kanji quiz, Japanese reading practice"
 ---
 
 <DefaultLayout title={"Japanese Study Tools - KanjiTest.Online"} description={desc} keywords={kw}>
@@ -28,7 +57,7 @@ const kw = "Japanese tools, JLPT study tools, Japanese learning tools, kanji dic
     <div class="text-center mb-10 sm:mb-14 animate-fade-up">
       <h1 class="text-3xl sm:text-5xl font-black text-ink tracking-tight">Tools</h1>
       <p class="text-sm sm:text-base text-ink/60 mt-3 max-w-2xl mx-auto leading-relaxed">
-        Practical tools to help with your Japanese study - from kana conversion and kanji lookup to text analysis and quizzes.
+        40 practical tools to help with your Japanese study - from kana conversion and kanji lookup to interactive quizzes and daily challenges.
       </p>
     </div>
 

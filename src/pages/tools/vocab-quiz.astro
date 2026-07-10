@@ -1,0 +1,58 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+---
+
+<DefaultLayout title="Japanese Vocabulary Quiz" description="Test your Japanese vocabulary knowledge with multiple-choice quizzes. Random words from the JLPT database." keywords="Japanese vocabulary quiz, JLPT vocabulary test, Japanese word quiz, vocabulary practice, learn Japanese words, Japanese multiple choice, JLPT vocab">
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">Vocabulary Quiz</h1>
+      <p class="text-sm text-ink/60 mt-2">Test your vocabulary with random JLPT words from every level.</p>
+    </div>
+    <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay:80ms">
+      <div class="flex flex-wrap justify-center gap-2 mb-4">
+        {["All","N5","N4","N3","N2","N1"].map(l=>`<button class="vq-lvl on btn h-8 px-3.5 text-xs rounded-full" data-lvl="${l==="All"?"all":l.toLowerCase()}">${l}</button>`).join("")}
+      </div>
+      <div class="flex items-center justify-between mb-3 text-xs text-ink/40"><span id="vq-score">0 correct</span><span id="vq-total">0 answered</span></div>
+      <div class="text-center">
+        <div id="vq-word" class="text-2xl sm:text-3xl font-jp font-bold text-ink min-h-[3rem]">—</div>
+        <div id="vq-reading" class="text-sm text-ink/50 mt-1"></div>
+        <div id="vq-options" class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-5"></div>
+        <div id="vq-feedback" class="mt-3 text-sm font-bold" hidden></div>
+      </div>
+      <button id="vq-next" class="btn btn-accent h-10 px-5 text-sm mt-4 w-full">Next →</button>
+    </div>
+  </div>
+</DefaultLayout>
+
+<script>
+  type Entry={kanji:string;meanings:string[];level:string;kun:string[];on:string[]}
+  let data:Entry[]=[],activeLvl="all",correct=0,total=0,answered=false
+  const wordEl=document.getElementById("vq-word")!,readingEl=document.getElementById("vq-reading")!
+  const optionsEl=document.getElementById("vq-options")!,feedbackEl=document.getElementById("vq-feedback")!
+  const scoreEl=document.getElementById("vq-score")!,totalEl=document.getElementById("vq-total")!
+  fetch("/api/kanji.json").then(r=>r.json()).then(d=>{data=d;nextQ()})
+  function nextQ(){
+    answered=false;feedbackEl.hidden=true
+    const pool=activeLvl==="all"?data:data.filter(e=>e.level===activeLvl)
+    if(!pool.length)return
+    const entry=pool[Math.floor(Math.random()*pool.length)]
+    wordEl.textContent=entry.kanji;readingEl.textContent=[...entry.kun,...entry.on].join("、")||""
+    const wrong=data.filter(e=>e.kanji!==entry.kanji).sort(()=>Math.random()-0.5).slice(0,3)
+    const ans=[entry.meanings[0],...wrong.map(e=>e.meanings[0])].sort(()=>Math.random()-0.5)
+    optionsEl.innerHTML=ans.map(a=>`<button class="vq-opt btn h-12 text-sm rounded-xl">${a}</button>`).join("")
+    optionsEl.querySelectorAll(".vq-opt").forEach(b=>b.addEventListener("click",function(){
+      if(answered)return;answered=true;total++
+      const ok=(this as HTMLElement).textContent===entry.meanings[0]
+      if(ok)correct++
+      feedbackEl.hidden=false;feedbackEl.textContent=ok?"✓ Correct!":`✗ ${entry.meanings[0]}`
+      feedbackEl.style.color=ok?"#10b981":"var(--color-vermilion)"
+      scoreEl.textContent=`${correct} correct`;totalEl.textContent=`${total} answered`
+    }))
+  }
+  document.getElementById("vq-next")!.onclick=nextQ
+  document.querySelectorAll(".vq-lvl").forEach(b=>b.addEventListener("click",function(){
+    document.querySelectorAll(".vq-lvl").forEach(x=>x.classList.remove("on"));this.classList.add("on")
+    activeLvl=(this as HTMLElement).dataset.lvl!;correct=0;total=0
+    scoreEl.textContent="0 correct";totalEl.textContent="0 answered";nextQ()
+  }))
+</script>

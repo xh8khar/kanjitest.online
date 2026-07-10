@@ -1,0 +1,101 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+---
+
+<DefaultLayout title="Memory Match — Kanji Concentration Game" description="Flip cards to match kanji characters with their English meanings. Fun memory game for Japanese learners of all JLPT levels." keywords="memory match, kanji game, Japanese memory game, concentration game, kanji matching, learn kanji with game, Japanese study game, kanji concentration">
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">Memory Match</h1>
+      <p class="text-sm text-ink/60 mt-2">Flip cards and match each kanji with its English meaning.</p>
+    </div>
+
+    <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay:80ms">
+      <div class="flex flex-wrap items-center justify-center gap-3 mb-5">
+        <div class="flex flex-wrap justify-center gap-1.5">
+          {["N5","N4","N3","N2","N1"].map((l,i)=>`<button class="mm-lvl on btn h-8 px-3.5 text-xs rounded-full" data-lvl="${l.toLowerCase()}">${l}</button>`).join("")}
+        </div>
+        <span id="mm-score" class="text-xs text-ink/40 font-medium">0 pairs · 0 flips</span>
+        <button id="mm-new" class="btn btn-ghost h-8 px-3 text-xs">New game</button>
+      </div>
+      <div id="mm-grid" class="grid grid-cols-4 gap-2 sm:gap-3 max-w-md mx-auto"></div>
+      <div id="mm-win" class="text-center mt-5 text-sm font-bold text-emerald-600" hidden>All pairs matched! 🎉</div>
+    </div>
+  </div>
+</DefaultLayout>
+
+<script>
+  type Entry = { kanji: string; meanings: string[]; level: string }
+  let data: Entry[] = [], activeLvl = "n5"
+  let flipped: HTMLElement[] = []
+  let matched = 0, flips = 0, locked = false
+
+  const grid = document.getElementById("mm-grid")!
+  const scoreEl = document.getElementById("mm-score")!
+  const winEl = document.getElementById("mm-win")!
+
+  fetch("/api/kanji.json").then(r => r.json()).then(d => { data = d; newGame() })
+
+  function shuffle<T>(a: T[]): T[] { const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]] } return b }
+
+  function newGame() {
+    const pool = data.filter(e => e.level === activeLvl && e.meanings[0]).sort(() => Math.random() - 0.5).slice(0, 6)
+    const cards: { id: string; text: string; pair: string; face: "kanji" | "meaning" }[] = []
+    for (const e of pool) {
+      cards.push({ id: `k-${e.kanji}`, text: e.kanji, pair: e.meanings[0], face: "kanji" })
+      cards.push({ id: `m-${e.kanji}`, text: e.meanings[0], pair: e.kanji, face: "meaning" })
+    }
+    const shuffled = shuffle(cards)
+    flipped = []; matched = 0; flips = 0; locked = false
+    winEl.hidden = true
+    updateScore()
+    grid.innerHTML = shuffled.map(c =>
+      `<button class="mm-card relative h-16 sm:h-20 rounded-xl border border-ink/15 bg-white text-xs sm:text-sm font-medium transition-all duration-300 overflow-hidden" data-pair="${c.pair}" data-face="${c.face}" data-id="${c.id}">
+        <span class="mm-front absolute inset-0 flex items-center justify-center bg-gradient-to-br from-ink/5 to-ink/10 text-ink/30 text-lg font-bold">?</span>
+        <span class="mm-back absolute inset-0 flex items-center justify-center p-1.5 opacity-0 transition-opacity duration-300 ${c.face==="kanji"?"text-2xl sm:text-3xl font-jp font-black text-ink":"text-ink/80 leading-tight"}">${c.text}</span>
+      </button>`
+    ).join("")
+    grid.querySelectorAll(".mm-card").forEach(card => card.addEventListener("click", () => handleFlip(card as HTMLElement)))
+  }
+
+  function handleFlip(card: HTMLElement) {
+    if (locked || card.classList.contains("mm-matched") || card.classList.contains("mm-flipped")) return
+    flips++
+    card.classList.add("mm-flipped")
+    card.querySelector(".mm-front")!.classList.add("opacity-0")
+    card.querySelector(".mm-back")!.classList.remove("opacity-0")
+    flipped.push(card)
+    if (flipped.length === 2) {
+      const [a, b] = flipped
+      if (a.dataset.pair === b.dataset.pair && a.dataset.face !== b.dataset.face) {
+        a.classList.add("mm-matched", "bg-emerald-50", "border-emerald-300")
+        b.classList.add("mm-matched", "bg-emerald-50", "border-emerald-300")
+        matched++
+        flipped = []
+        updateScore()
+        if (matched === 6) winEl.hidden = false
+      } else {
+        locked = true
+        setTimeout(() => {
+          for (const f of flipped) {
+            f.classList.remove("mm-flipped")
+            f.querySelector(".mm-front")!.classList.remove("opacity-0")
+            f.querySelector(".mm-back")!.classList.add("opacity-0")
+          }
+          flipped = []; locked = false
+        }, 800)
+      }
+      updateScore()
+    }
+  }
+
+  function updateScore() { scoreEl.textContent = `${matched} pairs · ${flips} flips` }
+
+  document.querySelectorAll(".mm-lvl").forEach(b => b.addEventListener("click", function() {
+    document.querySelectorAll(".mm-lvl").forEach(x => x.classList.remove("on"))
+    this.classList.add("on")
+    activeLvl = (this as HTMLElement).dataset.lvl!
+    newGame()
+  }))
+
+  document.getElementById("mm-new")!.onclick = newGame
+</script>

@@ -1,0 +1,153 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+---
+
+<DefaultLayout title="Daily Challenge — 10 Kanji Questions Every Day" description="A fresh set of 10 kanji questions every day. Test your kanji knowledge with daily challenges covering readings, meanings, and vocabulary across all JLPT levels." keywords="daily kanji challenge, Japanese daily quiz, kanji of the day, daily Japanese practice, JLPT daily challenge, kanji question daily, learn kanji daily, Japanese quiz daily">
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">Daily Challenge</h1>
+      <p class="text-sm text-ink/60 mt-2">A fresh set of 10 kanji questions every day. Can you ace today's challenge?</p>
+    </div>
+
+    <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay:80ms">
+      <div class="flex flex-wrap items-center justify-center gap-3 mb-5">
+        <div class="flex flex-wrap justify-center gap-1.5">
+          {["All","N5","N4","N3","N2","N1"].map((l,i)=>`<button class="dc-lvl on btn h-8 px-3.5 text-xs rounded-full" data-lvl="${l==="All"?"all":l.toLowerCase()}">${l}</button>`).join("")}
+        </div>
+        <span id="dc-date" class="text-xs text-ink/40 font-medium"></span>
+      </div>
+
+      <div class="flex items-center justify-between mb-3 text-xs text-ink/40">
+        <span id="dc-progress">Question 1 of 10</span>
+        <span id="dc-score">0 correct</span>
+      </div>
+
+      <div id="dc-question" class="text-center">
+        <div id="dc-prompt-type" class="text-[11px] text-ink/40 font-medium uppercase tracking-wider mb-1"></div>
+        <div id="dc-prompt" class="text-2xl sm:text-3xl font-jp font-bold text-ink min-h-[3rem]">—</div>
+        <div id="dc-hint" class="text-xs text-ink/50 mt-1"></div>
+        <div id="dc-options" class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-5 max-w-sm mx-auto"></div>
+        <div id="dc-feedback" class="mt-3 text-sm font-bold" hidden></div>
+      </div>
+
+      <div class="flex justify-center mt-4">
+        <button id="dc-next" class="btn btn-accent h-10 px-5 text-sm">Next →</button>
+      </div>
+
+      <div id="dc-results" class="text-center" hidden>
+        <div class="text-4xl mb-2">🏆</div>
+        <div class="text-xl font-black text-ink">Daily Challenge Complete!</div>
+        <div id="dc-final-score" class="text-sm text-ink/60 mt-1"></div>
+        <button id="dc-reset" class="btn btn-accent h-10 px-5 text-sm mt-4">Start New Challenge</button>
+      </div>
+    </div>
+  </div>
+</DefaultLayout>
+
+<script>
+  type Entry = { kanji: string; meanings: string[]; level: string; on: string[]; kun: string[]; strokes: number }
+  let data: Entry[] = []
+  let activeLvl = "all"
+  let questions: { prompt: string; promptType: string; correct: string; options: string[]; hint: string }[] = []
+  let qIndex = 0, correct = 0, answered = false
+
+  const dateEl = document.getElementById("dc-date")!
+  const progressEl = document.getElementById("dc-progress")!
+  const scoreEl = document.getElementById("dc-score")!
+  const promptEl = document.getElementById("dc-prompt")!
+  const promptTypeEl = document.getElementById("dc-prompt-type")!
+  const hintEl = document.getElementById("dc-hint")!
+  const optionsEl = document.getElementById("dc-options")!
+  const feedbackEl = document.getElementById("dc-feedback")!
+  const questionEl = document.getElementById("dc-question")!
+  const resultsEl = document.getElementById("dc-results")!
+  const finalScoreEl = document.getElementById("dc-final-score")!
+  const nextBtn = document.getElementById("dc-next") as HTMLButtonElement
+
+  const today = new Date().toISOString().slice(0, 10)
+  dateEl.textContent = today
+
+  fetch("/api/kanji.json").then(r => r.json()).then(d => { data = d; generateChallenge() })
+
+  function seededRandom(seed: number): number {
+    let s = seed
+    s = (s * 16807) % 2147483647
+    return (s - 1) / 2147483646
+  }
+
+  function generateChallenge() {
+    const seed = today.split("-").reduce((a, b) => a + parseInt(b), 0) * (activeLvl === "all" ? 1 : activeLvl.charCodeAt(1))
+    let pool = activeLvl === "all" ? data : data.filter(e => e.level === activeLvl)
+    pool = [...pool]
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(seededRandom(seed + i * 1000) * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]]
+    }
+    const picked = pool.slice(0, 10)
+
+    questions = picked.map((e, i) => {
+      const type = seededRandom(seed + i * 200) < 0.5 ? "meaning" : "reading"
+      const wrongPool = data.filter(x => x.kanji !== e.kanji)
+      const opts = new Set<string>()
+      while (opts.size < 3) {
+        const r = wrongPool[Math.floor(seededRandom(seed + i * 300 + opts.size * 50) * wrongPool.length)]
+        if (type === "meaning") opts.add(r.meanings[0])
+        else opts.add([...r.on, ...r.kun].filter(Boolean).sort(() => seededRandom(seed + i * 400) - 0.5)[0] || r.meanings[0])
+      }
+      const correctAns = type === "meaning" ? e.meanings[0] : [...e.on, ...e.kun].filter(Boolean).sort(() => seededRandom(seed + i * 500) - 0.5)[0] || e.meanings[0]
+      const allOpts = [correctAns, ...Array.from(opts)].sort(() => seededRandom(seed + i * 600) - 0.5)
+      return {
+        prompt: e.kanji,
+        promptType: type === "meaning" ? "What is the meaning?" : "What is a reading?",
+        correct: correctAns,
+        options: allOpts,
+        hint: `${e.level.toUpperCase()} · ${e.strokes} strokes`,
+      }
+    })
+
+    qIndex = 0; correct = 0
+    questionEl.hidden = false; resultsEl.hidden = true
+    nextBtn.hidden = false
+    showQuestion()
+  }
+
+  function showQuestion() {
+    answered = false; feedbackEl.hidden = true
+    const q = questions[qIndex]
+    promptTypeEl.textContent = q.promptType
+    promptEl.textContent = q.prompt
+    hintEl.textContent = q.hint
+    progressEl.textContent = `Question ${qIndex + 1} of ${questions.length}`
+    scoreEl.textContent = `${correct} correct`
+    optionsEl.innerHTML = q.options.map(o => `<button class="dc-opt btn h-11 text-sm rounded-xl">${o}</button>`).join("")
+    optionsEl.querySelectorAll(".dc-opt").forEach(b => b.addEventListener("click", function() {
+      if (answered) return; answered = true
+      const ok = (this as HTMLElement).textContent === q.correct
+      if (ok) correct++
+      feedbackEl.hidden = false
+      feedbackEl.textContent = ok ? "✓ Correct!" : `✗ ${q.correct}`
+      feedbackEl.style.color = ok ? "#10b981" : "var(--color-vermilion)"
+      scoreEl.textContent = `${correct} correct`
+    }))
+  }
+
+  nextBtn.onclick = () => {
+    if (qIndex < questions.length - 1) { qIndex++; showQuestion() }
+    else {
+      questionEl.hidden = true; nextBtn.hidden = true; resultsEl.hidden = false
+      finalScoreEl.textContent = `You got ${correct} out of ${questions.length} correct!`
+    }
+  }
+
+  document.getElementById("dc-reset")!.onclick = () => {
+    dateEl.textContent = new Date().toISOString().slice(0, 10)
+    generateChallenge()
+  }
+
+  document.querySelectorAll(".dc-lvl").forEach(b => b.addEventListener("click", function() {
+    document.querySelectorAll(".dc-lvl").forEach(x => x.classList.remove("on"))
+    this.classList.add("on")
+    activeLvl = (this as HTMLElement).dataset.lvl!
+    generateChallenge()
+  }))
+</script>

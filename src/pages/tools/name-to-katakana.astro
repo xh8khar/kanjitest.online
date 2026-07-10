@@ -1,0 +1,65 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+---
+
+<DefaultLayout title="Name to Katakana Converter" description="Convert foreign names to Japanese katakana. Enter any English name and see its katakana representation." keywords="name to katakana, English name to Japanese, Japanese name converter, katakana name translation, foreign name katakana, convert name to katakana">
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">Name to Katakana</h1>
+      <p class="text-sm text-ink/60 mt-2">Convert English names to Japanese katakana.</p>
+    </div>
+    <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay:80ms">
+      <label class="text-xs font-bold uppercase tracking-widest text-ink/40 mb-2 block" for="name-input">Enter a name</label>
+      <input id="name-input" class="w-full h-12 rounded-xl border border-ink/15 bg-white px-4 text-lg focus:outline-none focus:ring-2 focus:ring-vermilion/40 focus:border-vermilion/60 transition-all" placeholder="e.g. John Smith" />
+      <button id="name-convert" class="btn btn-accent h-10 px-4 text-sm mt-3">Convert</button>
+    </div>
+    <div class="card p-5 sm:p-6 mt-4 animate-fade-up" style="animation-delay:120ms" id="name-result" hidden>
+      <div class="text-[11px] text-ink/40 font-medium uppercase tracking-wider mb-2">Katakana</div>
+      <div id="name-output" class="text-2xl sm:text-3xl font-jp font-black text-ink"></div>
+      <button id="name-copy" class="btn btn-ghost h-9 px-3.5 text-xs mt-3">Copy</button>
+    </div>
+  </div>
+</DefaultLayout>
+
+<script>
+  const APPROX: [RegExp, string][] = [
+    [/shi$/i, "シー"], [/sh$/i, "シュ"], [/th$/i, "ス"], [/ph$/i, "フ"],
+    [/ck$/i, "ック"], [/ng$/i, "ング"], [/ll$/i, "ル"], [/tt$/i, "ト"],
+    [/a$/i, "ア"], [/e$/i, "ー"], [/i$/i, "イ"], [/o$/i, "オ"], [/u$/i, "ウ"],
+  ]
+  const MAP: Record<string, string> = {
+    b:"バ",c:"カ",d:"ダ",f:"ファ",g:"ガ",h:"ハ",j:"ジャ",k:"カ",l:"ラ",
+    m:"マ",n:"ナ",p:"パ",q:"ク",r:"ラ",s:"サ",t:"タ",v:"ヴァ",w:"ワ",x:"クサ",y:"ヤ",z:"ザ",
+    ba:"バ",be:"ベ",bi:"ビ",bo:"ボ",bu:"ブ",ca:"カ",ce:"セ",ci:"シ",co:"コ",cu:"ク",
+    da:"ダ",de:"デ",di:"ディ",do:"ド",du:"ヅ",fa:"ファ",fe:"フェ",fi:"フィ",fo:"フォ",fu:"フ",
+    ga:"ガ",ge:"ゲ",gi:"ギ",go:"ゴ",gu:"グ",ha:"ハ",he:"ヘ",hi:"ヒ",ho:"ホ",hu:"フ",
+    ja:"ジャ",je:"ジェ",ji:"ジ",jo:"ジョ",ju:"ジュ",ka:"カ",ke:"ケ",ki:"キ",ko:"コ",ku:"ク",
+    la:"ラ",le:"レ",li:"リ",lo:"ロ",lu:"ル",ma:"マ",me:"メ",mi:"ミ",mo:"モ",mu:"ム",
+    na:"ナ",ne:"ネ",ni:"ニ",no:"ノ",nu:"ヌ",pa:"パ",pe:"ペ",pi:"ピ",po:"ポ",pu:"プ",
+    ra:"ラ",re:"レ",ri:"リ",ro:"ロ",ru:"ル",sa:"サ",se:"セ",si:"シ",so:"ソ",su:"ス",
+    ta:"タ",te:"テ",ti:"ティ",to:"ト",tu:"ツ",va:"ヴァ",ve:"ヴェ",vi:"ヴィ",vo:"ヴォ",vu:"ヴ",
+    wa:"ワ",we:"ウェ",wi:"ウィ",wo:"ウォ",wu:"ウ",xa:"クサ",xe:"クセ",xi:"クシ",xo:"クソ",xu:"クス",
+    ya:"ヤ",ye:"イェ",yi:"イ",yo:"ヨ",yu:"ユ",za:"ザ",ze:"ゼ",zi:"ジ",zo:"ゾ",zu:"ズ",
+  }
+
+  function convert(s: string): string {
+    return s.replace(/[bcdfghjklmnpqrstvwxyz][aeiou]/gi, m => MAP[m.toLowerCase()] || m)
+      .replace(/[bcdfghjklmnpqrstvwxyz]/gi, m => MAP[m.toLowerCase()] || m)
+      .replace(/[aeiou]/gi, m => MAP[m.toLowerCase()] || m)
+  }
+
+  const input=document.getElementById("name-input") as HTMLInputElement
+  const output=document.getElementById("name-output")!
+  const box=document.getElementById("name-result")!
+
+  document.getElementById("name-convert")!.onclick=()=>{
+    const name=input.value.trim(); if(!name)return
+    const kata = name.split(/\s+/).map(part =>
+      part.charAt(0).toUpperCase()+part.slice(1).toLowerCase()
+    ).join("・")
+    output.textContent=convert(kata); box.hidden=false
+  }
+  document.getElementById("name-copy")!.onclick=async()=>{
+    try{await navigator.clipboard.writeText(output.textContent!)}catch{}
+  }
+</script>

@@ -1,0 +1,91 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+---
+
+<DefaultLayout title="Reading Quiz — Japanese Reading Comprehension Practice" description="Practice Japanese reading comprehension with fill-in-the-blank quizzes using real kanji vocabulary. Choose the correct reading or word for sentences from the JLPT database." keywords="Japanese reading quiz, reading comprehension Japanese, fill in the blank Japanese, Japanese sentence quiz, JLPT reading practice, Japanese reading test, kanji reading quiz">
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">Reading Quiz</h1>
+      <p class="text-sm text-ink/60 mt-2">Fill in the blank with the correct reading or word from real Japanese sentences.</p>
+    </div>
+
+    <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay:80ms">
+      <div class="flex flex-wrap items-center justify-center gap-3 mb-5">
+        <div class="flex flex-wrap justify-center gap-1.5">
+          {["N5","N4","N3","N2","N1"].map((l,i)=>`<button class="rq-lvl on btn h-8 px-3.5 text-xs rounded-full" data-lvl="${l.toLowerCase()}">${l}</button>`).join("")}
+        </div>
+        <span id="rq-score" class="text-xs text-ink/40 font-medium">0 correct / 0 total</span>
+      </div>
+
+      <div class="text-center">
+        <div id="rq-sentence" class="text-base sm:text-lg font-jp leading-relaxed text-ink bg-ink/5 rounded-xl p-4 mb-4"></div>
+        <div id="rq-context" class="text-xs text-ink/40 mb-3 italic"></div>
+        <div id="rq-options" class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-w-sm mx-auto"></div>
+        <div id="rq-feedback" class="mt-3 text-sm font-bold" hidden></div>
+      </div>
+
+      <div class="flex justify-center mt-4">
+        <button id="rq-next" class="btn btn-accent h-10 px-5 text-sm">Next →</button>
+      </div>
+    </div>
+  </div>
+</DefaultLayout>
+
+<script>
+  type Entry = { kanji: string; meanings: string[]; level: string; kun: string[]; on: string[]; examples: { word: string; reading: string; english: string; sentence?: string; sentenceEnglish?: string }[] }
+  let data: Entry[] = [], activeLvl = "n5"
+  let correct = 0, total = 0, answered = false
+  let currentCorrect = ""
+
+  const sentenceEl = document.getElementById("rq-sentence")!
+  const contextEl = document.getElementById("rq-context")!
+  const optionsEl = document.getElementById("rq-options")!
+  const feedbackEl = document.getElementById("rq-feedback")!
+  const scoreEl = document.getElementById("rq-score")!
+
+  fetch("/api/kanji.json").then(r => r.json()).then(d => { data = d; nextQ() })
+
+  function nextQ() {
+    answered = false; feedbackEl.hidden = true
+    const pool = data.filter(e => e.level === activeLvl && e.examples && e.examples.length > 0 && e.examples[0].sentence)
+    if (!pool.length) { sentenceEl.textContent = "No sentences available for this level."; return }
+    const entry = pool[Math.floor(Math.random() * pool.length)]
+    const ex = entry.examples[Math.floor(Math.random() * entry.examples.length)]
+    if (!ex.sentence) { nextQ(); return }
+    const blankWord = ex.word
+    const sentence = ex.sentence.replace(blankWord, "＿＿＿＿")
+    sentenceEl.textContent = sentence
+    contextEl.textContent = ex.sentenceEnglish || ex.english
+    currentCorrect = blankWord
+
+    const wrongPool = data.filter(e => e.kanji !== entry.kanji && e.examples && e.examples.length > 0)
+    const wrongWords: string[] = []
+    for (const w of wrongPool.sort(() => Math.random() - 0.5)) {
+      if (wrongWords.length >= 3) break
+      const wex = w.examples[Math.floor(Math.random() * w.examples.length)]
+      if (wex.word !== blankWord && !wrongWords.includes(wex.word)) wrongWords.push(wex.word)
+    }
+    const answers = [blankWord, ...wrongWords].sort(() => Math.random() - 0.5)
+    optionsEl.innerHTML = answers.map(a => `<button class="rq-opt btn h-11 text-sm rounded-xl font-jp">${a}</button>`).join("")
+    optionsEl.querySelectorAll(".rq-opt").forEach(b => b.addEventListener("click", function() {
+      if (answered) return; answered = true; total++
+      const ok = (this as HTMLElement).textContent === currentCorrect
+      if (ok) correct++
+      feedbackEl.hidden = false
+      feedbackEl.textContent = ok ? "✓ Correct!" : `✗ ${currentCorrect}`
+      feedbackEl.style.color = ok ? "#10b981" : "var(--color-vermilion)"
+      scoreEl.textContent = `${correct} correct / ${total} total`
+    }))
+  }
+
+  document.getElementById("rq-next")!.onclick = nextQ
+
+  document.querySelectorAll(".rq-lvl").forEach(b => b.addEventListener("click", function() {
+    document.querySelectorAll(".rq-lvl").forEach(x => x.classList.remove("on"))
+    this.classList.add("on")
+    activeLvl = (this as HTMLElement).dataset.lvl!
+    correct = 0; total = 0
+    scoreEl.textContent = "0 correct / 0 total"
+    nextQ()
+  }))
+</script>

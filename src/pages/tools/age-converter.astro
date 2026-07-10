@@ -1,0 +1,48 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+---
+
+<DefaultLayout title="Age Converter \u2014 How Old in Japanese" description="Convert your age to Japanese. Learn how to say your age in Japanese with proper counters and readings." keywords="Japanese age, how old Japanese, Japanese age counter, sai Japanese, age in Japanese, Japanese age converter, JLPT age">
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">Age Converter</h1>
+      <p class="text-sm text-ink/60 mt-2">Find out how to say any age in Japanese.</p>
+    </div>
+    <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay:80ms">
+      <label class="text-xs font-bold uppercase tracking-widest text-ink/40 mb-2 block" for="age-input">Enter age</label>
+      <input id="age-input" type="number" class="w-full h-12 rounded-xl border border-ink/15 bg-white px-4 text-lg focus:outline-none focus:ring-2 focus:ring-vermilion/40 focus:border-vermilion/60 transition-all" min="1" max="150" value="25" />
+    </div>
+    <div class="card p-5 sm:p-6 mt-4 animate-fade-up" style="animation-delay:120ms">
+      <div class="grid grid-cols-2 gap-4">
+        <div><div class="text-[11px] text-ink/40 font-medium uppercase tracking-wider mb-1">Age in Japanese</div><div id="age-jp" class="text-2xl font-jp font-black text-ink"></div></div>
+        <div><div class="text-[11px] text-ink/40 font-medium uppercase tracking-wider mb-1">Reading</div><div id="age-reading" class="text-lg font-bold text-ink/70"></div></div>
+      </div>
+      <div class="mt-4 pt-4 border-t border-ink/5">
+        <div class="text-[11px] text-ink/40 font-medium uppercase tracking-wider mb-1">Example sentence</div>
+        <div id="age-sentence" class="text-sm font-jp text-ink/70"></div>
+      </div>
+    </div>
+  </div>
+</DefaultLayout>
+
+<script>
+  const AGE_MAP:{[k:string]:{jp:string,rd:string}}={
+    "1":"一歳 いっさい","2":"二歳 にさい","3":"三歳 さんさい","4":"四歳 よんさい",
+    "5":"五歳 ごさい","6":"六歳 ろくさい","7":"七歳 ななさい","8":"八歳 はっさい",
+    "9":"九歳 きゅうさい","10":"十歳 じゅっさい","20":"二十歳 はたち",
+  }
+  function getAge(n:number):{jp:string,rd:string,sentence:string}{
+    if(AGE_MAP[String(n)]){const[jp,rd]=AGE_MAP[String(n)].split(" ");return{jp,rd,sentence:`私は${jp}です。`}}
+    const tens=Math.floor(n/10),ones=n%10
+    const tensS=["","","二十","三十","四十","五十","六十","七十","八十","九十","百"][tens]||String(n)
+    const onesS=["歳","一歳","二歳","三歳","四歳","五歳","六歳","七歳","八歳","九歳"][ones]
+    const tensR=["","","にじゅう","さんじゅう","よんじゅう","ごじゅう","ろくじゅう","ななじゅう","はちじゅう","きゅうじゅう","ひゃく"][tens]||""
+    const onesR={0:"",1:"いっさい",2:"にさい",3:"さんさい",4:"よんさい",5:"ごさい",6:"ろくさい",7:"ななさい",8:"はっさい",9:"きゅうさい"}
+    const jp=tensS.replace("十","")+onesS,rd=tensR+(onesR[ones as keyof typeof onesR]||"さい")
+    return{jp,rd,sentence:`私は${jp}です。`}
+  }
+  const input=document.getElementById("age-input") as HTMLInputElement
+  const jpEl=document.getElementById("age-jp")!,rdEl=document.getElementById("age-reading")!,sentEl=document.getElementById("age-sentence")!
+  function update(){const n=parseInt(input.value)||1;const r=getAge(Math.max(1,Math.min(150,n)));jpEl.textContent=r.jp;rdEl.textContent=r.rd;sentEl.textContent=r.sentence}
+  input.addEventListener("input",update);update()
+</script>

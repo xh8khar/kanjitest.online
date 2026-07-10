@@ -1,0 +1,37 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+
+export interface Props {
+  title: string
+  description: string
+  keywords: string
+  sections: { heading: string; items: { jp?: string; en: string; note?: string }[] }[]
+}
+const { title, description, keywords, sections } = Astro.props
+---
+
+<DefaultLayout title={title} description={description} keywords={keywords}>
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">{title.replace(/ \u2014.*$/, "").replace(/ \u2013.*$/, "")}</h1>
+      <p class="text-sm text-ink/60 mt-2">{description}</p>
+    </div>
+
+    <div class="space-y-6">
+      {sections.map((sec, si) => (
+        <div class="card p-5 sm:p-6 animate-fade-up" style={`animation-delay: ${si * 60}ms`}>
+          <h2 class="text-sm font-bold uppercase tracking-widest text-ink/40 mb-3">{sec.heading}</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
+            {sec.items.map((item) => (
+              <div class="flex items-baseline gap-2 py-0.5 border-b border-ink/5 last:border-0">
+                {item.jp && <span class="font-jp font-bold text-ink">{item.jp}</span>}
+                <span class="text-sm text-ink/60">{item.en}</span>
+                {item.note && <span class="text-[11px] text-ink/40 ml-auto shrink-0">{item.note}</span>}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</DefaultLayout>

@@ -1,0 +1,33 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+---
+
+<DefaultLayout title="Japanese Word Counter" description="Count words, characters, and sentences in Japanese text. Analyze vocabulary density and text statistics." keywords="Japanese word counter, word count Japanese, Japanese text statistics, count Japanese words, text analyzer Japanese, word frequency Japanese">
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">Japanese Word Counter</h1>
+      <p class="text-sm text-ink/60 mt-2">Count words, characters, sentences, and unique kanji in any Japanese text.</p>
+    </div>
+    <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay:80ms">
+      <textarea id="wc-input" class="w-full h-28 sm:h-32 rounded-xl border border-ink/15 bg-white p-3.5 sm:p-4 text-base leading-relaxed resize-y focus:outline-none focus:ring-2 focus:ring-vermilion/40 focus:border-vermilion/60 transition-all" placeholder="Paste Japanese text here…"></textarea>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4" id="wc-stats">
+      {["Characters","Sentences","Unique kanji","Avg char / sent"].map(l=>(
+        <div class="card p-4 text-center"><div class="text-2xl font-black text-ink wc-val" data-wc={l.toLowerCase().replace(/[^a-z]/g,"")}>0</div><div class="text-[11px] text-ink/50 mt-1 font-medium uppercase tracking-wider">{l}</div></div>
+      ))}
+    </div>
+  </div>
+</DefaultLayout>
+
+<script>
+  const input=document.getElementById("wc-input") as HTMLTextAreaElement
+  function update(){
+    const t=input.value; if(!t){document.querySelectorAll(".wc-val").forEach(e=>e.textContent="0");return}
+    const sents=t.split(/[。！？!?]\s*/).filter(Boolean).length||1
+    const kanji=new Set([...t].filter(c=>{const p=c.codePointAt(0)!;return p>=0x4e00&&p<=0x9fff}))
+    const avg=Math.round(t.length/sents)
+    const map:{[k:string]:string}={characters:String(t.length),sentences:String(sents),uniquekanji:String(kanji.size),avgcharsent:String(avg)}
+    document.querySelectorAll(".wc-val").forEach(e=>{const k=(e as HTMLElement).dataset.wc!;e.textContent=map[k]||"0"})
+  }
+  input.addEventListener("input",update)
+</script>

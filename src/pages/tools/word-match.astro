@@ -1,0 +1,54 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+---
+
+<DefaultLayout title="Japanese Word Match Game" description="Match Japanese words with their English meanings. Fun vocabulary practice game for JLPT learners." keywords="Japanese word game, vocabulary match, Japanese matching game, learn Japanese words, word association game, Japanese vocabulary practice">
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">Word Match</h1>
+      <p class="text-sm text-ink/60 mt-2">Match each Japanese word with its English meaning.</p>
+    </div>
+    <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay:80ms">
+      <div class="flex flex-wrap justify-center gap-2 mb-4">
+        {["N5","N4","N3","N2","N1"].map(l=>`<button class="wm-lvl on btn h-8 px-3.5 text-xs rounded-full" data-lvl="${l.toLowerCase()}">${l}</button>`).join("")}
+      </div>
+      <div id="wm-score" class="text-xs text-ink/40 mb-4">0 matched / 0 total</div>
+      <div id="wm-grid" class="grid grid-cols-2 gap-2 max-w-sm mx-auto"></div>
+      <button id="wm-new" class="btn btn-accent h-10 px-5 text-sm mt-4 w-full">New game</button>
+    </div>
+  </div>
+</DefaultLayout>
+
+<script>
+  type Entry={kanji:string;meanings:string[];level:string}
+  let data:Entry[]=[],activeLvl="n5",selected:string|null=null,matched=0,total=0
+  const grid=document.getElementById("wm-grid")!,scoreEl=document.getElementById("wm-score")!
+  fetch("/api/kanji.json").then(r=>r.json()).then(d=>{data=d;newGame()})
+  function shuffle<T>(a:T[]):T[]{const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
+  function newGame(){
+    const pool=data.filter(e=>e.level===activeLvl&&e.meanings[0]).sort(()=>Math.random()-0.5).slice(0,6)
+    total=pool.length;matched=0;selected=null
+    const jp=shuffle(pool.map(e=>({text:e.kanji,meaning:e.meanings[0],id:e.kanji+Math.random()})))
+    const en=shuffle(pool.map(e=>({text:e.meanings[0],meaning:e.meanings[0],id:e.kanji+Math.random()})))
+    const cards=shuffle([...jp,...en])
+    grid.innerHTML=cards.map(c=>`<button class="wm-card btn h-12 text-sm rounded-xl" data-id="${c.id}" data-meaning="${c.meaning}">${c.text}</button>`).join("")
+    updateScore()
+    grid.querySelectorAll(".wm-card").forEach(b=>b.addEventListener("click",function(){
+      if((this as HTMLElement).classList.contains("matched"))return
+      if(!selected){selected=(this as HTMLElement).dataset.id!;this.classList.add("ring-2","ring-vermilion");return}
+      const prev=selected;selected=null
+      document.querySelectorAll(".wm-card.ring-2").forEach(e=>e.classList.remove("ring-2","ring-vermilion"))
+      const a=this as HTMLElement,b=document.querySelector(`[data-id="${prev}"]`) as HTMLElement
+      if(a.dataset.meaning===b.dataset.meaning&&a.dataset.id!==b.dataset.id){
+        a.classList.add("matched","bg-emerald-50","text-emerald-700","border-emerald-300");b?.classList.add("matched","bg-emerald-50","text-emerald-700","border-emerald-300")
+        matched++;updateScore()
+      }
+    }))
+  }
+  function updateScore(){scoreEl.textContent=`${matched} matched / ${total} total`;if(matched===total)setTimeout(()=>alert("All matched! \u{1F389}"),300)}
+  document.querySelectorAll(".wm-lvl").forEach(b=>b.addEventListener("click",function(){
+    document.querySelectorAll(".wm-lvl").forEach(x=>x.classList.remove("on"));this.classList.add("on")
+    activeLvl=(this as HTMLElement).dataset.lvl!;newGame()
+  }))
+  document.getElementById("wm-new")!.onclick=newGame
+</script>

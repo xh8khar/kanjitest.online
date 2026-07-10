@@ -1,0 +1,91 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+---
+
+<DefaultLayout title="Kanji Grid — Browse All Kanji at a Glance" description="Browse all JLPT kanji in a compact grid view. Filter by level, search by character, and click any kanji for readings, meanings, and stroke count." keywords="kanji grid, all JLPT kanji, kanji overview, kanji chart, Japanese kanji list, kanji by level grid, browse kanji, kanji reference grid">
+  <div class="max-w-6xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">Kanji Grid</h1>
+      <p class="text-sm text-ink/60 mt-2">Browse all kanji in a compact grid. Click any character for full details.</p>
+    </div>
+
+    <div class="flex flex-wrap items-center justify-center gap-3 mb-6 animate-fade-up" style="animation-delay:80ms">
+      <div class="flex flex-wrap justify-center gap-1.5">
+        {["All","N5","N4","N3","N2","N1"].map((l,i)=>`<button class="kg-lvl on btn h-8 px-3.5 text-xs rounded-full" data-lvl="${l==="All"?"all":l.toLowerCase()}">${l}</button>`).join("")}
+      </div>
+      <input id="kg-search" class="h-9 rounded-xl border border-ink/15 bg-white px-3.5 text-xs w-40 focus:outline-none focus:ring-2 focus:ring-vermilion/40 focus:border-vermilion/60 transition-all" placeholder="Search kanji…" />
+      <span id="kg-count" class="text-xs text-ink/40 font-medium">0 kanji</span>
+    </div>
+
+    <div id="kg-grid" class="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-1.5 animate-fade-up" style="animation-delay:120ms"></div>
+
+    <div id="kg-detail" class="card p-5 sm:p-6 mt-6 animate-fade-up" style="animation-delay:160ms" hidden>
+      <div class="flex items-start gap-4">
+        <div id="kg-d-kanji" class="text-5xl sm:text-6xl font-jp font-black text-ink leading-none"></div>
+        <div class="min-w-0 flex-1">
+          <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm">
+            <span><span class="text-ink/40 text-xs">Level</span> <span id="kg-d-level" class="font-bold"></span></span>
+            <span><span class="text-ink/40 text-xs">Strokes</span> <span id="kg-d-strokes" class="font-bold"></span></span>
+          </div>
+          <div class="mt-1.5 text-sm"><span class="text-ink/40 text-xs">On'yomi</span> <span id="kg-d-on" class="font-jp"></span></div>
+          <div class="text-sm"><span class="text-ink/40 text-xs">Kun'yomi</span> <span id="kg-d-kun" class="font-jp"></span></div>
+          <div class="text-sm"><span class="text-ink/40 text-xs">Meanings</span> <span id="kg-d-meanings"></span></div>
+        </div>
+        <button id="kg-d-close" class="btn btn-ghost h-8 w-8 p-0 flex-shrink-0 text-lg leading-none">&times;</button>
+      </div>
+    </div>
+  </div>
+</DefaultLayout>
+
+<script>
+  type Entry = { kanji: string; meanings: string[]; level: string; strokes: number; kun: string[]; on: string[] }
+  let data: Entry[] = []
+  let activeLvl = "all"
+
+  const grid = document.getElementById("kg-grid")!
+  const search = document.getElementById("kg-search") as HTMLInputElement
+  const countEl = document.getElementById("kg-count")!
+  const detail = document.getElementById("kg-detail")!
+  const dKanji = document.getElementById("kg-d-kanji")!
+  const dLevel = document.getElementById("kg-d-level")!
+  const dStrokes = document.getElementById("kg-d-strokes")!
+  const dOn = document.getElementById("kg-d-on")!
+  const dKun = document.getElementById("kg-d-kun")!
+  const dMeanings = document.getElementById("kg-d-meanings")!
+
+  fetch("/api/kanji.json").then(r => r.json()).then(d => { data = d; render() })
+
+  function render() {
+    const q = search.value.trim().toLowerCase()
+    let filtered = activeLvl === "all" ? data : data.filter(e => e.level === activeLvl)
+    if (q) filtered = filtered.filter(e => e.kanji.includes(q) || e.meanings.some(m => m.toLowerCase().includes(q)) || e.on.some(o => o.includes(q)) || e.kun.some(k => k.includes(q)))
+    countEl.textContent = `${filtered.length} kanji`
+    grid.innerHTML = filtered.map(e =>
+      `<button class="kg-cell btn h-10 sm:h-11 text-lg font-jp font-bold rounded-lg border border-ink/10 bg-white hover:border-vermilion/40 hover:bg-vermilion/5 transition-all" data-kanji="${e.kanji}">${e.kanji}</button>`
+    ).join("")
+    grid.querySelectorAll(".kg-cell").forEach(b => b.addEventListener("click", () => {
+      const entry = data.find(e => e.kanji === (b as HTMLElement).dataset.kanji)
+      if (!entry) return
+      dKanji.textContent = entry.kanji
+      dLevel.textContent = entry.level.toUpperCase()
+      dStrokes.textContent = String(entry.strokes)
+      dOn.textContent = entry.on.join("、") || "—"
+      dKun.textContent = entry.kun.join("、") || "—"
+      dMeanings.textContent = entry.meanings.join(", ")
+      detail.hidden = false
+      detail.scrollIntoView({ behavior: "smooth", block: "nearest" })
+    }))
+  }
+
+  search.addEventListener("input", render)
+
+  document.querySelectorAll(".kg-lvl").forEach(b => b.addEventListener("click", function() {
+    document.querySelectorAll(".kg-lvl").forEach(x => x.classList.remove("on"))
+    this.classList.add("on")
+    activeLvl = (this as HTMLElement).dataset.lvl!
+    detail.hidden = true
+    render()
+  }))
+
+  document.getElementById("kg-d-close")!.onclick = () => { detail.hidden = true }
+</script>

@@ -1,0 +1,60 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+---
+
+<DefaultLayout title="Kana Typing Practice" description="Practice typing hiragana and katakana. Improve your kana typing speed with randomly generated characters." keywords="kana typing, Japanese typing practice, type hiragana, type katakana, Japanese keyboard practice, kana typing test, Japanese typing speed">
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">Kana Typing Practice</h1>
+      <p class="text-sm text-ink/60 mt-2">Type the displayed kana character. Improve your recognition and typing speed.</p>
+    </div>
+    <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay:80ms">
+      <div class="flex flex-wrap justify-center gap-2 mb-6">
+        {["Hiragana","Katakana","Mixed"].map(l=>`<button class="tp-mode on btn h-8 px-3.5 text-xs rounded-full" data-mode="${l.toLowerCase()}">${l}</button>`).join("")}
+      </div>
+      <div class="text-center">
+        <div id="tp-char" class="text-6xl sm:text-7xl font-jp font-black text-ink min-h-[5rem] flex items-center justify-center">あ</div>
+        <div class="flex items-center justify-center gap-2 mt-2 text-xs text-ink/40">
+          <div>Score: <span id="tp-score" class="font-bold text-ink">0</span></div>
+          <span>·</span>
+          <div>Streak: <span id="tp-streak" class="font-bold text-ink">0</span></div>
+        </div>
+        <div class="mt-4">
+          <input id="tp-input" class="w-48 h-11 rounded-xl border border-ink/15 bg-white px-4 text-center text-base focus:outline-none focus:ring-2 focus:ring-vermilion/40 focus:border-vermilion/60 transition-all" placeholder="Type romaji..." autocomplete="off" />
+        </div>
+      </div>
+    </div>
+  </div>
+</DefaultLayout>
+
+<script>
+  const KANA:{hira:string;kata:string;romaji:string}[]=[
+    {hira:"あ",kata:"ア",romaji:"a"},{hira:"い",kata:"イ",romaji:"i"},{hira:"う",kata:"ウ",romaji:"u"},{hira:"え",kata:"エ",romaji:"e"},{hira:"お",kata:"オ",romaji:"o"},
+    {hira:"か",kata:"カ",romaji:"ka"},{hira:"き",kata:"キ",romaji:"ki"},{hira:"く",kata:"ク",romaji:"ku"},{hira:"け",kata:"ケ",romaji:"ke"},{hira:"こ",kata:"コ",romaji:"ko"},
+    {hira:"さ",kata:"サ",romaji:"sa"},{hira:"し",kata:"シ",romaji:"shi"},{hira:"す",kata:"ス",romaji:"su"},{hira:"せ",kata:"セ",romaji:"se"},{hira:"そ",kata:"ソ",romaji:"so"},
+    {hira:"た",kata:"タ",romaji:"ta"},{hira:"ち",kata:"チ",romaji:"chi"},{hira:"つ",kata:"ツ",romaji:"tsu"},{hira:"て",kata:"テ",romaji:"te"},{hira:"と",kata:"ト",romaji:"to"},
+    {hira:"な",kata:"ナ",romaji:"na"},{hira:"に",kata:"ニ",romaji:"ni"},{hira:"ぬ",kata:"ヌ",romaji:"nu"},{hira:"ね",kata:"ネ",romaji:"ne"},{hira:"の",kata:"ノ",romaji:"no"},
+    {hira:"は",kata:"ハ",romaji:"ha"},{hira:"ひ",kata:"ヒ",romaji:"hi"},{hira:"ふ",kata:"フ",romaji:"fu"},{hira:"へ",kata:"ヘ",romaji:"he"},{hira:"ほ",kata:"ホ",romaji:"ho"},
+    {hira:"ま",kata:"マ",romaji:"ma"},{hira:"み",kata:"ミ",romaji:"mi"},{hira:"む",kata:"ム",romaji:"mu"},{hira:"め",kata:"メ",romaji:"me"},{hira:"も",kata:"モ",romaji:"mo"},
+    {hira:"や",kata:"ヤ",romaji:"ya"},{hira:"ゆ",kata:"ユ",romaji:"yu"},{hira:"よ",kata:"ヨ",romaji:"yo"},
+    {hira:"ら",kata:"ラ",romaji:"ra"},{hira:"り",kata:"リ",romaji:"ri"},{hira:"る",kata:"ル",romaji:"ru"},{hira:"れ",kata:"レ",romaji:"re"},{hira:"ろ",kata:"ロ",romaji:"ro"},
+    {hira:"わ",kata:"ワ",romaji:"wa"},{hira:"を",kata:"ヲ",romaji:"wo"},{hira:"ん",kata:"ン",romaji:"n"},
+  ]
+  let mode="hiragana",score=0,streak=0,current=KANA[0]
+  const charEl=document.getElementById("tp-char")!,input=document.getElementById("tp-input") as HTMLInputElement
+  const scoreEl=document.getElementById("tp-score")!,streakEl=document.getElementById("tp-streak")!
+  function next(){
+    const pool=mode==="mixed"?KANA:KANA.filter(k=>k[mode as keyof typeof k])
+    current=pool[Math.floor(Math.random()*pool.length)]
+    charEl.textContent=mode==="hiragana"?current.hira:mode==="katakana"?current.kata:Math.random()>0.5?current.hira:current.kata
+    input.value="";input.focus()
+  }
+  input.addEventListener("input",()=>{
+    if(input.value.trim().toLowerCase()===current.romaji){score++;streak++;scoreEl.textContent=String(score);streakEl.textContent=String(streak);next()}
+  })
+  document.querySelectorAll(".tp-mode").forEach(b=>b.addEventListener("click",function(){
+    document.querySelectorAll(".tp-mode").forEach(x=>x.classList.remove("on"));this.classList.add("on")
+    mode=(this as HTMLElement).dataset.mode!;next()
+  }))
+  next()
+</script>

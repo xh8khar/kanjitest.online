@@ -1,0 +1,47 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+---
+
+<DefaultLayout title="JLPT Countdown \u2014 Days Until Next JLPT Exam" description="Countdown to the next JLPT exam date. Days, hours, and minutes remaining until the next Japanese Language Proficiency Test." keywords="JLPT countdown, JLPT exam date, next JLPT test, days until JLPT, JLPT 2026, Japanese test countdown, JLPT schedule">
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">JLPT Countdown</h1>
+      <p class="text-sm text-ink/60 mt-2">Days, hours, minutes until the next JLPT exam.</p>
+    </div>
+    <div class="card p-6 sm:p-8 animate-fade-up text-center" style="animation-delay:80ms">
+      <div class="text-[11px] text-ink/40 font-medium uppercase tracking-wider mb-1">Next exam</div>
+      <div id="cd-date" class="text-sm font-bold text-ink/60 mb-4"></div>
+      <div class="flex justify-center gap-4 sm:gap-6">
+        {["Days","Hours","Minutes","Seconds"].map(l=>`<div class="text-center"><div class="cd-val text-3xl sm:text-4xl font-black text-ink tabular-nums" data-cd="${l.toLowerCase()}">0</div><div class="text-[10px] text-ink/40 font-medium uppercase tracking-wider mt-0.5">${l}</div></div>`).join("")}
+      </div>
+      <div id="cd-passed" class="mt-4 text-sm text-ink/50" hidden></div>
+    </div>
+  </div>
+</DefaultLayout>
+
+<script>
+  const EXAMS=[{m:7,d:5},{m:12,o:true}] // July 5, 2026 & December (first Sunday)
+  function getNext():Date{
+    const n=new Date(),y=n.getFullYear()
+    const july=new Date(y,6,5)
+    if(july>n)return july
+    const dec=new Date(y,11,1)
+    const sun=dec.getDay()?dec:new Date(y,11,1+(7-dec.getDay()))
+    if(sun>n)return sun
+    return new Date(y+1,6,5)
+  }
+  const dateEl=document.getElementById("cd-date")!,passedEl=document.getElementById("cd-passed")!
+  const daysEl=document.querySelector("[data-cd=days]")!,hrsEl=document.querySelector("[data-cd=hours]")!,
+    minEl=document.querySelector("[data-cd=minutes]")!,secEl=document.querySelector("[data-cd=seconds]")!
+  function tick(){
+    const now=new Date(),next=getNext(),diff=Math.max(0,next.getTime()-now.getTime())
+    if(diff===0){passedEl.hidden=false;passedEl.textContent="Exam day! Good luck! \u{1F389}";return}
+    passedEl.hidden=true
+    daysEl.textContent=String(Math.floor(diff/86400000))
+    hrsEl.textContent=String(Math.floor((diff%86400000)/3600000))
+    minEl.textContent=String(Math.floor((diff%3600000)/60000))
+    secEl.textContent=String(Math.floor((diff%60000)/1000))
+    dateEl.textContent=next.toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric"})
+  }
+  setInterval(tick,1000);tick()
+</script>
