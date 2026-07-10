@@ -1,5 +1,6 @@
 ---
 import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import ButtonGroup from "@/components/tools/ButtonGroup.astro"
 ---
 
 <DefaultLayout title="Random Kanji Generator" description="Discover random kanji characters from any JLPT level. See readings, meanings, stroke count, and example words for each character." keywords="random kanji, kanji generator, random Japanese character, JLPT kanji, kanji practice, random kanji with readings">
@@ -10,10 +11,17 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
     </div>
 
     <div class="flex flex-wrap justify-center gap-2 mb-6 animate-fade-up" style="animation-delay: 60ms">
-      <button class="level-btn on btn h-9 px-4 text-xs rounded-full" data-level="all">All levels</button>
-      {["N5", "N4", "N3", "N2", "N1"].map((l) => (
-        <button class="level-btn btn h-9 px-4 text-xs rounded-full" data-level={l.toLowerCase()}>{l}</button>
-      ))}
+      <ButtonGroup
+        classPrefix="level-btn"
+        buttons={[
+          { label: "All levels", attrs: { "data-level": "all" } },
+          { label: "N5", attrs: { "data-level": "n5" } },
+          { label: "N4", attrs: { "data-level": "n4" } },
+          { label: "N3", attrs: { "data-level": "n3" } },
+          { label: "N2", attrs: { "data-level": "n2" } },
+          { label: "N1", attrs: { "data-level": "n1" } },
+        ]}
+      />
     </div>
 
     <div class="card p-6 sm:p-8 text-center animate-fade-up" style="animation-delay: 100ms">

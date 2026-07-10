@@ -1,5 +1,6 @@
 ---
 import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import ButtonGroup from "@/components/tools/ButtonGroup.astro"
 ---
 
 <DefaultLayout title="Kana Quiz — Practice Hiragana and Katakana" description="Free kana quiz to practice hiragana and katakana recognition. Choose from hiragana, katakana, or both scripts." keywords="kana quiz, hiragana practice, katakana practice, Japanese kana test, kana flashcards, learn hiragana katakana, Japanese script quiz">
@@ -11,9 +12,7 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
 
     <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay: 80ms">
       <div class="flex flex-wrap justify-center gap-2 mb-6">
-        <button class="q-mode on btn h-9 px-4 text-xs rounded-full" data-mode="hiragana">Hiragana</button>
-        <button class="q-mode btn h-9 px-4 text-xs rounded-full" data-mode="katakana">Katakana</button>
-        <button class="q-mode btn h-9 px-4 text-xs rounded-full" data-mode="both">Both</button>
+        <ButtonGroup classPrefix="q-mode" dataAttr="data-mode" buttons={["Hiragana", "Katakana", "Both"]} />
       </div>
 
       <div id="quiz-area" class="text-center">

@@ -1,5 +1,6 @@
 ---
 import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import ButtonGroup from "@/components/tools/ButtonGroup.astro"
 ---
 
 <DefaultLayout title="Kana Typing Practice" description="Practice typing hiragana and katakana. Improve your kana typing speed with randomly generated characters." keywords="kana typing, Japanese typing practice, type hiragana, type katakana, Japanese keyboard practice, kana typing test, Japanese typing speed">
@@ -10,9 +11,7 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
     </div>
     <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay:80ms">
       <div class="flex flex-wrap justify-center gap-2 mb-6">
-        {["Hiragana","Katakana","Mixed"].map((l, i) => (
-          <button class:list={["tp-mode", "btn", "h-8", "px-3.5", "text-xs", "rounded-full", { on: i === 0 }]} data-mode={l.toLowerCase()}>{l}</button>
-        ))}
+        <ButtonGroup classPrefix="tp-mode" dataAttr="data-mode" buttons={["Hiragana","Katakana","Mixed"]} />
       </div>
       <div class="text-center">
         <div id="tp-char" class="text-6xl sm:text-7xl font-jp font-black text-ink min-h-[5rem] flex items-center justify-center">あ</div>

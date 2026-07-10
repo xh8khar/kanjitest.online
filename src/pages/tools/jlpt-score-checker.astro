@@ -1,5 +1,6 @@
 ---
 import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import ButtonGroup from "@/components/tools/ButtonGroup.astro"
 ---
 
 <DefaultLayout title="JLPT Score Checker — Pass/Fail Estimator" description="Estimate your JLPT exam result. Input your section scores for Language Knowledge, Reading, and Listening to check if you pass." keywords="JLPT score checker, JLPT pass fail calculator, JLPT score estimator, Japanese test score, JLPT passing score, JLPT section scores">
@@ -12,9 +13,7 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
     <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay: 80ms">
       <label class="text-xs font-bold uppercase tracking-widest text-ink/40 mb-3 block">Select your JLPT level</label>
       <div class="flex flex-wrap gap-2 mb-6">
-        {["N5", "N4", "N3", "N2", "N1"].map((l, i) => (
-          <button class:list={["sc-lvl", "btn", "h-9", "px-4", "text-xs", "rounded-full", { on: i === 0 }]} data-lvl={l.toLowerCase()}>{l}</button>
-        ))}
+        <ButtonGroup classPrefix="sc-lvl" buttons={["N5", "N4", "N3", "N2", "N1"]} />
       </div>
 
       <div class="space-y-4">

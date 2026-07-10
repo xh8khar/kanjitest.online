@@ -1,5 +1,6 @@
 ---
 import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import ButtonGroup from "@/components/tools/ButtonGroup.astro"
 ---
 
 <DefaultLayout title="Memory Match — Kanji Concentration Game" description="Flip cards to match kanji characters with their English meanings. Fun memory game for Japanese learners of all JLPT levels." keywords="memory match, kanji game, Japanese memory game, concentration game, kanji matching, learn kanji with game, Japanese study game, kanji concentration">
@@ -12,9 +13,7 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
     <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay:80ms">
       <div class="flex flex-wrap items-center justify-center gap-3 mb-5">
         <div class="flex flex-wrap justify-center gap-1.5">
-          {["N5","N4","N3","N2","N1"].map((l, i) => (
-            <button class:list={["mm-lvl", "btn", "h-8", "px-3.5", "text-xs", "rounded-full", { on: i === 0 }]} data-lvl={l.toLowerCase()}>{l}</button>
-          ))}
+          <ButtonGroup classPrefix="mm-lvl" buttons={["N5","N4","N3","N2","N1"]} />
         </div>
         <span id="mm-score" class="text-xs text-ink/40 font-medium">0 pairs · 0 flips</span>
         <button id="mm-new" class="btn btn-ghost h-8 px-3 text-xs">New game</button>

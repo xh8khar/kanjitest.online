@@ -1,0 +1,27 @@
+---
+export interface ButtonConfig {
+  label: string
+  attrs?: Record<string, string>
+}
+
+export interface Props {
+  classPrefix: string
+  buttons: ButtonConfig[] | string[]
+  dataAttr?: string
+  activeIndex?: number
+}
+const { classPrefix, buttons, dataAttr = "data-lvl", activeIndex = 0 } = Astro.props
+const items: ButtonConfig[] = buttons.map((b) => {
+  if (typeof b === "string") return { label: b, attrs: { [dataAttr]: b.toLowerCase() } }
+  return b
+})
+---
+
+<div class="flex flex-wrap justify-center gap-1.5">
+  {items.map((btn, i) => (
+    <button
+      class:list={[classPrefix, "btn", "h-8", "px-3.5", "text-xs", "rounded-full", { on: i === activeIndex }]}
+      {...(btn.attrs || {})}
+    >{btn.label}</button>
+  ))}
+</div>

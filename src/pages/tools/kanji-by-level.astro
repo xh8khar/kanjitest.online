@@ -1,5 +1,6 @@
 ---
 import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import ButtonGroup from "@/components/tools/ButtonGroup.astro"
 ---
 
 <DefaultLayout title="Kanji by JLPT Level — Browse All Kanji" description="Browse all kanji characters grouped by JLPT level N5 to N1. Search, filter, and click any character for full details." keywords="kanji by level, JLPT kanji list, N5 kanji, N4 kanji, N3 kanji, N2 kanji, N1 kanji, browse kanji, search kanji by level">
@@ -11,9 +12,17 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
 
     <div class="flex flex-wrap items-center gap-3 mb-6 animate-fade-up" style="animation-delay: 60ms">
       <div class="flex flex-wrap gap-1.5">
-        {["all", "n5", "n4", "n3", "n2", "n1"].map((l, i) => (
-          <button class:list={["lv-btn", "btn", "h-9", "px-3.5", "text-xs", "rounded-full", { on: i === 0 }]} data-lv={l}>{l === "all" ? "All" : l.toUpperCase()}</button>
-        ))}
+        <ButtonGroup
+          classPrefix="lv-btn"
+          buttons={[
+            { label: "All", attrs: { "data-lv": "all" } },
+            { label: "N5", attrs: { "data-lv": "n5" } },
+            { label: "N4", attrs: { "data-lv": "n4" } },
+            { label: "N3", attrs: { "data-lv": "n3" } },
+            { label: "N2", attrs: { "data-lv": "n2" } },
+            { label: "N1", attrs: { "data-lv": "n1" } },
+          ]}
+        />
       </div>
       <input id="search-input" class="flex-1 min-w-[160px] h-9 rounded-xl border border-ink/15 bg-white px-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-vermilion/40 focus:border-vermilion/60 transition-all" placeholder="Search kanji or meaning…" />
     </div>

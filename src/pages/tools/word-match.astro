@@ -1,5 +1,6 @@
 ---
 import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import ButtonGroup from "@/components/tools/ButtonGroup.astro"
 ---
 
 <DefaultLayout title="Japanese Word Match Game" description="Match Japanese words with their English meanings. Fun vocabulary practice game for JLPT learners." keywords="Japanese word game, vocabulary match, Japanese matching game, learn Japanese words, word association game, Japanese vocabulary practice">
@@ -10,9 +11,7 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
     </div>
     <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay:80ms">
       <div class="flex flex-wrap justify-center gap-2 mb-4">
-        {["N5","N4","N3","N2","N1"].map((l, i) => (
-          <button class:list={["wm-lvl", "btn", "h-8", "px-3.5", "text-xs", "rounded-full", { on: i === 0 }]} data-lvl={l.toLowerCase()}>{l}</button>
-        ))}
+        <ButtonGroup classPrefix="wm-lvl" buttons={["N5","N4","N3","N2","N1"]} />
       </div>
       <div id="wm-score" class="text-xs text-ink/40 mb-4">0 matched / 0 total</div>
       <div id="wm-grid" class="grid grid-cols-2 gap-2 max-w-sm mx-auto"></div>

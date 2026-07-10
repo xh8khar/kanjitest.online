@@ -1,5 +1,6 @@
 ---
 import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import ButtonGroup from "@/components/tools/ButtonGroup.astro"
 ---
 
 <DefaultLayout title="Flashcard Exporter — Generate Printable Kanji Flashcards" description="Create printable kanji flashcards from any JLPT level. Customize the number of cards and download as a print-friendly page." keywords="kanji flashcards, printable flashcards, JLPT flashcard generator, kanji flashcard PDF, Japanese study cards, print kanji flashcards, flashcard exporter, custom flashcards">
@@ -11,9 +12,7 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
 
     <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay:80ms">
       <div class="flex flex-wrap justify-center gap-2 mb-5">
-        {["N5","N4","N3","N2","N1"].map((l, i) => (
-          <button class:list={["fc-lvl", "btn", "h-8", "px-3.5", "text-xs", "rounded-full", { on: i === 0 }]} data-lvl={l.toLowerCase()}>{l}</button>
-        ))}
+        <ButtonGroup classPrefix="fc-lvl" buttons={["N5","N4","N3","N2","N1"]} />
       </div>
 
       <div class="flex flex-wrap items-center justify-center gap-4 mb-5">

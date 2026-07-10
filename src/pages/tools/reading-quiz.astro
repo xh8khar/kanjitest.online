@@ -1,5 +1,6 @@
 ---
 import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import ButtonGroup from "@/components/tools/ButtonGroup.astro"
 ---
 
 <DefaultLayout title="Reading Quiz — Japanese Reading Comprehension Practice" description="Practice Japanese reading comprehension with fill-in-the-blank quizzes using real kanji vocabulary. Choose the correct reading or word for sentences from the JLPT database." keywords="Japanese reading quiz, reading comprehension Japanese, fill in the blank Japanese, Japanese sentence quiz, JLPT reading practice, Japanese reading test, kanji reading quiz">
@@ -12,9 +13,7 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
     <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay:80ms">
       <div class="flex flex-wrap items-center justify-center gap-3 mb-5">
         <div class="flex flex-wrap justify-center gap-1.5">
-          {["N5","N4","N3","N2","N1"].map((l, i) => (
-            <button class:list={["rq-lvl", "btn", "h-8", "px-3.5", "text-xs", "rounded-full", { on: i === 0 }]} data-lvl={l.toLowerCase()}>{l}</button>
-          ))}
+          <ButtonGroup classPrefix="rq-lvl" buttons={["N5","N4","N3","N2","N1"]} />
         </div>
         <span id="rq-score" class="text-xs text-ink/40 font-medium">0 correct / 0 total</span>
       </div>

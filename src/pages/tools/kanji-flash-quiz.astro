@@ -1,5 +1,6 @@
 ---
 import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import ButtonGroup from "@/components/tools/ButtonGroup.astro"
 ---
 
 <DefaultLayout title="Kanji Flash Quiz — Quick Kanji Practice" description="Quick-fire kanji quiz using the full JLPT database. See a kanji, pick the correct meaning from four choices. Practice any level." keywords="kanji quiz, JLPT kanji practice, kanji flashcards, kanji meaning quiz, Japanese kanji test, quick kanji quiz, learn kanji online">
@@ -11,9 +12,7 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
 
     <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay: 80ms">
       <div class="flex flex-wrap justify-center gap-2 mb-6">
-        {["All", "N5", "N4", "N3", "N2", "N1"].map((l, i) => (
-          <button class:list={["fq-lvl", "btn", "h-9", "px-4", "text-xs", "rounded-full", { on: i === 0 }]} data-lvl={l === "All" ? "all" : l.toLowerCase()}>{l}</button>
-        ))}
+        <ButtonGroup classPrefix="fq-lvl" buttons={["All", "N5", "N4", "N3", "N2", "N1"]} />
       </div>
 
       <div class="flex items-center justify-between mb-4 text-xs text-ink/40">

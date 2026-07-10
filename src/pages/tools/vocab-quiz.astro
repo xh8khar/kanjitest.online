@@ -1,5 +1,6 @@
 ---
 import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import ButtonGroup from "@/components/tools/ButtonGroup.astro"
 ---
 
 <DefaultLayout title="Japanese Vocabulary Quiz" description="Test your Japanese vocabulary knowledge with multiple-choice quizzes. Random words from the JLPT database." keywords="Japanese vocabulary quiz, JLPT vocabulary test, Japanese word quiz, vocabulary practice, learn Japanese words, Japanese multiple choice, JLPT vocab">
@@ -10,9 +11,7 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
     </div>
     <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay:80ms">
       <div class="flex flex-wrap justify-center gap-2 mb-4">
-        {["All","N5","N4","N3","N2","N1"].map((l, i) => (
-          <button class:list={["vq-lvl", "btn", "h-8", "px-3.5", "text-xs", "rounded-full", { on: i === 0 }]} data-lvl={l === "All" ? "all" : l.toLowerCase()}>{l}</button>
-        ))}
+        <ButtonGroup classPrefix="vq-lvl" buttons={["All","N5","N4","N3","N2","N1"]} />
       </div>
       <div class="flex items-center justify-between mb-3 text-xs text-ink/40"><span id="vq-score">0 correct</span><span id="vq-total">0 answered</span></div>
       <div class="text-center">

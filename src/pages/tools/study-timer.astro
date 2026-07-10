@@ -1,5 +1,6 @@
 ---
 import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import ButtonGroup from "@/components/tools/ButtonGroup.astro"
 ---
 
 <DefaultLayout title="Study Timer — Pomodoro for Japanese Study" description="Free study timer for Japanese learners. Pomodoro-style timer with customizable focus and break intervals. Track your study sessions." keywords="study timer, pomodoro timer, Japanese study timer, focus timer, study session timer, productivity tool, Japanese learning timer">
@@ -11,11 +12,14 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
 
     <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay: 80ms">
       <div class="flex flex-wrap justify-center gap-2 mb-6">
-        {[{ label: "25 min", focus: 25, break: 5 }, { label: "45 min", focus: 45, break: 10 }, { label: "60 min", focus: 60, break: 15 }].map((p, i) => (
-          <button data-focus={p.focus} data-break={p.break} class:list={["tm-preset", "btn", "h-9", "px-4", "text-xs", "rounded-full", { on: i === 0 }]}>
-            {p.label}
-          </button>
-        ))}
+        <ButtonGroup
+          classPrefix="tm-preset"
+          buttons={[
+            { label: "25 min", attrs: { "data-focus": "25", "data-break": "5" } },
+            { label: "45 min", attrs: { "data-focus": "45", "data-break": "10" } },
+            { label: "60 min", attrs: { "data-focus": "60", "data-break": "15" } },
+          ]}
+        />
       </div>
 
       <div class="text-center">
