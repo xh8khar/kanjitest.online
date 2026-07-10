@@ -5,7 +5,7 @@ import n3 from "@/data/n3.json"
 import n2 from "@/data/n2.json"
 import n1 from "@/data/n1.json"
 
-export type Radical = (typeof raw)[number] & { slug?: string }
+export type Radical = (typeof raw)[number]
 export const radicals = raw as Radical[]
 
 interface KanjiEntry {
@@ -30,19 +30,13 @@ export function getKanjiByChar(ch: string): KanjiEntry | undefined {
   return _kanjiLookup.get(ch)
 }
 
-export function toSlug(meaning: string, id: number, slugOverride?: string): string {
-  if (slugOverride) return slugOverride
-  const base = meaning.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
-  const dupe = radicals.filter((r) => {
-    const s = r.meaning.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
-    return s === base
-  })
-  return dupe.length > 1 ? `${base}-${id}` : base
+export function toSlug(radicalChar: string): string {
+  return radicalChar
 }
 
 const _slugMap = new Map<string, Radical>()
 for (const r of radicals) {
-  _slugMap.set(toSlug(r.meaning, r.id, r.slug), r)
+  _slugMap.set(toSlug(r.radical), r)
 }
 export function getBySlug(slug: string): Radical | undefined {
   return _slugMap.get(slug)

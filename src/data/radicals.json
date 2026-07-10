@@ -26,7 +26,7 @@
   {"id":25,"radical":"卜","strokes":2,"meaning":"divination","reading":"ぼく","variants":[],"examples":["卜","占","外"],"desc":"Fortune-telling, a crack on a bone. A vertical line with a hook on the left."},
   {"id":26,"radical":"卩","strokes":2,"meaning":"seal","reading":"わりふ","variants":[],"examples":["即","印"],"desc":"A seal stamp — a kneeling figure seen from the side. Found in 印 (stamp)."},
   {"id":27,"radical":"厂","strokes":2,"meaning":"cliff","reading":"がんだれ","variants":[],"examples":["原","厚","厨"],"desc":"A cliff or overhang — a horizontal line with a left drop. Found in 原 (original/field)."},
-  {"id":28,"radical":"厶","strokes":2,"meaning":"private","slug":"厶","reading":"む","variants":[],"examples":["私","公"],"desc":"Selfishness or privacy. 私 (I/me) contains this radical. Opposite of 公 (public)."},
+  {"id":28,"radical":"厶","strokes":2,"meaning":"private","reading":"む","variants":[],"examples":["私","公"],"desc":"Selfishness or privacy. 私 (I/me) contains this radical. Opposite of 公 (public)."},
   {"id":29,"radical":"又","strokes":2,"meaning":"again","reading":"また","variants":[],"examples":["又","友","取"],"desc":"A right hand — means 'again' or 'also'. Original pictograph of a hand. 友 (friend) = two hands."},
   {"id":30,"radical":"口","strokes":3,"meaning":"mouth","reading":"くち","variants":[],"examples":["口","日","言"],"desc":"A square opening — the mouth. One of the most common radicals, found in hundreds of kanji."},
   {"id":31,"radical":"囗","strokes":3,"meaning":"enclosure","reading":"くにがまえ","variants":[],"examples":["国","囲","園"],"desc":"A full enclosure (big square). Wraps completely around the inside element. 国 (country)."},

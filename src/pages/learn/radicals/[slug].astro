@@ -3,7 +3,7 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
 import { radicals, toSlug, getBySlug, getKanjiByChar } from "@/lib/radicals"
 
 export function getStaticPaths() {
-  return radicals.map((r) => ({ params: { slug: toSlug(r.meaning, r.id, r.slug) } }))
+  return radicals.map((r) => ({ params: { slug: toSlug(r.radical) } }))
 }
 
 const slug = Astro.params.slug!
@@ -29,14 +29,14 @@ const next = idx < radicals.length - 1 ? radicals[idx + 1] : null
 
     <div class="flex justify-between items-center mb-6">
       {prev ? (
-        <a href={`/learn/radicals/${toSlug(prev.meaning, prev.id, prev.slug)}/`} class="flex items-center gap-1.5 text-xs text-ink/50 hover:text-ink transition-colors">
+        <a href={`/learn/radicals/${toSlug(prev.radical)}/`} class="flex items-center gap-1.5 text-xs text-ink/50 hover:text-ink transition-colors">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
           {prev.radical} {prev.meaning}
         </a>
       ) : <div />}
       <span class="text-xs text-ink/30">#{radical.id} / 214</span>
       {next ? (
-        <a href={`/learn/radicals/${toSlug(next.meaning, next.id, next.slug)}/`} class="flex items-center gap-1.5 text-xs text-ink/50 hover:text-ink transition-colors">
+        <a href={`/learn/radicals/${toSlug(next.radical)}/`} class="flex items-center gap-1.5 text-xs text-ink/50 hover:text-ink transition-colors">
           {next.radical} {next.meaning}
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
         </a>
