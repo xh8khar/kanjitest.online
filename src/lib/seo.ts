@@ -1,4 +1,4 @@
-const SITE_URL = import.meta.env.PUBLIC_SITE_URL ?? "https://kanjitest.online"
+const SITE_URL = import.meta.env.PUBLIC_SITE_URL ?? "https://www.kanjitest.online"
 const SITE_NAME = "Kanji Test Online"
 
 export function siteUrl(path = ""): string {
