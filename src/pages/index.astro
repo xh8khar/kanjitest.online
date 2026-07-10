@@ -3,16 +3,6 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
 import { getAll, getVocabulary } from "@/lib/kanji"
 import { LEVELS, LEVEL_IDS, SETS_PER_LEVEL, QUESTIONS_PER_SET } from "@/lib/levels"
 import { collectionPageSchema } from "@/lib/seo"
-import KanjiSearchBar from "@/components/KanjiSearchBar"
-
-const allKanji = LEVEL_IDS.flatMap((id) =>
-  getAll(id).map((k) => ({
-    kanji: k.kanji,
-    meaning: k.meanings[0],
-    level: id,
-    url: `/${id}/study/${k.kanji}/`,
-  }))
-)
 
 const levels = LEVEL_IDS.map((id) => ({
   ...LEVELS[id],
@@ -103,11 +93,7 @@ const jsonLd = collectionPageSchema(
         for every level from N5 to N1 — no account, no paywall.
       </p>
 
-      <div class="mt-8 sm:mt-9 animate-fade-up" style="animation-delay: 200ms">
-        <KanjiSearchBar client:load items={allKanji} />
-      </div>
-
-      <div class="flex flex-wrap justify-center gap-3 mt-6 sm:mt-8 animate-fade-up" style="animation-delay: 240ms">
+      <div class="flex flex-wrap justify-center gap-3 mt-8 sm:mt-10 animate-fade-up" style="animation-delay: 240ms">
         <a href="/n5/study/" class="btn btn-accent h-12 sm:h-13 px-7 sm:px-9 text-sm sm:text-base">
           Start studying
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
