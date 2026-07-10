@@ -183,7 +183,7 @@ export default function FlashcardsClient({ level, entry, index, total, prevKanji
           tabIndex={0}
           aria-label={flipped ? "Show kanji" : "Reveal readings and meanings"}
           onClick={() => setFlipped((f) => !f)}
-          className={`relative w-full min-h-[320px] sm:min-h-[380px] preserve-3d cursor-pointer transition-transform duration-500 [transition-timing-function:cubic-bezier(0.34,1.3,0.5,1)] ${
+          className={`relative w-full min-h-[320px] sm:min-h-[380px] preserve-3d cursor-pointer transition-transform duration-[280ms] [transition-timing-function:cubic-bezier(0.34,1.3,0.5,1)] ${
             flipped ? "rotate-y-180" : ""
           }`}
         >
