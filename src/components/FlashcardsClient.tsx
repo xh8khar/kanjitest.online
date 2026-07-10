@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef } from "react"
+import { useEffect, useState, useCallback, useRef, useMemo } from "react"
 import { navigate } from "astro:transitions/client"
 
 const STORAGE_KEY = "kanjitest_flashcards"
@@ -21,6 +21,12 @@ export interface CardEntry {
   examples: CardExample[]
 }
 
+interface KanjiLight {
+  kanji: string
+  id: number
+  meaning: string
+}
+
 interface Props {
   level: string
   entry: CardEntry
@@ -28,6 +34,7 @@ interface Props {
   total: number
   prevKanji: string | null
   nextKanji: string | null
+  allKanji: KanjiLight[]
 }
 
 interface FlashcardState {
@@ -48,13 +55,28 @@ function saveState(key: string, s: FlashcardState) {
   } catch {}
 }
 
-export default function FlashcardsClient({ level, entry, index, total, prevKanji, nextKanji }: Props) {
+export default function FlashcardsClient({ level, entry, index, total, prevKanji, nextKanji, allKanji }: Props) {
   const storageKey = `${STORAGE_KEY}_${level}`
   const [state, setState] = useState<FlashcardState>({ known: [] })
   const [flipped, setFlipped] = useState(false)
   const [leaving, setLeaving] = useState<"left" | "right" | null>(null)
+  const [showJump, setShowJump] = useState(false)
+  const [search, setSearch] = useState("")
   const touchX = useRef<number | null>(null)
+  const searchRef = useRef<HTMLInputElement>(null)
   const prefix = `/${level}`
+
+  const filtered = useMemo(() => {
+    if (!search.trim()) return allKanji
+    const q = search.trim().toLowerCase()
+    return allKanji.filter(
+      (k) => k.kanji.includes(q) || k.meaning.toLowerCase().includes(q)
+    )
+  }, [allKanji, search])
+
+  useEffect(() => {
+    if (showJump && searchRef.current) searchRef.current.focus()
+  }, [showJump])
 
   useEffect(() => {
     setState(loadState(storageKey))
@@ -92,6 +114,10 @@ export default function FlashcardsClient({ level, entry, index, total, prevKanji
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (showJump) {
+        if (e.key === "Escape") setShowJump(false)
+        return
+      }
       if (e.key === " " || e.key === "Enter") {
         e.preventDefault()
         setFlipped((f) => !f)
@@ -107,7 +133,7 @@ export default function FlashcardsClient({ level, entry, index, total, prevKanji
     }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
-  }, [go, mark, nextKanji, prevKanji])
+  }, [go, mark, nextKanji, prevKanji, showJump])
 
   const isKnown = state.known.includes(entry.id)
   const knownCount = state.known.length
@@ -123,9 +149,14 @@ export default function FlashcardsClient({ level, entry, index, total, prevKanji
             Card {index + 1} of {total} · {knownCount} known
           </p>
         </div>
-        <a href={`${prefix}/flashcards/`} className="btn btn-ghost h-9 px-3.5 text-xs">
-          All cards
-        </a>
+        <div className="flex items-center gap-2">
+          <button onClick={() => { setShowJump(true); setSearch("") }} className="btn btn-ghost h-9 px-3 text-xs">
+            Jump to
+          </button>
+          <a href={`${prefix}/flashcards/`} className="btn btn-ghost h-9 px-3.5 text-xs">
+            All cards
+          </a>
+        </div>
       </div>
 
       {/* Card — outer wrapper handles the fast exit fade so the answer
@@ -246,6 +277,70 @@ export default function FlashcardsClient({ level, entry, index, total, prevKanji
           />
         </div>
       </div>
+
+      {/* Jump-to-kanji overlay */}
+      {showJump && (
+        <div
+          className="fixed inset-0 z-50 flex items-start justify-center pt-12 sm:pt-20 px-4 animate-fade-in"
+          onClick={() => setShowJump(false)}
+        >
+          <div className="absolute inset-0 bg-ink/40 backdrop-blur-sm" />
+          <div
+            className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl shadow-ink/20 border border-ink/10 max-h-[70vh] flex flex-col animate-pop"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Search header */}
+            <div className="flex items-center gap-3 p-4 border-b border-ink/8">
+              <input
+                ref={searchRef}
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search kanji or meaning…"
+                className="flex-1 bg-ink/[0.03] border border-ink/12 rounded-xl px-4 h-11 text-sm text-ink outline-none focus:border-vermilion/50 focus:bg-white transition-colors placeholder:text-ink/30"
+              />
+              <button
+                onClick={() => setShowJump(false)}
+                className="btn btn-ghost h-9 px-3 text-xs shrink-0"
+              >
+                ✕
+              </button>
+            </div>
+            {/* Grid */}
+            <div className="flex-1 overflow-y-auto p-4 scrollbar-none">
+              {filtered.length === 0 ? (
+                <p className="text-sm text-ink/40 text-center py-8">No kanji match "{search}"</p>
+              ) : (
+                <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-1.5">
+                  {filtered.map((k) => (
+                    <button
+                      key={k.id}
+                      onClick={() => {
+                        setShowJump(false)
+                        setFlipped(false)
+                        navigate(`${prefix}/flashcards/${k.kanji}/`)
+                      }}
+                      className={`kanji-tile relative flex flex-col items-center justify-center py-2 px-1 cursor-pointer ${
+                        k.id === entry.id
+                          ? "ring-2 ring-vermilion bg-vermilion/5 border-vermilion/30"
+                          : ""
+                      }`}
+                    >
+                      <span className="text-lg font-jp font-black text-ink leading-none">{k.kanji}</span>
+                      <span className="text-[9px] text-ink/40 mt-1 leading-tight text-center truncate w-full">
+                        {k.meaning}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div className="px-4 py-2.5 border-t border-ink/8 text-[11px] text-ink/30 text-center">
+              {filtered.length} of {allKanji.length} kanji
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react"
+import { navigate } from "astro:transitions/client"
 
 export interface QuizQuestion {
   kanjiId: number
@@ -60,10 +61,63 @@ function ScoreRing({ pct }: { pct: number }) {
   )
 }
 
+const SET_COUNT = 20
+
+function JumpSetOverlay({
+  setNum,
+  prefix,
+  onClose,
+}: {
+  setNum: number
+  prefix: string
+  onClose: () => void
+}) {
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-start justify-center pt-12 sm:pt-20 px-4 animate-fade-in"
+      onClick={onClose}
+    >
+      <div className="absolute inset-0 bg-ink/40 backdrop-blur-sm" />
+      <div
+        className="relative w-full max-w-sm bg-white rounded-2xl shadow-2xl shadow-ink/20 border border-ink/10 animate-pop"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between p-4 border-b border-ink/8">
+          <span className="text-sm font-bold text-ink">Jump to set</span>
+          <button onClick={onClose} className="btn btn-ghost h-8 px-2.5 text-xs">
+            ✕
+          </button>
+        </div>
+        <div className="p-4">
+          <div className="grid grid-cols-5 gap-2">
+            {Array.from({ length: SET_COUNT }, (_, i) => i + 1).map((n) => (
+              <button
+                key={n}
+                onClick={() => {
+                  onClose()
+                  navigate(`${prefix}/sets/${n}/`)
+                }}
+                className={`h-10 rounded-xl text-sm font-bold transition-all duration-200 ${
+                  n === setNum
+                    ? "bg-ink text-white shadow-md shadow-ink/20"
+                    : "bg-ink/[0.04] text-ink/60 border border-ink/10 hover:border-ink/30 hover:bg-ink/[0.06]"
+                }`}
+              >
+                {n}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function TestClient({ level, setNum, questions }: Props) {
   const [idx, setIdx] = useState(0)
   const [answers, setAnswers] = useState<(string | null)[]>(() => questions.map(() => null))
   const [finished, setFinished] = useState(false)
+  const [showJump, setShowJump] = useState(false)
   const prefix = `/${level}`
 
   const q = questions[idx]
@@ -97,6 +151,10 @@ export default function TestClient({ level, setNum, questions }: Props) {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (showJump) {
+        if (e.key === "Escape") setShowJump(false)
+        return
+      }
       if (finished) return
       const current = questions[idx]
       const currentAnswer = answers[idx]
@@ -119,61 +177,71 @@ export default function TestClient({ level, setNum, questions }: Props) {
       pct === 100 ? "Perfect score! 完璧です！" : pct >= 80 ? "Great job! すごい！" : pct >= 50 ? "Keep practicing! がんばって！" : "Review and try again — 一歩ずつ。"
 
     return (
-      <div className="max-w-xl mx-auto px-4 py-8 animate-fade-up">
-        <div className="card p-6 sm:p-8 text-center shadow-lg shadow-ink/5">
-          <p className="text-xs font-bold uppercase tracking-widest text-ink/40 mb-5">
-            Set {setNum} · complete
-          </p>
-          <ScoreRing pct={pct} />
-          <p className="text-lg font-black text-ink mt-4 animate-pop" style={{ animationDelay: "300ms" }}>
-            {correctCount} / {questions.length}
-          </p>
-          <p className="text-sm text-ink/60 mt-1">{message}</p>
-
-          <div className="grid grid-cols-2 gap-2.5 mt-6">
-            <button onClick={restart} className="btn btn-ghost h-12 text-sm">
-              ↻ Retry set
-            </button>
-            <a
-              href={`${prefix}/sets/${setNum < 20 ? setNum + 1 : 1}/`}
-              className="btn btn-primary h-12 text-sm"
-            >
-              Next set →
-            </a>
-          </div>
-        </div>
-
-        {wrong.length > 0 && (
-          <div className="mt-6">
-            <p className="text-xs font-bold uppercase tracking-widest text-ink/40 mb-3">
-              Review these {wrong.length} {wrong.length === 1 ? "kanji" : "kanji"}
+      <>
+        <div className="max-w-xl mx-auto px-4 py-8 animate-fade-up">
+          <div className="card p-6 sm:p-8 text-center shadow-lg shadow-ink/5">
+            <p className="text-xs font-bold uppercase tracking-widest text-ink/40 mb-5">
+              Set {setNum} · complete
             </p>
-            <div className="space-y-2">
-              {wrong.map(({ q: qq, given }, i) => (
-                <a
-                  key={i}
-                  href={`${prefix}/study/${qq.kanji}/`}
-                  className="card card-hover group flex items-center gap-3.5 px-4 py-3 reveal is-visible animate-fade-up"
-                  style={{ animationDelay: `${i * 70}ms` }}
-                >
-                  <span className="w-11 h-11 rounded-xl bg-vermilion/10 flex items-center justify-center text-xl font-jp font-bold text-ink shrink-0">
-                    {qq.kanji}
-                  </span>
-                  <span className="flex-1 min-w-0 text-left">
-                    <span className="block text-sm font-bold text-ink truncate">
-                      {qq.prompt} → {qq.correct}
-                    </span>
-                    <span className="block text-[11px] text-ink/50 truncate">
-                      you answered: {given ?? "—"}
-                    </span>
-                  </span>
-                  <span className="text-xs text-ink/40 group-hover:text-vermilion transition-colors shrink-0">study →</span>
-                </a>
-              ))}
+            <ScoreRing pct={pct} />
+            <p className="text-lg font-black text-ink mt-4 animate-pop" style={{ animationDelay: "300ms" }}>
+              {correctCount} / {questions.length}
+            </p>
+            <p className="text-sm text-ink/60 mt-1">{message}</p>
+
+            <div className="grid grid-cols-2 gap-2.5 mt-6">
+              <button onClick={restart} className="btn btn-ghost h-12 text-sm">
+                ↻ Retry set
+              </button>
+              <a
+                href={`${prefix}/sets/${setNum < 20 ? setNum + 1 : 1}/`}
+                className="btn btn-primary h-12 text-sm"
+              >
+                Next set →
+              </a>
             </div>
           </div>
+
+          {wrong.length > 0 && (
+            <div className="mt-6">
+              <p className="text-xs font-bold uppercase tracking-widest text-ink/40 mb-3">
+                Review these {wrong.length} {wrong.length === 1 ? "kanji" : "kanji"}
+              </p>
+              <div className="space-y-2">
+                {wrong.map(({ q: qq, given }, i) => (
+                  <a
+                    key={i}
+                    href={`${prefix}/study/${qq.kanji}/`}
+                    className="card card-hover group flex items-center gap-3.5 px-4 py-3 reveal is-visible animate-fade-up"
+                    style={{ animationDelay: `${i * 70}ms` }}
+                  >
+                    <span className="w-11 h-11 rounded-xl bg-vermilion/10 flex items-center justify-center text-xl font-jp font-bold text-ink shrink-0">
+                      {qq.kanji}
+                    </span>
+                    <span className="flex-1 min-w-0 text-left">
+                      <span className="block text-sm font-bold text-ink truncate">
+                        {qq.prompt} → {qq.correct}
+                      </span>
+                      <span className="block text-[11px] text-ink/50 truncate">
+                        you answered: {given ?? "—"}
+                      </span>
+                    </span>
+                    <span className="text-xs text-ink/40 group-hover:text-vermilion transition-colors shrink-0">study →</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {showJump && (
+          <JumpSetOverlay
+            setNum={setNum}
+            prefix={prefix}
+            onClose={() => setShowJump(false)}
+          />
         )}
-      </div>
+      </>
     )
   }
 
@@ -191,9 +259,14 @@ export default function TestClient({ level, setNum, questions }: Props) {
             Question {idx + 1} of {questions.length}
           </p>
         </div>
-        <a href={`${prefix}/sets/`} className="btn btn-ghost h-9 px-3.5 text-xs">
-          All sets
-        </a>
+        <div className="flex items-center gap-2">
+          <button onClick={() => setShowJump(true)} className="btn btn-ghost h-9 px-3 text-xs">
+            Jump to
+          </button>
+          <a href={`${prefix}/sets/`} className="btn btn-ghost h-9 px-3.5 text-xs">
+            All sets
+          </a>
+        </div>
       </div>
 
       <div className="flex gap-1 mb-6" aria-hidden="true">
@@ -299,6 +372,11 @@ export default function TestClient({ level, setNum, questions }: Props) {
       <p className="text-[11px] text-ink/35 text-center mt-4 hidden sm:block">
         keys 1–4 = answer · enter = next
       </p>
+
+      {/* Jump-to-set overlay */}
+      {showJump && (
+        <JumpSetOverlay setNum={setNum} prefix={prefix} onClose={() => setShowJump(false)} />
+      )}
     </div>
   )
 }

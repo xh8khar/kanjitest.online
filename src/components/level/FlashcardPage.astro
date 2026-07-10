@@ -27,6 +27,9 @@ const entry = {
   examples: k.examples.slice(0, 2),
 }
 
+// Lightweight list for the jump-to-kanji overlay
+const allKanji = all.map((x) => ({ kanji: x.kanji, id: x.id, meaning: x.meanings[0] }))
+
 const title = `Flashcard: ${k.kanji} (${k.meanings[0]}) — JLPT ${meta.label}`
 const description = `Flashcard for JLPT ${meta.label} kanji ${k.kanji} (${k.meanings[0]}). Flip to see readings, meanings, and example words.`
 ---
@@ -40,5 +43,6 @@ const description = `Flashcard for JLPT ${meta.label} kanji ${k.kanji} (${k.mean
     total={all.length}
     prevKanji={idx > 0 ? all[idx - 1].kanji : null}
     nextKanji={idx < all.length - 1 ? all[idx + 1].kanji : null}
+    allKanji={allKanji}
   />
 </DefaultLayout>
