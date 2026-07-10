@@ -16,11 +16,30 @@ export const GET: APIRoute = async () => {
   const blogPosts = await getCollection("blog")
   const publishedBlogPosts = blogPosts.filter((p) => !p.data.draft)
 
+  const toolSlugs = [
+    "age-converter", "body-parts", "color-names", "counter-reference",
+    "daily-challenge", "date-converter", "direction-words", "family-terms",
+    "flashcard-exporter", "food-drink", "japanese-clock", "jlpt-countdown",
+    "jlpt-level-guide", "jlpt-score-checker", "kana-chart", "kana-converter",
+    "kana-quiz", "kanji-by-level", "kanji-dictionary", "kanji-flash-quiz",
+    "kanji-grid", "kanji-highlighter", "memory-match", "name-to-katakana",
+    "number-to-japanese", "particle-guide", "professions", "random-kanji",
+    "reading-quiz", "reading-time", "romaji-converter", "streak-tracker",
+    "study-timer", "text-analyzer", "time-guide", "typing-practice",
+    "vocab-quiz", "weather-vocab", "word-counter", "word-match",
+  ]
+
   const entries: UrlEntry[] = [
     { loc: BASE, priority: "1.0", changefreq: "weekly" },
     { loc: `${BASE}/blog/`, priority: "0.8", changefreq: "weekly" },
     ...publishedBlogPosts.map((p) => ({
       loc: `${BASE}/blog/${p.id}/`,
+      priority: "0.7" as const,
+      changefreq: "monthly" as const,
+    })),
+    { loc: `${BASE}/tools/`, priority: "0.8", changefreq: "weekly" },
+    ...toolSlugs.map((slug) => ({
+      loc: `${BASE}/tools/${slug}/`,
       priority: "0.7" as const,
       changefreq: "monthly" as const,
     })),
