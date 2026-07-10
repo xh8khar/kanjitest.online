@@ -30,6 +30,10 @@ const isSubActive = (id: string, sub: string) => path.startsWith(`/${id}/${sub}/
         Blog
         <span class="nav-bar" />
       </a>
+      <a href="/tools/" class:list={["nav-lv", { on: path.startsWith("/tools/") }]}>
+        Tools
+        <span class="nav-bar" />
+      </a>
       {LEVEL_IDS.map((id) => (
         <div class="relative h-full group">
           <a href={`/${id}/`} class:list={["nav-lv", { on: isLevelActive(id) }]}>
@@ -72,6 +76,10 @@ const isSubActive = (id: string, sub: string) => path.startsWith(`/${id}/${sub}/
         <a href="/blog/" class:list={["m-sub mb-1.5 flex items-center gap-2.5 px-3 py-2.5 rounded-xl w-full text-sm font-bold font-semibold tracking-tight", { on: path.startsWith("/blog/") || path === "/blog" }]}>
           <span class="text-base">✍️</span>
           Blog
+        </a>
+        <a href="/tools/" class:list={["m-sub mb-1.5 flex items-center gap-2.5 px-3 py-2.5 rounded-xl w-full text-sm font-bold font-semibold tracking-tight", { on: path.startsWith("/tools/") || path === "/tools" }]}>
+          <span class="text-base">🔧</span>
+          Tools
         </a>
         {LEVEL_IDS.map((id) => {
           const lv = LEVELS[id]

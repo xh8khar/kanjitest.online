@@ -1,0 +1,89 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+---
+
+<DefaultLayout title="Kanji by JLPT Level — Browse All Kanji" description="Browse all kanji characters grouped by JLPT level N5 to N1. Search, filter, and click any character for full details." keywords="kanji by level, JLPT kanji list, N5 kanji, N4 kanji, N3 kanji, N2 kanji, N1 kanji, browse kanji, search kanji by level">
+  <div class="max-w-5xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">Kanji by Level</h1>
+      <p class="text-sm text-ink/60 mt-2">Browse all kanji grouped by JLPT level. Search or filter to find any character.</p>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-3 mb-6 animate-fade-up" style="animation-delay: 60ms">
+      <div class="flex flex-wrap gap-1.5">
+        {["all", "n5", "n4", "n3", "n2", "n1"].map((l) => (
+          <button class="lv-btn on btn h-9 px-3.5 text-xs rounded-full" data-lv={l}>{l === "all" ? "All" : l.toUpperCase()}</button>
+        ))}
+      </div>
+      <input id="search-input" class="flex-1 min-w-[160px] h-9 rounded-xl border border-ink/15 bg-white px-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-vermilion/40 focus:border-vermilion/60 transition-all" placeholder="Search kanji or meaning…" />
+    </div>
+
+    <div id="stats-bar" class="text-xs text-ink/40 mb-4 animate-fade-up flex items-center gap-2" style="animation-delay: 80ms">
+      <span id="count-label">Loading...</span>
+    </div>
+
+    <div id="grid" class="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-1.5 sm:gap-2"></div>
+  </div>
+</DefaultLayout>
+
+<script>
+  type Entry = { kanji: string; kun: string[]; on: string[]; meanings: string[]; strokes: number; level: string }
+  let data: Entry[] = []
+  let activeLevel = "all"
+  let search = ""
+
+  const grid = document.getElementById("grid")!
+  const countLabel = document.getElementById("count-label")!
+  const searchInput = document.getElementById("search-input") as HTMLInputElement
+
+  fetch("/api/kanji.json").then(r => r.json()).then(d => { data = d; render() })
+
+  function render() {
+    let filtered = data
+    if (activeLevel !== "all") filtered = filtered.filter(e => e.level === activeLevel)
+    if (search) {
+      const q = search.toLowerCase()
+      filtered = filtered.filter(e =>
+        e.kanji.includes(q) ||
+        e.meanings.some(m => m.toLowerCase().includes(q)) ||
+        e.on.some(o => o.toLowerCase().includes(q)) ||
+        e.kun.some(k => k.includes(q))
+      )
+    }
+    countLabel.textContent = `${filtered.length.toLocaleString()} kanji${search ? " matching" : ""}`
+    grid.innerHTML = filtered.map(e =>
+      `<a href="/${e.level}/study/${encodeURIComponent(e.kanji)}/" class="kanji-tile p-2 sm:p-2.5 reveal">
+        <span class="block text-lg sm:text-xl font-jp font-bold text-ink leading-none">${e.kanji}</span>
+        <span class="block text-[10px] text-ink/40 mt-0.5 leading-tight uppercase">${e.level}</span>
+        <span class="block text-[10px] text-ink/50 mt-0.5 leading-tight truncate">${e.kun[0]?.replace(/\..+$/, "") || e.on[0] || ""}</span>
+      </a>`
+    ).join("")
+  }
+
+  document.querySelectorAll(".lv-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".lv-btn").forEach(b => b.classList.remove("on"))
+      btn.classList.add("on")
+      activeLevel = (btn as HTMLElement).dataset.lv!
+      render()
+    })
+  })
+
+  searchInput.addEventListener("input", () => { search = searchInput.value; render() })
+</script>
+
+<style>
+  .kanji-tile {
+    display: block;
+    text-align: center;
+    background: #fff;
+    border: 1px solid color-mix(in srgb, var(--color-ink) 8%, transparent);
+    border-radius: 0.75rem;
+    transition: all 0.2s ease;
+  }
+  .kanji-tile:hover {
+    border-color: color-mix(in srgb, var(--color-ink) 25%, transparent);
+    box-shadow: 0 4px 12px -4px color-mix(in srgb, var(--color-ink) 8%, transparent);
+    translate: 0 -1px;
+  }
+</style>

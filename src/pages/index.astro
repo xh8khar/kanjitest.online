@@ -238,6 +238,33 @@ const faqSchema = {
     </div>
   </section>
 
+  <!-- ———————— Tools ———————— -->
+  <section class="border-t border-ink/5 bg-white/30">
+    <div class="max-w-5xl mx-auto px-4 py-16 sm:py-24">
+      <h2 class="text-2xl sm:text-4xl font-black text-ink text-center reveal">Japanese study tools</h2>
+      <p class="text-sm sm:text-base text-ink/60 text-center mt-3 max-w-xl mx-auto reveal" style="--reveal-delay: 80ms">
+        Practical tools for kana conversion, kanji lookup, text analysis, and more.
+      </p>
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mt-8 sm:mt-10">
+        {["🔀", "📖", "🎨", "✅", "⚡", "📅", "⏱️"].map((icon, i) => (
+          <a href={["/tools/kana-converter/", "/tools/kanji-dictionary/", "/tools/kanji-highlighter/", "/tools/jlpt-score-checker/", "/tools/kanji-flash-quiz/", "/tools/date-converter/", "/tools/study-timer/"][i]}
+            class="card card-hover group p-4 sm:p-5 text-center reveal"
+            style={`--reveal-delay: ${i * 60}ms`}
+          >
+            <span class="inline-flex w-10 h-10 items-center justify-center rounded-xl bg-ink/[0.04] text-xl transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6">{icon}</span>
+            <p class="text-xs font-bold text-ink mt-2 group-hover:text-vermilion transition-colors">{["Kana Converter", "Kanji Dictionary", "Kanji Highlighter", "Score Checker", "Flash Quiz", "Date Converter", "Study Timer"][i]}</p>
+          </a>
+        ))}
+      </div>
+      <div class="flex justify-center mt-6">
+        <a href="/tools/" class="btn btn-ghost h-10 px-5 text-xs font-semibold reveal">
+          View all tools
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <!-- ———————— Levels ———————— -->
   <section id="levels" class="border-t border-ink/5 scroll-mt-14">
     <div class="max-w-5xl mx-auto px-4 py-16 sm:py-24">

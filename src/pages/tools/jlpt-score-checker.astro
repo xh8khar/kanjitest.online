@@ -1,0 +1,111 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+---
+
+<DefaultLayout title="JLPT Score Checker — Pass/Fail Estimator" description="Estimate your JLPT exam result. Input your section scores for Language Knowledge, Reading, and Listening to check if you pass." keywords="JLPT score checker, JLPT pass fail calculator, JLPT score estimator, Japanese test score, JLPT passing score, JLPT section scores">
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">JLPT Score Checker</h1>
+      <p class="text-sm text-ink/60 mt-2">Estimate your JLPT result based on section scores. Uses official pass/fail criteria.</p>
+    </div>
+
+    <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay: 80ms">
+      <label class="text-xs font-bold uppercase tracking-widest text-ink/40 mb-3 block">Select your JLPT level</label>
+      <div class="flex flex-wrap gap-2 mb-6">
+        {["N5", "N4", "N3", "N2", "N1"].map((l) => (
+          <button class="sc-lvl on btn h-9 px-4 text-xs rounded-full" data-lvl={l.toLowerCase()}>{l}</button>
+        ))}
+      </div>
+
+      <div class="space-y-4">
+        {[{ id: "vocab", label: "Language Knowledge (Vocabulary/Grammar)", max: 60 },
+          { id: "reading", label: "Reading", max: 60 },
+          { id: "listening", label: "Listening", max: 60 }].map((s) => (
+          <div>
+            <label class="text-xs text-ink/60 mb-1.5 flex justify-between" for={`sc-${s.id}`}>
+              <span>{s.label}</span>
+              <span id={`sc-${s.id}-val`} class="font-bold text-ink">0 / {s.max}</span>
+            </label>
+            <input id={`sc-${s.id}`} type="range" min="0" max={s.max} value="0" class="sc-slider w-full" data-max={s.max} />
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="card p-5 sm:p-6 mt-4 animate-fade-up text-center" style="animation-delay: 140ms">
+      <div class="text-[11px] text-ink/40 font-medium uppercase tracking-wider mb-1">Total score</div>
+      <div id="sc-total" class="text-3xl sm:text-4xl font-black text-ink">0 / 180</div>
+      <div id="sc-verdict" class="mt-3 text-sm font-bold"></div>
+    </div>
+  </div>
+</DefaultLayout>
+
+<script>
+  const PASS_THRESHOLD: Record<string, number> = { n5: 80, n4: 90, n3: 95, n2: 90, n1: 100 }
+  const SECTION_MIN = 19
+
+  let activeLvl = "n5"
+  const vocab = document.getElementById("sc-vocab") as HTMLInputElement
+  const reading = document.getElementById("sc-reading") as HTMLInputElement
+  const listening = document.getElementById("sc-listening") as HTMLInputElement
+  const totalEl = document.getElementById("sc-total")!
+  const verdictEl = document.getElementById("sc-verdict")!
+
+  function update() {
+    const v = parseInt(vocab.value), r = parseInt(reading.value), l = parseInt(listening.value)
+    const total = v + r + l
+    const pass = PASS_THRESHOLD[activeLvl]
+    totalEl.textContent = `${total} / 180`
+    document.getElementById("sc-vocab-val")!.textContent = `${v} / ${vocab.dataset.max}`
+    document.getElementById("sc-reading-val")!.textContent = `${r} / ${reading.dataset.max}`
+    document.getElementById("sc-listening-val")!.textContent = `${l} / ${listening.dataset.max}`
+
+    if (total === 0) { verdictEl.textContent = ""; return }
+    const sectionOk = v >= SECTION_MIN && r >= SECTION_MIN && l >= SECTION_MIN
+    const totalOk = total >= pass
+    if (totalOk && sectionOk) {
+      verdictEl.textContent = `✓ Pass (${activeLvl.toUpperCase()}) — meets all criteria`
+      verdictEl.style.color = "var(--color-emerald, #10b981)"
+    } else if (!sectionOk) {
+      verdictEl.textContent = `✗ Fail — one or more sections below ${SECTION_MIN}/60`
+      verdictEl.style.color = "var(--color-vermilion)"
+    } else {
+      verdictEl.textContent = `✗ Fail — total ${total}/${180} needs ${pass}/${180} to pass`
+      verdictEl.style.color = "var(--color-vermilion)"
+    }
+  }
+
+  [vocab, reading, listening].forEach(el => el.addEventListener("input", update))
+
+  document.querySelectorAll(".sc-lvl").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".sc-lvl").forEach(b => b.classList.remove("on"))
+      btn.classList.add("on")
+      activeLvl = (btn as HTMLElement).dataset.lvl!
+      update()
+    })
+  })
+
+  update()
+</script>
+
+<style>
+  .sc-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    border-radius: 3px;
+    background: color-mix(in srgb, var(--color-ink) 12%, transparent);
+    outline: none;
+  }
+  .sc-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--color-vermilion);
+    cursor: pointer;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 6px color-mix(in srgb, var(--color-ink) 15%, transparent);
+  }
+</style>

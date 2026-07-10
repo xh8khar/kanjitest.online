@@ -1,0 +1,98 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+---
+
+<DefaultLayout title="Japanese Date Converter — Convert Dates to Japanese Format" description="Convert Western dates to Japanese calendar format. Shows year, month, day in kanji with era names (Reiwa, Heisei, Showa)." keywords="Japanese date converter, date to Japanese, Western to Japanese date, Reiwa date, Japanese calendar converter, Japanese era converter, Japanese year converter">
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">Japanese Date Converter</h1>
+      <p class="text-sm text-ink/60 mt-2">Convert dates to Japanese format with era names and kanji numerals.</p>
+    </div>
+
+    <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay: 80ms">
+      <label class="text-xs font-bold uppercase tracking-widest text-ink/40 mb-3 block">Select a date</label>
+      <div class="grid grid-cols-3 gap-3">
+        <div>
+          <label class="text-xs text-ink/50 mb-1 block">Year</label>
+          <input id="dc-year" type="number" class="w-full h-11 rounded-xl border border-ink/15 bg-white px-3.5 text-base focus:outline-none focus:ring-2 focus:ring-vermilion/40 focus:border-vermilion/60 transition-all" value="2026" min="1900" max="2100" />
+        </div>
+        <div>
+          <label class="text-xs text-ink/50 mb-1 block">Month</label>
+          <select id="dc-month" class="w-full h-11 rounded-xl border border-ink/15 bg-white px-3.5 text-base focus:outline-none focus:ring-2 focus:ring-vermilion/40 focus:border-vermilion/60 transition-all">
+            {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => <option value={m} selected={m === 7}>{m}</option>)}
+          </select>
+        </div>
+        <div>
+          <label class="text-xs text-ink/50 mb-1 block">Day</label>
+          <select id="dc-day" class="w-full h-11 rounded-xl border border-ink/15 bg-white px-3.5 text-base focus:outline-none focus:ring-2 focus:ring-vermilion/40 focus:border-vermilion/60 transition-all">
+            {Array.from({ length: 31 }, (_, i) => i + 1).map((d) => <option value={d} selected={d === 10}>{d}</option>)}
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card p-5 sm:p-6 mt-4 animate-fade-up" style="animation-delay: 120ms" id="dc-result">
+      <div class="text-[11px] text-ink/40 font-medium uppercase tracking-wider mb-3">Formats</div>
+      <div class="space-y-3 text-sm">
+        <div class="flex justify-between items-center border-b border-ink/5 pb-2">
+          <span class="text-ink/50">Full Japanese</span>
+          <span id="dc-full" class="font-jp font-bold text-ink text-base"></span>
+        </div>
+        <div class="flex justify-between items-center border-b border-ink/5 pb-2">
+          <span class="text-ink/50">Era name</span>
+          <span id="dc-era" class="font-jp font-bold text-ink text-base"></span>
+        </div>
+        <div class="flex justify-between items-center border-b border-ink/5 pb-2">
+          <span class="text-ink/50">Kanji numerals</span>
+          <span id="dc-kanji" class="font-jp font-bold text-ink text-base"></span>
+        </div>
+        <div class="flex justify-between items-center pb-2">
+          <span class="text-ink/50">ISO format</span>
+          <span id="dc-iso" class="font-mono text-sm text-ink/70"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</DefaultLayout>
+
+<script>
+  const DIGITS = ["〇", "一", "二", "三", "四", "五", "六", "七", "八", "九"]
+  const MONTHS = ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"]
+  const OLD_DAYS = ["一日", "二日", "三日", "四日", "五日", "六日", "七日", "八日", "九日", "十日",
+    "十一日", "十二日", "十三日", "十四日", "十五日", "十六日", "十七日", "十八日", "十九日", "二十日",
+    "二十一日", "二十二日", "二十三日", "二十四日", "二十五日", "二十六日", "二十七日", "二十八日", "二十九日", "三十日",
+    "三十一日"]
+
+  interface Era { name: string; kanji: string; start: number }
+  const ERAS: Era[] = [
+    { name: "Reiwa", kanji: "令和", start: 2019 },
+    { name: "Heisei", kanji: "平成", start: 1989 },
+    { name: "Showa", kanji: "昭和", start: 1926 },
+  ]
+
+  function toKanjiNum(n: number): string {
+    return String(n).split("").map(ch => DIGITS[parseInt(ch)]).join("")
+  }
+
+  function convert() {
+    const y = parseInt((document.getElementById("dc-year") as HTMLInputElement).value)
+    const m = parseInt((document.getElementById("dc-month") as HTMLSelectElement).value)
+    const d = parseInt((document.getElementById("dc-day") as HTMLSelectElement).value)
+    if (!y || !m || !d) return
+
+    const era = ERAS.find(e => y >= e.start) || ERAS[ERAS.length - 1]
+    const eraYear = y - era.start + 1
+    const eraYearStr = eraYear === 1 ? "元" : toKanjiNum(eraYear)
+
+    document.getElementById("dc-full")!.textContent = `${era.kanji}${eraYearStr}年${MONTHS[m - 1]}${OLD_DAYS[d - 1]}`
+    document.getElementById("dc-era")!.textContent = `${era.kanji} ${eraYear}年 ${m}月 ${d}日`
+    document.getElementById("dc-kanji")!.textContent = `${toKanjiNum(y)}年${toKanjiNum(m)}月${toKanjiNum(d)}日`
+    document.getElementById("dc-iso")!.textContent = `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`
+  }
+
+  ["dc-year", "dc-month", "dc-day"].forEach(id => {
+    document.getElementById(id)!.addEventListener("change", convert)
+    document.getElementById(id)!.addEventListener("input", convert)
+  })
+  convert()
+</script>

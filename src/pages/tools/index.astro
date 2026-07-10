@@ -1,0 +1,45 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+
+const tools = [
+  { href: "/tools/kana-converter/", icon: "🔀", title: "Kana Converter", desc: "Convert between hiragana and katakana instantly. Paste any Japanese text and toggle scripts." },
+  { href: "/tools/kana-chart/", icon: "📋", title: "Kana Chart", desc: "Full hiragana and katakana reference chart with stroke order. Print-friendly layout." },
+  { href: "/tools/text-analyzer/", icon: "🔍", title: "Text Analyzer", desc: "Analyze any Japanese text - count kanji, hiragana, katakana, romaji characters and more." },
+  { href: "/tools/kanji-dictionary/", icon: "📖", title: "Kanji Dictionary", desc: "Look up any kanji character across all JLPT levels - readings, meanings, stroke count, examples." },
+  { href: "/tools/random-kanji/", icon: "🎲", title: "Random Kanji", desc: "Discover a random kanji from any JLPT level. Filter by level and see full character details." },
+  { href: "/tools/number-to-japanese/", icon: "🔢", title: "Number to Japanese", desc: "Convert Arabic numerals to Japanese words. Supports numbers from 1 to billions in kanji and kana." },
+  { href: "/tools/romaji-converter/", icon: "✏️", title: "Romaji Converter", desc: "Convert hiragana and katakana text to romaji (Latin script). Great for pronunciation practice." },
+  { href: "/tools/kana-quiz/", icon: "🎯", title: "Kana Quiz", desc: "Test your kana knowledge with a flashcard-style quiz. Choose hiragana, katakana, or both." },
+  { href: "/tools/kanji-by-level/", icon: "📚", title: "Kanji by Level", desc: "Browse all kanji grouped by JLPT level. Search, filter, and click any character for full details." },
+  { href: "/tools/jlpt-level-guide/", icon: "📊", title: "JLPT Level Guide", desc: "Compare N5 to N1 at a glance - kanji counts, vocabulary, grammar, and estimated study hours." },
+  { href: "/tools/kanji-highlighter/", icon: "🎨", title: "Kanji Highlighter", desc: "Paste Japanese text and see each kanji color-coded by JLPT level. Instant level recognition." },
+  { href: "/tools/jlpt-score-checker/", icon: "✅", title: "JLPT Score Checker", desc: "Input your section scores and check if you pass the JLPT. Uses official pass/fail criteria." },
+  { href: "/tools/date-converter/", icon: "📅", title: "Date Converter", desc: "Convert dates to Japanese format with era names (Reiwa, Heisei, Showa) and kanji numerals." },
+  { href: "/tools/study-timer/", icon: "⏱️", title: "Study Timer", desc: "Pomodoro-style timer for focused Japanese study. Customizable focus and break intervals." },
+  { href: "/tools/kanji-flash-quiz/", icon: "⚡", title: "Kanji Flash Quiz", desc: "Quick-fire kanji meaning quiz using the full JLPT database. Practice any level." },
+]
+
+const desc = "Free Japanese study tools - kana converter, kanji dictionary, text analyzer, JLPT score checker, study timer, date converter, kanji highlighter, and more."
+const kw = "Japanese tools, JLPT study tools, Japanese learning tools, kanji dictionary, kana converter, Japanese text analyzer, JLPT score calculator, kanji highlighter"
+---
+
+<DefaultLayout title={"Japanese Study Tools - KanjiTest.Online"} description={desc} keywords={kw}>
+  <div class="max-w-6xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-10 sm:mb-14 animate-fade-up">
+      <h1 class="text-3xl sm:text-5xl font-black text-ink tracking-tight">Tools</h1>
+      <p class="text-sm sm:text-base text-ink/60 mt-3 max-w-2xl mx-auto leading-relaxed">
+        Practical tools to help with your Japanese study - from kana conversion and kanji lookup to text analysis and quizzes.
+      </p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+      {tools.map((t, i) => (
+        <a href={t.href} class="card card-hover group p-5 sm:p-6 animate-fade-up" style={`animation-delay: ${i * 50}ms`}>
+          <span class="inline-flex w-11 h-11 items-center justify-center rounded-xl bg-ink/[0.04] text-2xl transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6">{t.icon}</span>
+          <h2 class="text-base font-bold text-ink mt-4 group-hover:text-vermilion transition-colors">{t.title}</h2>
+          <p class="text-[13px] text-ink/60 mt-1.5 leading-relaxed">{t.desc}</p>
+        </a>
+      ))}
+    </div>
+  </div>
+</DefaultLayout>

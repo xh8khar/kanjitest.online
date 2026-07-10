@@ -1,0 +1,135 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+
+const hiragana = [
+  { row: "a", chars: [{ kana: "あ", roma: "a" }, { kana: "い", roma: "i" }, { kana: "う", roma: "u" }, { kana: "え", roma: "e" }, { kana: "お", roma: "o" }] },
+  { row: "ka", chars: [{ kana: "か", roma: "ka" }, { kana: "き", roma: "ki" }, { kana: "く", roma: "ku" }, { kana: "け", roma: "ke" }, { kana: "こ", roma: "ko" }] },
+  { row: "sa", chars: [{ kana: "さ", roma: "sa" }, { kana: "し", roma: "shi" }, { kana: "す", roma: "su" }, { kana: "せ", roma: "se" }, { kana: "そ", roma: "so" }] },
+  { row: "ta", chars: [{ kana: "た", roma: "ta" }, { kana: "ち", roma: "chi" }, { kana: "つ", roma: "tsu" }, { kana: "て", roma: "te" }, { kana: "と", roma: "to" }] },
+  { row: "na", chars: [{ kana: "な", roma: "na" }, { kana: "に", roma: "ni" }, { kana: "ぬ", roma: "nu" }, { kana: "ね", roma: "ne" }, { kana: "の", roma: "no" }] },
+  { row: "ha", chars: [{ kana: "は", roma: "ha" }, { kana: "ひ", roma: "hi" }, { kana: "ふ", roma: "fu" }, { kana: "へ", roma: "he" }, { kana: "ほ", roma: "ho" }] },
+  { row: "ma", chars: [{ kana: "ま", roma: "ma" }, { kana: "み", roma: "mi" }, { kana: "む", roma: "mu" }, { kana: "め", roma: "me" }, { kana: "も", roma: "mo" }] },
+  { row: "ya", chars: [{ kana: "や", roma: "ya" }, { kana: "", roma: "" }, { kana: "ゆ", roma: "yu" }, { kana: "", roma: "" }, { kana: "よ", roma: "yo" }] },
+  { row: "ra", chars: [{ kana: "ら", roma: "ra" }, { kana: "り", roma: "ri" }, { kana: "る", roma: "ru" }, { kana: "れ", roma: "re" }, { kana: "ろ", roma: "ro" }] },
+  { row: "wa", chars: [{ kana: "わ", roma: "wa" }, { kana: "ゐ", roma: "wi" }, { kana: "", roma: "" }, { kana: "ゑ", roma: "we" }, { kana: "を", roma: "wo" }] },
+  { row: "n", chars: [{ kana: "ん", roma: "n" }, { kana: "", roma: "" }, { kana: "", roma: "" }, { kana: "", roma: "" }, { kana: "", roma: "" }] },
+]
+
+const katakana = [
+  { row: "a", chars: [{ kana: "ア", roma: "a" }, { kana: "イ", roma: "i" }, { kana: "ウ", roma: "u" }, { kana: "エ", roma: "e" }, { kana: "オ", roma: "o" }] },
+  { row: "ka", chars: [{ kana: "カ", roma: "ka" }, { kana: "キ", roma: "ki" }, { kana: "ク", roma: "ku" }, { kana: "ケ", roma: "ke" }, { kana: "コ", roma: "ko" }] },
+  { row: "sa", chars: [{ kana: "サ", roma: "sa" }, { kana: "シ", roma: "shi" }, { kana: "ス", roma: "su" }, { kana: "セ", roma: "se" }, { kana: "ソ", roma: "so" }] },
+  { row: "ta", chars: [{ kana: "タ", roma: "ta" }, { kana: "チ", roma: "chi" }, { kana: "ツ", roma: "tsu" }, { kana: "テ", roma: "te" }, { kana: "ト", roma: "to" }] },
+  { row: "na", chars: [{ kana: "ナ", roma: "na" }, { kana: "ニ", roma: "ni" }, { kana: "ヌ", roma: "nu" }, { kana: "ネ", roma: "ne" }, { kana: "ノ", roma: "no" }] },
+  { row: "ha", chars: [{ kana: "ハ", roma: "ha" }, { kana: "ヒ", roma: "hi" }, { kana: "フ", roma: "fu" }, { kana: "ヘ", roma: "he" }, { kana: "ホ", roma: "ho" }] },
+  { row: "ma", chars: [{ kana: "マ", roma: "ma" }, { kana: "ミ", roma: "mi" }, { kana: "ム", roma: "mu" }, { kana: "メ", roma: "me" }, { kana: "モ", roma: "mo" }] },
+  { row: "ya", chars: [{ kana: "ヤ", roma: "ya" }, { kana: "", roma: "" }, { kana: "ユ", roma: "yu" }, { kana: "", roma: "" }, { kana: "ヨ", roma: "yo" }] },
+  { row: "ra", chars: [{ kana: "ラ", roma: "ra" }, { kana: "リ", roma: "ri" }, { kana: "ル", roma: "ru" }, { kana: "レ", roma: "re" }, { kana: "ロ", roma: "ro" }] },
+  { row: "wa", chars: [{ kana: "ワ", roma: "wa" }, { kana: "ヰ", roma: "wi" }, { kana: "", roma: "" }, { kana: "ヱ", roma: "we" }, { kana: "ヲ", roma: "wo" }] },
+  { row: "n", chars: [{ kana: "ン", roma: "n" }, { kana: "", roma: "" }, { kana: "", roma: "" }, { kana: "", roma: "" }, { kana: "", roma: "" }] },
+]
+
+const vowels = ["a", "i", "u", "e", "o"]
+---
+
+<DefaultLayout title="Kana Chart — Hiragana and Katakana Table" description="Complete hiragana and katakana reference chart with romaji. Print-friendly Japanese kana table for beginners." keywords="kana chart, hiragana chart, katakana chart, Japanese alphabet, kana table, hiragana katakana reference, learn Japanese kana">
+  <div class="max-w-4xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">Kana Chart</h1>
+      <p class="text-sm text-ink/60 mt-2">Complete hiragana and katakana reference with romaji readings.</p>
+    </div>
+
+    <div class="space-y-10">
+      <section class="animate-fade-up" style="animation-delay: 80ms">
+        <h2 class="text-lg font-bold text-ink mb-4">Hiragana</h2>
+        <div class="overflow-x-auto">
+          <table class="kana-table">
+            <thead>
+              <tr>
+                <th></th>
+                {vowels.map((v) => <th class="text-xs text-ink/50 font-medium">{v}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              {hiragana.map((r) => (
+                <tr>
+                  <td class="text-xs text-ink/40 font-medium w-8">{r.row}</td>
+                  {r.chars.map((c) => (
+                    <td class={c.kana ? "" : "empty"}>
+                      {c.kana && <><span class="kana-char">{c.kana}</span><span class="roma">{c.roma}</span></>}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="animate-fade-up" style="animation-delay: 120ms">
+        <h2 class="text-lg font-bold text-ink mb-4">Katakana</h2>
+        <div class="overflow-x-auto">
+          <table class="kana-table">
+            <thead>
+              <tr>
+                <th></th>
+                {vowels.map((v) => <th class="text-xs text-ink/50 font-medium">{v}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              {katakana.map((r) => (
+                <tr>
+                  <td class="text-xs text-ink/40 font-medium w-8">{r.row}</td>
+                  {r.chars.map((c) => (
+                    <td class={c.kana ? "" : "empty"}>
+                      {c.kana && <><span class="kana-char">{c.kana}</span><span class="roma">{c.roma}</span></>}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+</DefaultLayout>
+
+<style>
+  .kana-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 3px;
+  }
+  .kana-table th {
+    text-align: center;
+    padding: 0.25rem 0.5rem;
+  }
+  .kana-table td {
+    text-align: center;
+    background: #fff;
+    border: 1px solid color-mix(in srgb, var(--color-ink) 10%, transparent);
+    border-radius: 0.625rem;
+    padding: 0.5rem 0.25rem;
+    min-width: 4.5rem;
+  }
+  .kana-table td.empty {
+    background: transparent;
+    border-color: transparent;
+  }
+  .kana-char {
+    display: block;
+    font-size: 1.5rem;
+    font-family: var(--font-jp);
+    font-weight: 600;
+    color: var(--color-ink);
+    line-height: 1.3;
+  }
+  .roma {
+    display: block;
+    font-size: 0.625rem;
+    color: color-mix(in srgb, var(--color-ink) 50%, transparent);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+</style>

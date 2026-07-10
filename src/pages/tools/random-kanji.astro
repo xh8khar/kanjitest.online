@@ -1,0 +1,83 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+---
+
+<DefaultLayout title="Random Kanji Generator" description="Discover random kanji characters from any JLPT level. See readings, meanings, stroke count, and example words for each character." keywords="random kanji, kanji generator, random Japanese character, JLPT kanji, kanji practice, random kanji with readings">
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">Random Kanji</h1>
+      <p class="text-sm text-ink/60 mt-2">Click for a random kanji character — or filter by JLPT level.</p>
+    </div>
+
+    <div class="flex flex-wrap justify-center gap-2 mb-6 animate-fade-up" style="animation-delay: 60ms">
+      <button class="level-btn on btn h-9 px-4 text-xs rounded-full" data-level="all">All levels</button>
+      {["N5", "N4", "N3", "N2", "N1"].map((l) => (
+        <button class="level-btn btn h-9 px-4 text-xs rounded-full" data-level={l.toLowerCase()}>{l}</button>
+      ))}
+    </div>
+
+    <div class="card p-6 sm:p-8 text-center animate-fade-up" style="animation-delay: 100ms">
+      <div id="kanji-display" class="text-7xl sm:text-8xl font-jp font-black text-ink leading-none min-h-[6rem]">—</div>
+      <div id="kanji-level" class="chip mt-4 inline-block"></div>
+      <div class="grid sm:grid-cols-2 gap-4 mt-6 text-left">
+        <div>
+          <div class="text-[11px] text-ink/40 font-medium uppercase tracking-wider mb-1">Onyomi</div>
+          <div id="kanji-on" class="text-base font-bold text-ink font-jp">—</div>
+        </div>
+        <div>
+          <div class="text-[11px] text-ink/40 font-medium uppercase tracking-wider mb-1">Kunyomi</div>
+          <div id="kanji-kun" class="text-base font-bold text-ink font-jp">—</div>
+        </div>
+      </div>
+      <div class="mt-4 text-left">
+        <div class="text-[11px] text-ink/40 font-medium uppercase tracking-wider mb-1">Meanings</div>
+        <div id="kanji-meanings" class="text-sm text-ink/70">—</div>
+      </div>
+      <div class="mt-4 text-left">
+        <div class="text-[11px] text-ink/40 font-medium uppercase tracking-wider mb-1">Stroke count</div>
+        <div id="kanji-strokes" class="text-sm font-bold text-ink">—</div>
+      </div>
+      <button id="reroll-btn" class="btn btn-accent h-11 px-6 text-sm mt-6">Roll again ↻</button>
+    </div>
+  </div>
+</DefaultLayout>
+
+<script>
+  type KanjiEntry = {
+    kanji: string; kun: string[]; on: string[]; meanings: string[]
+    strokes: number; level: string
+  }
+
+  let data: KanjiEntry[] = []
+  let activeLevel = "all"
+  const display = document.getElementById("kanji-display")!
+  const levelEl = document.getElementById("kanji-level")!
+  const onEl = document.getElementById("kanji-on")!
+  const kunEl = document.getElementById("kanji-kun")!
+  const meaningsEl = document.getElementById("kanji-meanings")!
+  const strokesEl = document.getElementById("kanji-strokes")!
+
+  fetch("/api/kanji.json").then(r => r.json()).then(d => { data = d; pick() })
+
+  function pick() {
+    const pool = activeLevel === "all" ? data : data.filter(e => e.level === activeLevel)
+    if (!pool.length) return
+    const entry = pool[Math.floor(Math.random() * pool.length)]
+    display.textContent = entry.kanji
+    levelEl.textContent = entry.level.toUpperCase()
+    onEl.textContent = entry.on.join("、") || "—"
+    kunEl.textContent = entry.kun.join("、") || "—"
+    meaningsEl.textContent = entry.meanings.join(", ")
+    strokesEl.textContent = `${entry.strokes} stroke${entry.strokes !== 1 ? "s" : ""}`
+  }
+
+  document.getElementById("reroll-btn")!.onclick = pick
+  document.querySelectorAll(".level-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".level-btn").forEach(b => b.classList.remove("on"))
+      btn.classList.add("on")
+      activeLevel = (btn as HTMLElement).dataset.level!
+      pick()
+    })
+  })
+</script>

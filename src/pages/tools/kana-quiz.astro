@@ -1,0 +1,170 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+---
+
+<DefaultLayout title="Kana Quiz — Practice Hiragana and Katakana" description="Free kana quiz to practice hiragana and katakana recognition. Choose from hiragana, katakana, or both scripts." keywords="kana quiz, hiragana practice, katakana practice, Japanese kana test, kana flashcards, learn hiragana katakana, Japanese script quiz">
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">Kana Quiz</h1>
+      <p class="text-sm text-ink/60 mt-2">Practice hiragana and katakana recognition with flashcards.</p>
+    </div>
+
+    <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay: 80ms">
+      <div class="flex flex-wrap justify-center gap-2 mb-6">
+        <button class="q-mode on btn h-9 px-4 text-xs rounded-full" data-mode="hiragana">Hiragana</button>
+        <button class="q-mode btn h-9 px-4 text-xs rounded-full" data-mode="katakana">Katakana</button>
+        <button class="q-mode btn h-9 px-4 text-xs rounded-full" data-mode="both">Both</button>
+      </div>
+
+      <div id="quiz-area" class="text-center">
+        <div id="q-char" class="text-6xl sm:text-7xl font-jp font-black text-ink min-h-[5rem] leading-none flex items-center justify-center">あ</div>
+        <div id="q-romaji" class="text-lg sm:text-xl font-bold text-ink/60 mt-4 min-h-[2rem]"></div>
+
+        <div id="q-options" class="flex flex-wrap justify-center gap-2 mt-6"></div>
+
+        <div id="q-result" class="mt-4 text-sm font-bold" hidden></div>
+
+        <div class="flex items-center justify-center gap-4 mt-6 text-xs text-ink/40">
+          <span id="q-score">0 correct</span>
+          <span>·</span>
+          <span id="q-count">0 answered</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</DefaultLayout>
+
+<script>
+  const KANA: Record<string, { hira: string; kata: string; roma: string }[]> = {
+    gojuon: [
+      { hira: "あ", kata: "ア", roma: "a" }, { hira: "い", kata: "イ", roma: "i" },
+      { hira: "う", kata: "ウ", roma: "u" }, { hira: "え", kata: "エ", roma: "e" },
+      { hira: "お", kata: "オ", roma: "o" }, { hira: "か", kata: "カ", roma: "ka" },
+      { hira: "き", kata: "キ", roma: "ki" }, { hira: "く", kata: "ク", roma: "ku" },
+      { hira: "け", kata: "ケ", roma: "ke" }, { hira: "こ", kata: "コ", roma: "ko" },
+      { hira: "さ", kata: "サ", roma: "sa" }, { hira: "し", kata: "シ", roma: "shi" },
+      { hira: "す", kata: "ス", roma: "su" }, { hira: "せ", kata: "セ", roma: "se" },
+      { hira: "そ", kata: "ソ", roma: "so" }, { hira: "た", kata: "タ", roma: "ta" },
+      { hira: "ち", kata: "チ", roma: "chi" }, { hira: "つ", kata: "ツ", roma: "tsu" },
+      { hira: "て", kata: "テ", roma: "te" }, { hira: "と", kata: "ト", roma: "to" },
+      { hira: "な", kata: "ナ", roma: "na" }, { hira: "に", kata: "ニ", roma: "ni" },
+      { hira: "ぬ", kata: "ヌ", roma: "nu" }, { hira: "ね", kata: "ネ", roma: "ne" },
+      { hira: "の", kata: "ノ", roma: "no" }, { hira: "は", kata: "ハ", roma: "ha" },
+      { hira: "ひ", kata: "ヒ", roma: "hi" }, { hira: "ふ", kata: "フ", roma: "fu" },
+      { hira: "へ", kata: "ヘ", roma: "he" }, { hira: "ほ", kata: "ホ", roma: "ho" },
+      { hira: "ま", kata: "マ", roma: "ma" }, { hira: "み", kata: "ミ", roma: "mi" },
+      { hira: "む", kata: "ム", roma: "mu" }, { hira: "め", kata: "メ", roma: "me" },
+      { hira: "も", kata: "モ", roma: "mo" }, { hira: "や", kata: "ヤ", roma: "ya" },
+      { hira: "ゆ", kata: "ユ", roma: "yu" }, { hira: "よ", kata: "ヨ", roma: "yo" },
+      { hira: "ら", kata: "ラ", roma: "ra" }, { hira: "り", kata: "リ", roma: "ri" },
+      { hira: "る", kata: "ル", roma: "ru" }, { hira: "れ", kata: "レ", roma: "re" },
+      { hira: "ろ", kata: "ロ", roma: "ro" }, { hira: "わ", kata: "ワ", roma: "wa" },
+      { hira: "を", kata: "ヲ", roma: "wo" }, { hira: "ん", kata: "ン", roma: "n" },
+    ],
+    dakuon: [
+      { hira: "が", kata: "ガ", roma: "ga" }, { hira: "ぎ", kata: "ギ", roma: "gi" },
+      { hira: "ぐ", kata: "グ", roma: "gu" }, { hira: "げ", kata: "ゲ", roma: "ge" },
+      { hira: "ご", kata: "ゴ", roma: "go" }, { hira: "ざ", kata: "ザ", roma: "za" },
+      { hira: "じ", kata: "ジ", roma: "ji" }, { hira: "ず", kata: "ズ", roma: "zu" },
+      { hira: "ぜ", kata: "ゼ", roma: "ze" }, { hira: "ぞ", kata: "ゾ", roma: "zo" },
+      { hira: "だ", kata: "ダ", roma: "da" }, { hira: "ぢ", kata: "ヂ", roma: "ji" },
+      { hira: "づ", kata: "ヅ", roma: "zu" }, { hira: "で", kata: "デ", roma: "de" },
+      { hira: "ど", kata: "ド", roma: "do" }, { hira: "ば", kata: "バ", roma: "ba" },
+      { hira: "び", kata: "ビ", roma: "bi" }, { hira: "ぶ", kata: "ブ", roma: "bu" },
+      { hira: "べ", kata: "ベ", roma: "be" }, { hira: "ぼ", kata: "ボ", roma: "bo" },
+    ],
+    handakuon: [
+      { hira: "ぱ", kata: "パ", roma: "pa" }, { hira: "ぴ", kata: "ピ", roma: "pi" },
+      { hira: "ぷ", kata: "プ", roma: "pu" }, { hira: "ぺ", kata: "ペ", roma: "pe" },
+      { hira: "ぽ", kata: "ポ", roma: "po" },
+    ],
+    youon: [
+      { hira: "きゃ", kata: "キャ", roma: "kya" }, { hira: "きゅ", kata: "キュ", roma: "kyu" },
+      { hira: "きょ", kata: "キョ", roma: "kyo" }, { hira: "しゃ", kata: "シャ", roma: "sha" },
+      { hira: "しゅ", kata: "シュ", roma: "shu" }, { hira: "しょ", kata: "ショ", roma: "sho" },
+      { hira: "ちゃ", kata: "チャ", roma: "cha" }, { hira: "ちゅ", kata: "チュ", roma: "chu" },
+      { hira: "ちょ", kata: "チョ", roma: "cho" }, { hira: "にゃ", kata: "ニャ", roma: "nya" },
+      { hira: "にゅ", kata: "ニュ", roma: "nyu" }, { hira: "にょ", kata: "ニョ", roma: "nyo" },
+      { hira: "ひゃ", kata: "ヒャ", roma: "hya" }, { hira: "ひゅ", kata: "ヒュ", roma: "hyu" },
+      { hira: "ひょ", kata: "ヒョ", roma: "hyo" }, { hira: "みゃ", kata: "ミャ", roma: "mya" },
+      { hira: "みゅ", kata: "ミュ", roma: "myu" }, { hira: "みょ", kata: "ミョ", roma: "myo" },
+      { hira: "りゃ", kata: "リャ", roma: "rya" }, { hira: "りゅ", kata: "リュ", roma: "ryu" },
+      { hira: "りょ", kata: "リョ", roma: "ryo" }, { hira: "ぎゃ", kata: "ギャ", roma: "gya" },
+      { hira: "ぎゅ", kata: "ギュ", roma: "gyu" }, { hira: "ぎょ", kata: "ギョ", roma: "gyo" },
+      { hira: "じゃ", kata: "ジャ", roma: "ja" }, { hira: "じゅ", kata: "ジュ", roma: "ju" },
+      { hira: "じょ", kata: "ジョ", roma: "jo" }, { hira: "びゃ", kata: "ビャ", roma: "bya" },
+      { hira: "びゅ", kata: "ビュ", roma: "byu" }, { hira: "びょ", kata: "ビョ", roma: "byo" },
+      { hira: "ぴゃ", kata: "ピャ", roma: "pya" }, { hira: "ぴゅ", kata: "ピュ", roma: "pyu" },
+      { hira: "ぴょ", kata: "ピョ", roma: "pyo" },
+    ],
+  }
+
+  const allKana = [...KANA.gojuon, ...KANA.dakuon, ...KANA.handakuon, ...KANA.youon]
+
+  let mode = "hiragana"
+  let correct = 0
+  let answered = 0
+  let current: typeof allKana[0] | null = null
+  let showingAnswer = false
+
+  const charEl = document.getElementById("q-char")!
+  const romajiEl = document.getElementById("q-romaji")!
+  const optionsEl = document.getElementById("q-options")!
+  const resultEl = document.getElementById("q-result")!
+  const scoreEl = document.getElementById("q-score")!
+  const countEl = document.getElementById("q-count")!
+
+  function getPool() {
+    if (mode === "hiragana") return allKana.map(k => ({ char: k.hira, answer: k.roma }))
+    if (mode === "katakana") return allKana.map(k => ({ char: k.kata, answer: k.roma }))
+    return allKana.flatMap(k => [{ char: k.hira, answer: k.roma }, { char: k.kata, answer: k.roma }])
+  }
+
+  function next() {
+    showingAnswer = false
+    resultEl.hidden = true
+    const pool = getPool()
+    current = pool[Math.floor(Math.random() * pool.length)]
+    charEl.textContent = current.char
+    romajiEl.textContent = "?"
+
+    const wrongPool = pool.filter(p => p.answer !== current.answer)
+    const wrong = wrongPool.sort(() => Math.random() - 0.5).slice(0, 3).map(p => p.answer)
+    const answers = [current.answer, ...wrong].sort(() => Math.random() - 0.5)
+
+    optionsEl.innerHTML = answers.map(a =>
+      `<button class="opt-btn btn h-10 px-4 text-sm rounded-xl">${a}</button>`
+    ).join("")
+
+    optionsEl.querySelectorAll(".opt-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (showingAnswer) return
+        showingAnswer = true
+        answered++
+        const isCorrect = (btn as HTMLElement).textContent === current!.answer
+        if (isCorrect) correct++
+        resultEl.hidden = false
+        resultEl.textContent = isCorrect ? "✓ Correct!" : `✗ ${current!.answer}`
+        resultEl.style.color = isCorrect ? "var(--color-emerald, #10b981)" : "var(--color-vermilion)"
+        romajiEl.textContent = current!.answer
+        scoreEl.textContent = `${correct} correct`
+        countEl.textContent = `${answered} answered`
+        setTimeout(next, 1200)
+      })
+    })
+  }
+
+  document.querySelectorAll(".q-mode").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".q-mode").forEach(b => b.classList.remove("on"))
+      btn.classList.add("on")
+      mode = (btn as HTMLElement).dataset.mode!
+      correct = 0; answered = 0
+      scoreEl.textContent = "0 correct"
+      countEl.textContent = "0 answered"
+      next()
+    })
+  })
+
+  next()
+</script>

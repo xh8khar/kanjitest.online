@@ -1,0 +1,116 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import { getAll, getVocabulary } from "@/lib/kanji"
+import { LEVELS, LEVEL_IDS, SETS_PER_LEVEL, QUESTIONS_PER_SET } from "@/lib/levels"
+
+const levels = LEVEL_IDS.map((id) => ({
+  ...LEVELS[id],
+  id,
+  kanji: getAll(id).length,
+  vocab: getVocabulary(id).length,
+  hours: { min: id === "n5" ? 150 : id === "n4" ? 300 : id === "n3" ? 450 : id === "n2" ? 600 : 900, max: id === "n5" ? 250 : id === "n4" ? 400 : id === "n3" ? 600 : id === "n2" ? 800 : 1200 },
+}))
+---
+
+<DefaultLayout title="JLPT Level Guide — N5 to N1 Comparison" description="Compare all JLPT levels N5 through N1 — kanji counts, vocabulary, grammar points, study hours, and exam structure at a glance." keywords="JLPT level guide, N5 N4 N3 N2 N1 comparison, JLPT levels explained, Japanese proficiency levels, JLPT study hours, JLPT kanji count">
+  <div class="max-w-5xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-10 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">JLPT Level Guide</h1>
+      <p class="text-sm text-ink/60 mt-2 max-w-2xl mx-auto">Compare every JLPT level from N5 to N1 — kanji, vocabulary, grammar, study hours, and what you need to know.</p>
+    </div>
+
+    <div class="overflow-x-auto animate-fade-up" style="animation-delay: 80ms">
+      <table class="guide-table">
+        <thead>
+          <tr>
+            <th></th>
+            {levels.map((l) => (
+              <th class={`bg-gradient-to-b ${l.gradient} text-white`}>
+                <span class="text-xl font-black">{l.label}</span>
+                <span class="block text-[10px] font-medium text-white/75 mt-0.5">{l.tagline}</span>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label">Kanji</td>
+            {levels.map((l) => <td class="value">{l.kanji.toLocaleString()}</td>)}
+          </tr>
+          <tr>
+            <td class="label">Vocabulary</td>
+            {levels.map((l) => <td class="value">{l.vocab.toLocaleString()} words</td>)}
+          </tr>
+          <tr>
+            <td class="label">Study hours</td>
+            {levels.map((l) => <td class="value">{l.hours.min}–{l.hours.max} hours</td>)}
+          </tr>
+          <tr>
+            <td class="label">Practice tests</td>
+            {levels.map((l) => <td class="value">{SETS_PER_LEVEL} sets × {QUESTIONS_PER_SET} questions</td>)}
+          </tr>
+          <tr>
+            <td class="label">Skill level</td>
+            {levels.map((l) => <td class="value text-xs">{l.blurb}</td>)}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mt-10 space-y-4 animate-fade-up" style="animation-delay: 120ms">
+      {levels.map((l, i) => (
+        <a href={`/${l.id}/`} class={`card card-hover group p-5 sm:p-6 flex items-center gap-4 sm:gap-6 ${l.glow}`} style={`--reveal-delay: ${i * 60}ms`}>
+          <span class={`w-12 h-12 sm:w-14 sm:h-14 shrink-0 rounded-xl bg-gradient-to-br ${l.gradient} text-white font-black flex items-center justify-center text-lg sm:text-xl shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}>
+            {l.label}
+          </span>
+          <div class="min-w-0 flex-1">
+            <div class="text-sm font-bold text-ink group-hover:text-vermilion transition-colors">JLPT {l.label} — {l.tagline}</div>
+            <div class="text-[13px] text-ink/60 mt-1 leading-relaxed">{l.blurb}</div>
+            <div class="flex flex-wrap gap-2 mt-2">
+              <span class="chip">{l.kanji.toLocaleString()} kanji</span>
+              <span class="chip">{l.vocab.toLocaleString()} words</span>
+              <span class="chip">{SETS_PER_LEVEL} tests</span>
+            </div>
+          </div>
+          <span class="text-ink/25 group-hover:text-vermilion group-hover:translate-x-0.5 transition-all duration-300 text-lg shrink-0">&rarr;</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</DefaultLayout>
+
+<style>
+  .guide-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 4px;
+    font-size: 0.875rem;
+  }
+  .guide-table th {
+    border-radius: 0.75rem;
+    padding: 1rem 1.25rem;
+    text-align: center;
+    font-weight: 700;
+  }
+  .guide-table td {
+    background: #fff;
+    border: 1px solid color-mix(in srgb, var(--color-ink) 8%, transparent);
+    border-radius: 0.625rem;
+    padding: 0.75rem 1rem;
+    text-align: center;
+  }
+  .guide-table td.label {
+    background: color-mix(in srgb, var(--color-ink) 4%, transparent);
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: color-mix(in srgb, var(--color-ink) 55%, transparent);
+    text-align: left;
+    white-space: nowrap;
+  }
+  .guide-table td.value {
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+</style>

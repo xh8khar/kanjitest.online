@@ -1,0 +1,66 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+---
+
+<DefaultLayout title="Kanji Highlighter — Color Code Kanji by JLPT Level" description="Paste Japanese text and instantly see each kanji color-coded by its JLPT level N5 to N1. Free online tool for learners." keywords="kanji highlighter, JLPT level color code, kanji level identifier, Japanese text analyzer, kanji by level, kanji recognition tool">
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">Kanji Highlighter</h1>
+      <p class="text-sm text-ink/60 mt-2">Paste any Japanese text and see each kanji color-coded by JLPT level.</p>
+    </div>
+
+    <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay: 80ms">
+      <label class="text-xs font-bold uppercase tracking-widest text-ink/40 mb-2 block" for="hl-input">Enter Japanese text</label>
+      <textarea id="hl-input" class="w-full h-28 sm:h-32 rounded-xl border border-ink/15 bg-white p-3.5 sm:p-4 text-lg leading-relaxed resize-y focus:outline-none focus:ring-2 focus:ring-vermilion/40 focus:border-vermilion/60 transition-all font-jp" placeholder="Paste or type Japanese text here…"></textarea>
+      <div class="flex gap-2 mt-3">
+        <button id="hl-btn" class="btn btn-accent h-10 px-4 text-sm">Highlight</button>
+        <button id="hl-clear" class="btn btn-ghost h-10 px-4 text-sm">Clear</button>
+      </div>
+    </div>
+
+    <div class="card p-5 sm:p-6 mt-4 animate-fade-up" style="animation-delay: 120ms" id="hl-result" hidden>
+      <div class="text-xs font-bold uppercase tracking-widest text-ink/40 mb-2">Highlighted text</div>
+      <div id="hl-output" class="text-lg leading-relaxed font-jp break-words"></div>
+      <div class="flex flex-wrap gap-3 mt-4 text-xs">
+        <span><span class="inline-block w-3 h-3 rounded-sm" style="background:#d9482f"></span> N5</span>
+        <span><span class="inline-block w-3 h-3 rounded-sm" style="background:#e67e22"></span> N4</span>
+        <span><span class="inline-block w-3 h-3 rounded-sm" style="background:#f1c40f"></span> N3</span>
+        <span><span class="inline-block w-3 h-3 rounded-sm" style="background:#2ecc71"></span> N2</span>
+        <span><span class="inline-block w-3 h-3 rounded-sm" style="background:#3498db"></span> N1</span>
+        <span><span class="inline-block w-3 h-3 rounded-sm" style="background:#95a5a6"></span> Not in JLPT</span>
+      </div>
+    </div>
+  </div>
+</DefaultLayout>
+
+<script>
+  type Entry = { kanji: string; level: string }
+  const LEVEL_COLORS: Record<string, string> = { n5: "#d9482f", n4: "#e67e22", n3: "#f1c40f", n2: "#2ecc71", n1: "#3498db" }
+  let lookup: Record<string, string> = {}
+
+  fetch("/api/kanji.json").then(r => r.json()).then((data: Entry[]) => {
+    for (const e of data) lookup[e.kanji] = e.level
+  })
+
+  const input = document.getElementById("hl-input") as HTMLTextAreaElement
+  const output = document.getElementById("hl-output")!
+  const resultBox = document.getElementById("hl-result")!
+
+  document.getElementById("hl-btn")!.onclick = () => {
+    const text = input.value
+    if (!text) return
+    let html = ""
+    for (const ch of text) {
+      const level = lookup[ch]
+      if (level) {
+        html += `<span style="color:${LEVEL_COLORS[level]}; font-weight:600" title="JLPT ${level.toUpperCase()}">${ch}</span>`
+      } else {
+        html += ch
+      }
+    }
+    output.innerHTML = html
+    resultBox.hidden = false
+  }
+
+  document.getElementById("hl-clear")!.onclick = () => { input.value = ""; resultBox.hidden = true }
+</script>

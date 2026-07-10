@@ -1,0 +1,99 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+---
+
+<DefaultLayout title="Kanji Flash Quiz — Quick Kanji Practice" description="Quick-fire kanji quiz using the full JLPT database. See a kanji, pick the correct meaning from four choices. Practice any level." keywords="kanji quiz, JLPT kanji practice, kanji flashcards, kanji meaning quiz, Japanese kanji test, quick kanji quiz, learn kanji online">
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">Kanji Flash Quiz</h1>
+      <p class="text-sm text-ink/60 mt-2">Quick-fire kanji practice. See a character, pick the correct meaning.</p>
+    </div>
+
+    <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay: 80ms">
+      <div class="flex flex-wrap justify-center gap-2 mb-6">
+        {["All", "N5", "N4", "N3", "N2", "N1"].map((l) => (
+          <button class="fq-lvl on btn h-9 px-4 text-xs rounded-full" data-lvl={l === "All" ? "all" : l.toLowerCase()}>{l}</button>
+        ))}
+      </div>
+
+      <div class="flex items-center justify-between mb-4 text-xs text-ink/40">
+        <span id="fq-score">0 correct</span>
+        <span id="fq-count">0 of 0</span>
+      </div>
+
+      <div class="text-center">
+        <div id="fq-kanji" class="text-6xl sm:text-7xl font-jp font-black text-ink min-h-[5rem] flex items-center justify-center">—</div>
+        <div id="fq-options" class="grid grid-cols-2 gap-2 mt-6 max-w-sm mx-auto"></div>
+        <div id="fq-feedback" class="mt-4 text-sm font-bold" hidden></div>
+      </div>
+
+      <div class="flex justify-center mt-6">
+        <button id="fq-next" class="btn btn-accent h-10 px-5 text-sm">Next →</button>
+      </div>
+    </div>
+  </div>
+</DefaultLayout>
+
+<script>
+  type Entry = { kanji: string; meanings: string[]; level: string }
+  let data: Entry[] = []
+  let activeLevel = "all"
+  let current: Entry | null = null
+  let correct = 0, total = 0
+  let answered = false
+
+  const kanjiEl = document.getElementById("fq-kanji")!
+  const optionsEl = document.getElementById("fq-options")!
+  const feedbackEl = document.getElementById("fq-feedback")!
+  const scoreEl = document.getElementById("fq-score")!
+  const countEl = document.getElementById("fq-count")!
+  const nextBtn = document.getElementById("fq-next") as HTMLButtonElement
+
+  fetch("/api/kanji.json").then(r => r.json()).then(d => { data = d; nextQ() })
+
+  function nextQ() {
+    answered = false
+    feedbackEl.hidden = true
+    const pool = activeLevel === "all" ? data : data.filter(e => e.level === activeLevel)
+    if (!pool.length) return
+    current = pool[Math.floor(Math.random() * pool.length)]
+    kanjiEl.textContent = current.kanji
+    countEl.textContent = `${total} answered`
+
+    const wrongPool = data.filter(e => e.kanji !== current!.kanji).sort(() => Math.random() - 0.5).slice(0, 3)
+    const wrongMeanings = wrongPool.map(e => e.meanings[0])
+    const answers = [current.meanings[0], ...wrongMeanings].sort(() => Math.random() - 0.5)
+
+    optionsEl.innerHTML = answers.map(a =>
+      `<button class="fq-opt btn h-11 text-sm rounded-xl px-3">${a}</button>`
+    ).join("")
+
+    optionsEl.querySelectorAll(".fq-opt").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (answered) return
+        answered = true; total++
+        const isCorrect = (btn as HTMLElement).textContent === current!.meanings[0]
+        if (isCorrect) correct++
+        feedbackEl.hidden = false
+        feedbackEl.textContent = isCorrect ? "✓ Correct!" : `✗ ${current!.meanings[0]}`
+        feedbackEl.style.color = isCorrect ? "#10b981" : "var(--color-vermilion)"
+        scoreEl.textContent = `${correct} correct`
+        countEl.textContent = `${total} answered`
+      })
+    })
+  }
+
+  nextBtn.onclick = nextQ
+
+  document.querySelectorAll(".fq-lvl").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".fq-lvl").forEach(b => b.classList.remove("on"))
+      btn.classList.add("on")
+      activeLevel = (btn as HTMLElement).dataset.lvl!
+      correct = 0; total = 0
+      scoreEl.textContent = "0 correct"
+      countEl.textContent = "0 of 0"
+      nextQ()
+    })
+  })
+</script>

@@ -1,0 +1,88 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+---
+
+<DefaultLayout title="Number to Japanese Converter" description="Convert Arabic numerals to Japanese words and kanji. Supports numbers from 1 to billions." keywords="number to Japanese, Japanese number converter, numeral to kanji, Japanese counting, Arabic numeral to Japanese, number conversion">
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">Number to Japanese</h1>
+      <p class="text-sm text-ink/60 mt-2">Convert numbers to Japanese kanji and kana readings.</p>
+    </div>
+
+    <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay: 80ms">
+      <label class="text-xs font-bold uppercase tracking-widest text-ink/40 mb-2 block" for="num-input">Enter a number</label>
+      <input id="num-input" type="number" class="w-full h-12 rounded-xl border border-ink/15 bg-white px-4 text-lg focus:outline-none focus:ring-2 focus:ring-vermilion/40 focus:border-vermilion/60 transition-all" placeholder="e.g. 42" min="0" max="999999999999" />
+    </div>
+
+    <div class="card p-5 sm:p-6 mt-4 animate-fade-up" style="animation-delay: 120ms" id="result-box" hidden>
+      <div class="mb-4">
+        <div class="text-[11px] text-ink/40 font-medium uppercase tracking-wider mb-1.5">Kanji</div>
+        <div id="kanji-result" class="text-2xl sm:text-3xl font-jp font-black text-ink"></div>
+      </div>
+      <div>
+        <div class="text-[11px] text-ink/40 font-medium uppercase tracking-wider mb-1.5">Kana reading</div>
+        <div id="kana-result" class="text-lg font-jp font-bold text-ink/70"></div>
+      </div>
+    </div>
+  </div>
+</DefaultLayout>
+
+<script>
+  const DIGITS_KANJI = ["", "一", "二", "三", "四", "五", "六", "七", "八", "九"]
+  const DIGITS_KANA = ["", "いち", "に", "さん", "し/よん", "ご", "ろく", "しち/なな", "はち", "きゅう"]
+  const PLACES_KANJI = ["", "十", "百", "千"]
+  const PLACES_KANA = ["", "じゅう", "ひゃく", "せん"]
+  const BIG_KANJI = ["", "万", "億"]
+  const BIG_KANA = ["", "まん", "おく"]
+
+  function convertNum(n: number): { kanji: string; kana: string } | null {
+    if (n === 0) return { kanji: "零", kana: "れい/ぜろ" }
+    if (n > 999999999999) return null
+
+    const parts: { kanji: string; kana: string }[] = []
+    let remaining = n
+    let groupIdx = 0
+
+    while (remaining > 0) {
+      const group = remaining % 10000
+      remaining = Math.floor(remaining / 10000)
+
+      if (group > 0) {
+        let gKanji = "", gKana = ""
+        for (let i = 0; i < 4; i++) {
+          const digit = Math.floor(group / Math.pow(10, i)) % 10
+          if (digit > 0) {
+            const prefixKanji = DIGITS_KANJI[digit]
+            const prefixKana = DIGITS_KANA[digit]
+            gKanji = (digit === 1 && i > 0 ? "" : prefixKanji) + PLACES_KANJI[i] + gKanji
+            gKana = (digit === 1 && i > 0 ? "" : prefixKana) + PLACES_KANA[i] + gKana
+          }
+        }
+        const big = BIG_KANJI[groupIdx]
+        const bigK = BIG_KANA[groupIdx]
+        parts.unshift({ kanji: gKanji + big, kana: gKana + bigK })
+      }
+      groupIdx++
+    }
+
+    return {
+      kanji: parts.map(p => p.kanji).join(""),
+      kana: parts.map(p => p.kana).join(""),
+    }
+  }
+
+  const input = document.getElementById("num-input") as HTMLInputElement
+  const resultBox = document.getElementById("result-box")!
+  const kanjiRes = document.getElementById("kanji-result")!
+  const kanaRes = document.getElementById("kana-result")!
+
+  input.addEventListener("input", () => {
+    const val = parseInt(input.value, 10)
+    if (isNaN(val) || val < 0) { resultBox.hidden = true; return }
+    const res = convertNum(val)
+    if (!res) { resultBox.hidden = true; return }
+    kanjiRes.textContent = res.kanji
+    kanaRes.textContent = res.kana
+    resultBox.hidden = false
+  })
+</script>

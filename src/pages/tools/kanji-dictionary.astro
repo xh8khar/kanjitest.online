@@ -1,0 +1,118 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+---
+
+<DefaultLayout title="Kanji Dictionary — Look Up Any Kanji" description="Free kanji dictionary across all JLPT levels N5 to N1. Look up readings, meanings, stroke count, and example sentences for any kanji character." keywords="kanji dictionary, JLPT kanji lookup, Japanese character dictionary, kanji readings, kanji meanings, stroke count">
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">Kanji Dictionary</h1>
+      <p class="text-sm text-ink/60 mt-2">Look up any kanji character — readings, meanings, stroke count, and examples across all JLPT levels.</p>
+    </div>
+
+    <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay: 80ms">
+      <label class="text-xs font-bold uppercase tracking-widest text-ink/40 mb-2 block" for="kanji-input">Enter a kanji character</label>
+      <div class="flex gap-2">
+        <input id="kanji-input" class="flex-1 h-12 rounded-xl border border-ink/15 bg-white px-4 text-lg font-jp focus:outline-none focus:ring-2 focus:ring-vermilion/40 focus:border-vermilion/60 transition-all" placeholder="e.g. 学" maxlength="1" />
+        <button id="lookup-btn" class="btn btn-accent h-12 px-5 text-sm">Look up</button>
+      </div>
+    </div>
+
+    <div id="result-area" class="space-y-4 mt-4" hidden>
+      <div class="card p-5 sm:p-6 animate-fade-up">
+        <div class="flex items-start justify-between">
+          <div>
+            <span id="result-kanji" class="text-5xl sm:text-6xl font-jp font-black text-ink leading-none"></span>
+            <span id="result-level" class="ml-3 chip align-middle"></span>
+          </div>
+          <div class="text-right">
+            <div class="text-[11px] text-ink/40 font-medium uppercase tracking-wider">Stroke count</div>
+            <div id="result-strokes" class="text-2xl font-black text-ink"></div>
+          </div>
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-4 mt-6">
+          <div>
+            <div class="text-[11px] text-ink/40 font-medium uppercase tracking-wider mb-1.5">Onyomi (Chinese reading)</div>
+            <div id="result-on" class="text-base font-bold text-ink font-jp"></div>
+          </div>
+          <div>
+            <div class="text-[11px] text-ink/40 font-medium uppercase tracking-wider mb-1.5">Kunyomi (Japanese reading)</div>
+            <div id="result-kun" class="text-base font-bold text-ink font-jp"></div>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <div class="text-[11px] text-ink/40 font-medium uppercase tracking-wider mb-1.5">Meanings</div>
+          <div id="result-meanings" class="text-sm text-ink/70"></div>
+        </div>
+      </div>
+
+      <div class="card p-5 sm:p-6 animate-fade-up">
+        <h3 class="text-xs font-bold uppercase tracking-widest text-ink/40 mb-3">Example words & sentences</h3>
+        <div id="result-examples" class="space-y-3"></div>
+      </div>
+    </div>
+
+    <div id="not-found" class="card p-5 sm:p-6 mt-4 text-center animate-fade-up" hidden>
+      <p class="text-ink/60">No kanji found. Try a different character.</p>
+    </div>
+  </div>
+</DefaultLayout>
+
+<script>
+  type KanjiEntry = {
+    kanji: string; kun: string[]; on: string[]; meanings: string[]
+    strokes: number; level: string; examples: { word: string; reading: string; english: string; sentence?: string; sentenceEnglish?: string }[]
+  }
+
+  let data: KanjiEntry[] = []
+
+  const input = document.getElementById("kanji-input") as HTMLInputElement
+  const lookupBtn = document.getElementById("lookup-btn")!
+  const resultArea = document.getElementById("result-area")!
+  const notFound = document.getElementById("not-found")!
+  const rKanji = document.getElementById("result-kanji")!
+  const rLevel = document.getElementById("result-level")!
+  const rStrokes = document.getElementById("result-strokes")!
+  const rOn = document.getElementById("result-on")!
+  const rKun = document.getElementById("result-kun")!
+  const rMeanings = document.getElementById("result-meanings")!
+  const rExamples = document.getElementById("result-examples")!
+
+  fetch("/api/kanji.json").then(r => r.json()).then(d => { data = d })
+
+  function lookup() {
+    const ch = input.value.trim()
+    if (!ch) return
+    const entry = data.find(e => e.kanji === ch)
+    if (!entry) { resultArea.hidden = true; notFound.hidden = false; return }
+    notFound.hidden = true
+    rKanji.textContent = entry.kanji
+    rLevel.textContent = entry.level.toUpperCase()
+    rStrokes.textContent = String(entry.strokes)
+    rOn.textContent = entry.on.join("、") || "—"
+    rKun.textContent = entry.kun.join("、") || "—"
+    rMeanings.textContent = entry.meanings.join(", ")
+    rExamples.innerHTML = entry.examples.length
+      ? entry.examples.map(ex => `
+        <div class="border-b border-ink/5 pb-3 last:border-0 last:pb-0">
+          <div class="flex items-baseline gap-2">
+            <span class="font-jp font-bold text-ink">${ex.word}</span>
+            <span class="text-xs text-ink/50">${ex.reading}</span>
+            <span class="text-xs text-ink/40">· ${ex.english}</span>
+          </div>
+          ${ex.sentence ? `
+            <div class="flex items-baseline gap-2 mt-1">
+              <span class="text-sm font-jp text-ink/70">${ex.sentence}</span>
+              <span class="text-xs text-ink/40">${ex.sentenceEnglish}</span>
+            </div>
+          ` : ""}
+        </div>
+      `).join("")
+      : '<p class="text-xs text-ink/50">No examples available.</p>'
+    resultArea.hidden = false
+  }
+
+  lookupBtn.onclick = lookup
+  input.onkeydown = (e: KeyboardEvent) => { if (e.key === "Enter") lookup() }
+</script>

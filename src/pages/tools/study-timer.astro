@@ -1,0 +1,121 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+---
+
+<DefaultLayout title="Study Timer — Pomodoro for Japanese Study" description="Free study timer for Japanese learners. Pomodoro-style timer with customizable focus and break intervals. Track your study sessions." keywords="study timer, pomodoro timer, Japanese study timer, focus timer, study session timer, productivity tool, Japanese learning timer">
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-8 animate-fade-up">
+      <h1 class="text-3xl sm:text-4xl font-black text-ink">Study Timer</h1>
+      <p class="text-sm text-ink/60 mt-2">Pomodoro-style timer for focused Japanese study sessions.</p>
+    </div>
+
+    <div class="card p-5 sm:p-6 animate-fade-up" style="animation-delay: 80ms">
+      <div class="flex flex-wrap justify-center gap-2 mb-6">
+        {[{ label: "25 min", focus: 25, break: 5 }, { label: "45 min", focus: 45, break: 10 }, { label: "60 min", focus: 60, break: 15 }].map((p, i) => (
+          <button data-focus={p.focus} data-break={p.break} class:list={["tm-preset", "btn", "h-9", "px-4", "text-xs", "rounded-full", { on: i === 0 }]}>
+            {p.label}
+          </button>
+        ))}
+      </div>
+
+      <div class="text-center">
+        <div class="text-[11px] text-ink/40 font-medium uppercase tracking-wider mb-1" id="tm-phase">Focus</div>
+        <div id="tm-display" class="text-6xl sm:text-7xl font-black text-ink tabular-nums leading-none font-mono">25:00</div>
+
+        <div class="flex justify-center gap-3 mt-6">
+          <button id="tm-start" class="btn btn-accent h-11 px-6 text-sm">Start</button>
+          <button id="tm-pause" class="btn btn-ghost h-11 px-6 text-sm" disabled>Pause</button>
+          <button id="tm-reset" class="btn btn-ghost h-11 px-6 text-sm">Reset</button>
+        </div>
+
+        <div class="flex items-center justify-center gap-4 mt-5 text-xs text-ink/40">
+          <span><span id="tm-sessions">0</span> sessions</span>
+          <span>·</span>
+          <span><span id="tm-total-min">0</span> total min</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</DefaultLayout>
+
+<script>
+  let focusMin = 25, breakMin = 5
+  let seconds = focusMin * 60
+  let running = false
+  let phase: "focus" | "break" = "focus"
+  let timer: number | null = null
+  let sessions = 0
+  let totalMin = 0
+
+  const display = document.getElementById("tm-display")!
+  const phaseEl = document.getElementById("tm-phase")!
+  const startBtn = document.getElementById("tm-start") as HTMLButtonElement
+  const pauseBtn = document.getElementById("tm-pause") as HTMLButtonElement
+  const sessionsEl = document.getElementById("tm-sessions")!
+  const totalMinEl = document.getElementById("tm-total-min")!
+
+  function formatTime(s: number): string {
+    const m = Math.floor(s / 60), sec = s % 60
+    return `${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`
+  }
+
+  function updateDisplay() {
+    display.textContent = formatTime(seconds)
+    phaseEl.textContent = phase === "focus" ? "Focus" : "Break"
+  }
+
+  function tick() {
+    seconds--
+    if (seconds < 0) {
+      if (phase === "focus") {
+        sessions++; totalMin += focusMin
+        sessionsEl.textContent = String(sessions)
+        totalMinEl.textContent = String(totalMin)
+        phase = "break"
+        seconds = breakMin * 60
+      } else {
+        phase = "focus"
+        seconds = focusMin * 60
+      }
+    }
+    updateDisplay()
+  }
+
+  function stopTimer() {
+    if (timer !== null) { clearInterval(timer); timer = null }
+  }
+
+  startBtn.onclick = () => {
+    if (running) return
+    running = true
+    startBtn.disabled = true; pauseBtn.disabled = false
+    timer = window.setInterval(tick, 1000)
+  }
+
+  pauseBtn.onclick = () => {
+    if (!running) return
+    running = false
+    stopTimer()
+    startBtn.disabled = false; pauseBtn.disabled = true
+  }
+
+  document.getElementById("tm-reset")!.onclick = () => {
+    stopTimer(); running = false
+    phase = "focus"; seconds = focusMin * 60
+    startBtn.disabled = false; pauseBtn.disabled = true
+    updateDisplay()
+  }
+
+  document.querySelectorAll(".tm-preset").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".tm-preset").forEach(b => b.classList.remove("on"))
+      btn.classList.add("on")
+      focusMin = parseInt((btn as HTMLElement).dataset.focus!)
+      breakMin = parseInt((btn as HTMLElement).dataset.break!)
+      stopTimer(); running = false
+      phase = "focus"; seconds = focusMin * 60
+      startBtn.disabled = false; pauseBtn.disabled = true
+      updateDisplay()
+    })
+  })
+</script>
