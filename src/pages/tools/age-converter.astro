@@ -34,11 +34,11 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
   function getAge(n:number):{jp:string,rd:string,sentence:string}{
     if(AGE_MAP[String(n)]){const[jp,rd]=AGE_MAP[String(n)].split(" ");return{jp,rd,sentence:`私は${jp}です。`}}
     const tens=Math.floor(n/10),ones=n%10
-    const tensS=["","","二十","三十","四十","五十","六十","七十","八十","九十","百"][tens]||String(n)
-    const onesS=["歳","一歳","二歳","三歳","四歳","五歳","六歳","七歳","八歳","九歳"][ones]
-    const tensR=["","","にじゅう","さんじゅう","よんじゅう","ごじゅう","ろくじゅう","ななじゅう","はちじゅう","きゅうじゅう","ひゃく"][tens]||""
-    const onesR={0:"",1:"いっさい",2:"にさい",3:"さんさい",4:"よんさい",5:"ごさい",6:"ろくさい",7:"ななさい",8:"はっさい",9:"きゅうさい"}
-    const jp=tensS.replace("十","")+onesS,rd=tensR+(onesR[ones as keyof typeof onesR]||"さい")
+    const tensS=["","十","二十","三十","四十","五十","六十","七十","八十","九十","百"][tens]||String(n)
+    const onesS=["","一","二","三","四","五","六","七","八","九"][ones]
+    const tensR=["","じゅう","にじゅう","さんじゅう","よんじゅう","ごじゅう","ろくじゅう","ななじゅう","はちじゅう","きゅうじゅう","ひゃく"][tens]||""
+    const onesR=["さい","いっさい","にさい","さんさい","よんさい","ごさい","ろくさい","ななさい","はっさい","きゅうさい"]
+    const jp=tensS+onesS+"歳",rd=tensR+onesR[ones]
     return{jp,rd,sentence:`私は${jp}です。`}
   }
   const input=document.getElementById("age-input") as HTMLInputElement

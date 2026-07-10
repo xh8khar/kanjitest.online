@@ -1,21 +1,5 @@
 ---
 import DefaultLayout from "@/layouts/DefaultLayout.astro"
-import { toKatakana } from "@/lib/kana"
-
-function toHiragana(kata: string): string {
-  return [...kata]
-    .map((ch) => {
-      const cp = ch.codePointAt(0)!
-      const hiraStart = 0x3041
-      const kataStart = 0x30a1
-      const kataEnd = 0x30fa
-      if (cp >= kataStart && cp <= kataEnd) {
-        return String.fromCodePoint(cp - (kataStart - hiraStart))
-      }
-      return ch
-    })
-    .join("")
-}
 ---
 
 <DefaultLayout title="Kana Converter — Hiragana to Katakana" description="Free online kana converter — convert between hiragana and katakana instantly. Supports bidirectional conversion for any Japanese text." keywords="kana converter, hiragana to katakana, katakana to hiragana, Japanese script converter, kana conversion tool, learn Japanese kana">

@@ -53,8 +53,8 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
 
 <script>
   const EXAMS = [
-    { m: 7, d: 5 },                     // July 5, 2026
-    { m: 12, d: (new Date().getFullYear() >= 2026 ? 6 : 6) },  // first Sunday of December
+    { m: 7, d: 5 },   // July 5
+    { m: 12 },        // December (first Sunday)
   ]
 
   function getFirstSunday(y: number, m: number): Date {

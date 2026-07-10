@@ -15,6 +15,7 @@ import ButtonGroup from "@/components/tools/ButtonGroup.astro"
       </div>
       <div id="wm-score" class="text-xs text-ink/40 mb-4">0 matched / 0 total</div>
       <div id="wm-grid" class="grid grid-cols-2 gap-2 max-w-sm mx-auto"></div>
+      <div id="wm-win" class="text-center text-sm font-bold text-emerald-600 mt-3 animate-pop" hidden>All matched! 🎉</div>
       <button id="wm-new" class="btn btn-accent h-10 px-5 text-sm mt-4 w-full">New game</button>
     </div>
   </div>
@@ -23,12 +24,12 @@ import ButtonGroup from "@/components/tools/ButtonGroup.astro"
 <script>
   type Entry={kanji:string;meanings:string[];level:string}
   let data:Entry[]=[],activeLvl="n5",selected:string|null=null,matched=0,total=0
-  const grid=document.getElementById("wm-grid")!,scoreEl=document.getElementById("wm-score")!
+  const grid=document.getElementById("wm-grid")!,scoreEl=document.getElementById("wm-score")!,winEl=document.getElementById("wm-win")!
   fetch("/api/kanji.json").then(r=>r.json()).then(d=>{data=d;newGame()})
   function shuffle<T>(a:T[]):T[]{const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
   function newGame(){
     const pool=data.filter(e=>e.level===activeLvl&&e.meanings[0]).sort(()=>Math.random()-0.5).slice(0,6)
-    total=pool.length;matched=0;selected=null
+    total=pool.length;matched=0;selected=null;winEl.hidden=true
     const jp=shuffle(pool.map(e=>({text:e.kanji,meaning:e.meanings[0],id:e.kanji+Math.random()})))
     const en=shuffle(pool.map(e=>({text:e.meanings[0],meaning:e.meanings[0],id:e.kanji+Math.random()})))
     const cards=shuffle([...jp,...en])
@@ -46,7 +47,7 @@ import ButtonGroup from "@/components/tools/ButtonGroup.astro"
       }
     }))
   }
-  function updateScore(){scoreEl.textContent=`${matched} matched / ${total} total`;if(matched===total)setTimeout(()=>alert("All matched! \u{1F389}"),300)}
+  function updateScore(){scoreEl.textContent=`${matched} matched / ${total} total`;if(matched===total)winEl.hidden=false}
   document.querySelectorAll(".wm-lvl").forEach(b=>b.addEventListener("click",function(){
     document.querySelectorAll(".wm-lvl").forEach(x=>x.classList.remove("on"));this.classList.add("on")
     activeLvl=(this as HTMLElement).dataset.lvl!;newGame()

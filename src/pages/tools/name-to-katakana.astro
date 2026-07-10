@@ -22,11 +22,6 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
 </DefaultLayout>
 
 <script>
-  const APPROX: [RegExp, string][] = [
-    [/shi$/i, "シー"], [/sh$/i, "シュ"], [/th$/i, "ス"], [/ph$/i, "フ"],
-    [/ck$/i, "ック"], [/ng$/i, "ング"], [/ll$/i, "ル"], [/tt$/i, "ト"],
-    [/a$/i, "ア"], [/e$/i, "ー"], [/i$/i, "イ"], [/o$/i, "オ"], [/u$/i, "ウ"],
-  ]
   const MAP: Record<string, string> = {
     b:"バ",c:"カ",d:"ダ",f:"ファ",g:"ガ",h:"ハ",j:"ジャ",k:"カ",l:"ラ",
     m:"マ",n:"ナ",p:"パ",q:"ク",r:"ラ",s:"サ",t:"タ",v:"ヴァ",w:"ワ",x:"クサ",y:"ヤ",z:"ザ",
