@@ -63,8 +63,11 @@ export default function FlashcardsClient({ level, entry, index, total, prevKanji
   const go = useCallback(
     (kanji: string | null, dir: "left" | "right") => {
       if (!kanji) return
+      // snap back to the front so the answer side never carries over
+      // into the transition to the next card
+      setFlipped(false)
       setLeaving(dir)
-      // let the card slide out before the view transition takes over
+      // let the card fade out before the view transition takes over
       setTimeout(() => navigate(`${prefix}/flashcards/${kanji}/`), 160)
     },
     [prefix]
@@ -125,9 +128,16 @@ export default function FlashcardsClient({ level, entry, index, total, prevKanji
         </a>
       </div>
 
-      {/* Card */}
+      {/* Card — outer wrapper handles the fast exit fade so the answer
+          side can never show through the page transition */}
       <div
-        className="perspective-1200 select-none"
+        className={`perspective-1200 select-none transition-[opacity,transform] duration-150 ease-out ${
+          leaving === "right"
+            ? "translate-x-6 opacity-0"
+            : leaving === "left"
+              ? "-translate-x-6 opacity-0"
+              : ""
+        }`}
         onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
         onTouchEnd={(e) => {
           if (touchX.current === null) return
@@ -142,14 +152,8 @@ export default function FlashcardsClient({ level, entry, index, total, prevKanji
           tabIndex={0}
           aria-label={flipped ? "Show kanji" : "Reveal readings and meanings"}
           onClick={() => setFlipped((f) => !f)}
-          className={`relative w-full min-h-[320px] sm:min-h-[380px] preserve-3d cursor-pointer transition-all duration-500 [transition-timing-function:cubic-bezier(0.34,1.3,0.5,1)] ${
+          className={`relative w-full min-h-[320px] sm:min-h-[380px] preserve-3d cursor-pointer transition-transform duration-500 [transition-timing-function:cubic-bezier(0.34,1.3,0.5,1)] ${
             flipped ? "rotate-y-180" : ""
-          } ${
-            leaving === "right"
-              ? "translate-x-8 opacity-0"
-              : leaving === "left"
-                ? "-translate-x-8 opacity-0"
-                : ""
           }`}
         >
           {/* Front */}
