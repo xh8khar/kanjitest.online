@@ -48,7 +48,6 @@ function saveState(key: string, s: FlashcardState) {
 
 export default function FlashcardsClient({ level, entry: initialEntry, startIndex, total }: Props) {
   const prefix = `/${level}`
-  const [mounted, setMounted] = useState(false)
   // Pages embed one card; the full deck arrives from deck.json (one small
   // cached fetch per level) and unlocks instant client-side navigation.
   const [cards, setCards] = useState<CardData[] | null>(null)
@@ -61,7 +60,6 @@ export default function FlashcardsClient({ level, entry: initialEntry, startInde
   const touchX = useRef<number | null>(null)
   const searchRef = useRef<HTMLInputElement>(null)
   const [state, setState] = useState<FlashcardState>({ known: [] })
-  useEffect(() => { setMounted(true) }, [])
 
   useEffect(() => {
     let alive = true
@@ -215,7 +213,6 @@ export default function FlashcardsClient({ level, entry: initialEntry, startInde
 
       {/* Card */}
       <div
-        style={{ opacity: mounted ? undefined : 0 }}
         className={`perspective-1200 select-none transition-opacity duration-150 ease-out ${
           leaving ? "opacity-0" : "opacity-100"
         }`}
@@ -343,7 +340,7 @@ export default function FlashcardsClient({ level, entry: initialEntry, startInde
         >
           <div className="absolute inset-0 bg-ink/40 backdrop-blur-sm" />
           <div
-            className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl shadow-ink/20 border border-ink/10 max-h-[70vh] flex flex-col animate-pop"
+            className="relative w-full max-w-2xl rounded-2xl shadow-2xl shadow-ink/20 border border-ink/10 max-h-[70vh] flex flex-col animate-pop" style={{ background: "var(--card-bg, #fff)" }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-3 p-4 border-b border-ink/8">
@@ -354,7 +351,7 @@ export default function FlashcardsClient({ level, entry: initialEntry, startInde
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search kanji or meaning…"
                 aria-label="Search kanji or meaning"
-                className="flex-1 bg-ink/[0.03] border border-ink/12 rounded-xl px-4 h-11 text-sm text-ink outline-none focus:border-vermilion/50 focus:bg-white transition-colors placeholder:text-ink/30"
+                className="flex-1 bg-ink/[0.03] border border-ink/12 rounded-xl px-4 h-11 text-sm text-ink outline-none focus:border-vermilion/50 transition-colors placeholder:text-ink/30" style={{ background: "var(--card-bg, #fff)" }}
               />
               <button
                 onClick={() => setShowJump(false)}

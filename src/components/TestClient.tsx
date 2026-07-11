@@ -79,7 +79,7 @@ function JumpSetOverlay({
     >
       <div className="absolute inset-0 bg-ink/40 backdrop-blur-sm" />
       <div
-        className="relative w-full max-w-sm bg-white rounded-2xl shadow-2xl shadow-ink/20 border border-ink/10 animate-pop"
+        className="relative w-full max-w-sm rounded-2xl shadow-2xl shadow-ink/20 border border-ink/10 animate-pop" style={{ background: "var(--card-bg, #fff)" }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between p-4 border-b border-ink/8">

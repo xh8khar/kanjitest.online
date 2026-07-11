@@ -2,7 +2,7 @@
 import DefaultLayout from "@/layouts/DefaultLayout.astro"
 import type { Level } from "@/lib/kanji"
 import { levelMeta } from "@/lib/levels"
-import { breadcrumbSchema, definedTermSchema } from "@/lib/seo"
+import { breadcrumbSchema, definedTermSchema, faqSchema } from "@/lib/seo"
 import { getGrammar } from "@/lib/grammar"
 
 export interface Props {
@@ -29,11 +29,17 @@ const breadSchema = breadcrumbSchema([
   { name: "Grammar", url: `${prefix}/grammar/` },
   { name: grammar.title, url: `${prefix}/grammar/${grammar.id}/` },
 ])
+const faqEntries = grammar.examples.map((ex) => ({
+  question: `How do you use ${grammar.title} in a sentence?`,
+  answer: `${ex.jp} — ${ex.en}`,
+}))
+const faqSchemaData = faqSchema(faqEntries)
 ---
 
 <DefaultLayout title={title} description={description} level={level}>
   <script type="application/ld+json" set:html={JSON.stringify(breadSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(termSchema)} />
+  {faqEntries.length > 0 && <script type="application/ld+json" set:html={JSON.stringify(faqSchemaData)} />}
 
   <div class="px-4 py-6 sm:py-8">
     <a href={`${prefix}/grammar/`} class="inline-flex items-center gap-1 text-xs text-ink/55 hover:text-vermilion transition-colors animate-fade-in">

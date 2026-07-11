@@ -1,0 +1,29 @@
+# robots.txt for KanjiTest.Online
+# https://www.kanjitest.online/robots.txt
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Crawl-delay: 10
+
+# Sitemaps
+Sitemap: https://www.kanjitest.online/sitemap.xml
+
+# LLMs
+User-agent: GPTBot
+Allow: /
+Allow: /llms.txt
+Allow: /api/decks.json
+Allow: /api/kanji.json
+Allow: /api/grammar.json
+Allow: /api/radicals.json
+Disallow: /api/
+
+User-agent: CCBot
+Allow: /
+Allow: /llms.txt
+Disallow: /api/
+
+User-agent: Googlebot
+Allow: /
+Disallow: /api/

@@ -1,0 +1,107 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import { siteUrl, webPageSchema, breadcrumbSchema } from "@/lib/seo"
+---
+
+<DefaultLayout
+  title="Open Source Kanji Data — Free JLPT Kanji JSON API"
+  description="Free, open-source JLPT kanji data available as JSON. Download kanji, grammar, and radical datasets for N5 through N1. MIT licensed."
+  keywords="open source kanji data, free kanji API, JLPT kanji JSON, kanji dataset"
+>
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(webPageSchema("Open Source Kanji Data | KanjiTest.Online", "Free open-source JLPT kanji, grammar, and radical datasets available via JSON API."))}
+    />
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(breadcrumbSchema([
+        { name: "Home", url: siteUrl("/") },
+        { name: "Open Source", url: siteUrl("/open-source/") },
+      ]))}
+    />
+
+    <h1 class="text-3xl sm:text-4xl font-black text-ink mb-6">Open Source Kanji Data</h1>
+
+    <div class="space-y-5 text-sm sm:text-base text-ink/80 leading-relaxed">
+      <p>
+        KanjiTest.Online publishes all of its JLPT kanji, grammar, and radical data as open datasets.
+        You are free to use these datasets in your own projects — apps, flashcards, study tools,
+        research, or anything else.
+      </p>
+
+      <h2 class="text-xl font-bold text-ink mt-8 mb-3">JSON API Endpoints</h2>
+      <p>All endpoints return structured JSON and are updated whenever the site data changes.</p>
+
+      <div class="space-y-3 mt-4">
+        <div class="card p-4">
+          <div class="font-bold text-ink">All Kanji by Level</div>
+          <div class="text-xs text-ink/50 font-mono mt-0.5">GET /api/decks.json</div>
+          <div class="text-[13px] text-ink/70 mt-1">Complete JLPT kanji data (N5–N1) organized by level — readings, meanings, stroke counts, and example words with sentences.</div>
+          <a href="/api/decks.json" class="inline-block mt-2 text-xs font-semibold text-vermilion hover:text-vermilion-deep transition-colors">View API →</a>
+        </div>
+
+        <div class="card p-4">
+          <div class="font-bold text-ink">Grammar Points</div>
+          <div class="text-xs text-ink/50 font-mono mt-0.5">GET /api/grammar.json</div>
+          <div class="text-[13px] text-ink/70 mt-1">All 76 JLPT grammar points (N5–N1) with formation, usage notes, example sentences, and related grammar links.</div>
+          <a href="/api/grammar.json" class="inline-block mt-2 text-xs font-semibold text-vermilion hover:text-vermilion-deep transition-colors">View API →</a>
+        </div>
+
+        <div class="card p-4">
+          <div class="font-bold text-ink">All Kanji (Flat)</div>
+          <div class="text-xs text-ink/50 font-mono mt-0.5">GET /api/kanji.json</div>
+          <div class="text-[13px] text-ink/70 mt-1">Every kanji character from all JLPT levels in a single flat array. Includes level metadata per entry.</div>
+          <a href="/api/kanji.json" class="inline-block mt-2 text-xs font-semibold text-vermilion hover:text-vermilion-deep transition-colors">View API →</a>
+        </div>
+
+        <div class="card p-4">
+          <div class="font-bold text-ink">Radicals</div>
+          <div class="text-xs text-ink/50 font-mono mt-0.5">GET /api/radicals.json</div>
+          <div class="text-[13px] text-ink/70 mt-1">All 214 Kangxi radicals with stroke counts, meanings, readings, variants, and example characters.</div>
+          <a href="/api/radicals.json" class="inline-block mt-2 text-xs font-semibold text-vermilion hover:text-vermilion-deep transition-colors">View API →</a>
+        </div>
+      </div>
+
+      <h2 class="text-xl font-bold text-ink mt-8 mb-3">Data Format</h2>
+      <p>Each kanji entry includes:</p>
+      <ul class="list-disc pl-5 space-y-1 text-[13px]">
+        <li><strong class="text-ink">kanji</strong> — the character itself</li>
+        <li><strong class="text-ink">kun</strong> — kun'yomi readings</li>
+        <li><strong class="text-ink">on</strong> — on'yomi readings</li>
+        <li><strong class="text-ink">meanings</strong> — English meanings</li>
+        <li><strong class="text-ink">strokes</strong> — stroke count</li>
+        <li><strong class="text-ink">examples</strong> — vocabulary words with readings, English translations, and full sentences</li>
+        <li><strong class="text-ink">level</strong> — JLPT level (n5–n1)</li>
+      </ul>
+
+      <h2 class="text-xl font-bold text-ink mt-8 mb-3">How to Use</h2>
+      <p class="text-[13px]">
+        Fetch the data directly in your JavaScript, Python, or any other language:
+      </p>
+      <pre class="text-white text-xs p-4 rounded-xl overflow-x-auto mt-2" style="background:#221f1a"><code>// JavaScript
+const kanji = await fetch('https://www.kanjitest.online/api/decks.json').then(r => r.json())
+console.log(kanji.n5[0]) // first N5 kanji</code></pre>
+      <pre class="text-white text-xs p-4 rounded-xl overflow-x-auto mt-2" style="background:#221f1a"><code># Python
+import requests
+data = requests.get('https://www.kanjitest.online/api/decks.json').json()
+print(data['n5'][0]['kanji'], data['n5'][0]['meanings'])</code></pre>
+
+      <h2 class="text-xl font-bold text-ink mt-8 mb-3">LLMs.txt</h2>
+      <p class="text-[13px]">
+        A machine-readable summary of the site is available for AI assistants and large language models:
+        <a href="/llms.txt" class="text-blue-600 underline hover:text-blue-800" target="_blank">llms.txt</a>.
+        This file provides a structured overview of all content sections, APIs, and navigation paths.
+      </p>
+
+      <h2 class="text-xl font-bold text-ink mt-8 mb-3">License</h2>
+      <p class="text-[13px]">
+        All datasets are released under the
+        <a href="https://opensource.org/licenses/MIT" class="text-blue-600 underline hover:text-blue-800" target="_blank" rel="noopener">MIT License</a>.
+        You may use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the data
+        without restriction. Attribution is appreciated but not required.
+      </p>
+
+    </div>
+  </div>
+</DefaultLayout>

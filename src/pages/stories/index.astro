@@ -1,0 +1,50 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import stories from "@/data/stories.json"
+import { LEVELS } from "@/lib/levels"
+
+const groups = (["n5", "n4", "n3", "n2", "n1"] as const).map((level) => ({
+  level,
+  items: stories.filter((s) => s.level === level),
+}))
+const totalStories = stories.length
+---
+
+<DefaultLayout title="Kanji Mnemonics & Memory Stories — Learn Kanji with Stories" description="Creative mnemonics and memory stories for over 60 common Japanese kanji. Remember kanji easily with our story-based learning system." keywords="kanji mnemonics, how to remember kanji, kanji stories, memory techniques, learn kanji, radical stories, mnemonic for kanji">
+  <div class="max-w-4xl mx-auto px-4 py-8 sm:py-12">
+    <div class="text-center mb-10 sm:mb-14 animate-fade-up">
+      <h1 class="text-3xl sm:text-5xl font-black text-ink tracking-tight">Kanji Memory Stories</h1>
+      <p class="text-sm sm:text-base text-ink/60 mt-3 max-w-2xl mx-auto leading-relaxed">
+        <strong class="text-ink">{totalStories}</strong> creative mnemonics to help you remember kanji meanings and readings through vivid stories.
+      </p>
+    </div>
+
+    {groups.filter((g) => g.items.length > 0).map((g, gi) => (
+      <section class="mb-10 animate-fade-up" style={`animation-delay: ${gi * 80}ms`}>
+        <div class="flex items-center gap-3 mb-4">
+          <span class={`w-2.5 h-2.5 rounded-full ${LEVELS[g.level].accentBg}`} />
+          <h2 class="text-lg font-black text-ink tracking-tight">JLPT {LEVELS[g.level].label}</h2>
+          <span class="text-xs text-ink/40 font-medium">{g.items.length} kanji</span>
+          <span class="flex-1 h-px bg-ink/10" />
+        </div>
+        <div class="grid sm:grid-cols-2 gap-3">
+          {g.items.map((s) => {
+            const firstLine = s.story.length > 80 ? s.story.slice(0, 80) + "…" : s.story
+            return (
+              <a href={`/stories/${s.kanji}/`} class="card card-hover group px-4 py-3.5 flex items-center gap-3 no-underline reveal">
+                <span class="w-12 h-12 rounded-xl bg-ink/[0.06] flex items-center justify-center shrink-0 text-2xl font-jp font-bold text-ink transition-transform duration-300 group-hover:scale-110">
+                  {s.kanji}
+                </span>
+                <div class="flex-1 min-w-0">
+                  <span class="text-sm font-bold text-ink group-hover:text-vermilion transition-colors">{s.meaning}</span>
+                  <p class="text-[12px] text-ink/55 mt-0.5 leading-relaxed line-clamp-2">{firstLine}</p>
+                </div>
+                <span class="text-ink/25 shrink-0 text-sm transition-all duration-300 group-hover:text-vermilion group-hover:translate-x-0.5">&rarr;</span>
+              </a>
+            )
+          })}
+        </div>
+      </section>
+    ))}
+  </div>
+</DefaultLayout>

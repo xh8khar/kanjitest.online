@@ -32,6 +32,7 @@ const tools = [
   { href: `${prefix}/study/`, label: "Study", icon: "📖" },
   { href: `${prefix}/flashcards/`, label: "Flashcards", icon: "🃏" },
   { href: `${prefix}/vocabulary/`, label: "Vocabulary", icon: "📝" },
+  { href: `${prefix}/grammar/`, label: "Grammar", icon: "📋" },
   { href: `${prefix}/sets/`, label: "Tests", icon: "✍️" },
 ]
 ---
@@ -123,7 +124,7 @@ const tools = [
     translate: 2px 0;
   }
   .sb-tool.on {
-    background: var(--color-ink);
+    background: var(--color-ink-solid, var(--color-ink));
     color: #fff;
     font-weight: 600;
     box-shadow: 0 4px 12px -2px color-mix(in srgb, var(--color-ink) 20%, transparent);
@@ -167,7 +168,7 @@ const tools = [
     color: var(--color-ink);
   }
   .sb-set.on {
-    background: var(--color-ink);
+    background: var(--color-ink-solid, var(--color-ink));
     color: #fff;
     box-shadow: 0 4px 12px -2px color-mix(in srgb, var(--color-ink) 20%, transparent);
   }

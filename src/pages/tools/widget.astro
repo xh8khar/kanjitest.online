@@ -1,0 +1,65 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import { siteUrl, webPageSchema, breadcrumbSchema } from "@/lib/seo"
+---
+
+<DefaultLayout
+  title="Kanji Widget — Free Embeddable Kanji of the Day for Your Site"
+  description="Add a free Kanji of the Day widget to any website. Embeddable JavaScript widget showing a daily kanji character with readings and meanings."
+  keywords="kanji widget, embeddable kanji, kanji of the day widget"
+>
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(webPageSchema("Kanji Widget | KanjiTest.Online", "Free embeddable Kanji of the Day widget for any website."))}
+    />
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(breadcrumbSchema([
+        { name: "Home", url: siteUrl("/") },
+        { name: "Tools", url: siteUrl("/tools/") },
+        { name: "Widget", url: siteUrl("/tools/widget/") },
+      ]))}
+    />
+
+    <h1 class="text-3xl sm:text-4xl font-black text-ink mb-6">Kanji of the Day Widget</h1>
+
+    <div class="space-y-5 text-sm sm:text-base text-ink/80 leading-relaxed">
+      <p>
+        Embed a free Kanji of the Day widget on your website. It shows a different kanji character
+        every day — pulled from all JLPT levels — with readings and meanings.
+      </p>
+
+      <h2 class="text-xl font-bold text-ink mt-8 mb-3">Usage</h2>
+      <p class="text-[13px]">Add these two lines anywhere on your page:</p>
+      <pre class="text-white text-xs p-4 rounded-xl overflow-x-auto mt-2" style="background:#221f1a"><code>&lt;div id="kanjitest-widget"&gt;&lt;/div&gt;
+&lt;script src="https://www.kanjitest.online/api/embed-widget.js" async defer&gt;&lt;/script&gt;</code></pre>
+
+      <h2 class="text-xl font-bold text-ink mt-8 mb-3">Live Preview</h2>
+      <p class="text-[13px]">Here is what the widget looks like:</p>
+      <div class="mt-3" id="kanjitest-widget"></div>
+      <script src="/api/embed-widget.js" async defer></script>
+
+      <h2 class="text-xl font-bold text-ink mt-8 mb-3">How It Works</h2>
+      <ul class="list-disc pl-5 space-y-1 text-[13px]">
+        <li>The widget fetches kanji data from all JLPT levels (N5–N1).</li>
+        <li>A deterministic daily selection picks one kanji based on the day of the year.</li>
+        <li>Displays the kanji character, primary English meaning, and kun/on readings.</li>
+        <li>Links back to KanjiTest.Online for full details.</li>
+        <li>Automatically sizes to fit its container (max-width: 280px).</li>
+      </ul>
+
+      <h2 class="text-xl font-bold text-ink mt-8 mb-3">Customization</h2>
+      <p class="text-[13px]">
+        The widget targets <code class="text-ink font-mono text-xs bg-ink/5 px-1 py-0.5 rounded">#kanjitest-widget</code>.
+        You can style the container with your own CSS before the script loads — the widget content will inherit
+        the container's width and alignment. To hide the widget on certain pages, simply omit the div or script tag.
+      </p>
+
+      <div class="mt-8 p-4 bg-amber-50 border border-amber-200 rounded-xl text-[13px] text-amber-900">
+        <strong>Note:</strong> The widget fetches data from KanjiTest.Online each time it loads.
+        It is cached in the browser for up to one hour. The data source is free and requires no API key.
+      </div>
+    </div>
+  </div>
+</DefaultLayout>

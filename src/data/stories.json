@@ -1,0 +1,436 @@
+[
+  {
+    "kanji": "学",
+    "meaning": "learn, study",
+    "story": "A child (子) under a roof (宀) surrounded by knowledge (X) — the classic image of studying. Think of a child sheltered in a schoolhouse, absorbing wisdom from all sides.",
+    "components": ["子", "宀"],
+    "level": "n5"
+  },
+  {
+    "kanji": "休",
+    "meaning": "rest",
+    "story": "A person (亻) leaning against a tree (木). Imagine a tired traveler who finally reaches a tree and rests against its trunk. When you see this kanji, picture yourself taking a break in the shade.",
+    "components": ["亻", "木"],
+    "level": "n5"
+  },
+  {
+    "kanji": "何",
+    "meaning": "what, how many",
+    "story": "A person (亻) carrying something on their back — they can carry (可) anything. The question 'what?' is asking what a person is carrying. Think: 'What is that person holding?'",
+    "components": ["亻", "可"],
+    "level": "n5"
+  },
+  {
+    "kanji": "先",
+    "meaning": "previous, ahead, before",
+    "story": "A cow (牛) walking on legs (儿) — going ahead of the herd. The cow takes the lead, moving forward on its legs. 'Ahead' of the rest.",
+    "components": ["牛", "儿"],
+    "level": "n5"
+  },
+  {
+    "kanji": "出",
+    "meaning": "exit, leave, put out",
+    "story": "Two mountains (山) stacked on top of each other. When one mountain rises out of another, something is 'coming out.' Think of a plant sprouting out of the ground.",
+    "components": ["山", "山"],
+    "level": "n5"
+  },
+  {
+    "kanji": "名",
+    "meaning": "name, famous",
+    "story": "Evening (夕) and mouth (口) — at dusk, you call someone's name with your mouth to find them in the dark. Your name is what people call out when they cannot see you.",
+    "components": ["夕", "口"],
+    "level": "n5"
+  },
+  {
+    "kanji": "大",
+    "meaning": "big, large, great",
+    "story": "A person (人) standing with arms stretched wide. The bigger something is, the more space it occupies. Picture a person spreading their arms to show 'this big!'",
+    "components": ["人"],
+    "level": "n5"
+  },
+  {
+    "kanji": "天",
+    "meaning": "heaven, sky",
+    "story": "One (一) above big (大). Heaven is what lies one step above everything great. The sky stretches above all things on earth.",
+    "components": ["一", "大"],
+    "level": "n5"
+  },
+  {
+    "kanji": "女",
+    "meaning": "woman, female",
+    "story": "A woman kneeling with folded hands — a pictograph of a person in a traditional posture of grace. The curved lines suggest elegance and poise.",
+    "components": [],
+    "level": "n5"
+  },
+  {
+    "kanji": "子",
+    "meaning": "child",
+    "story": "A baby wrapped in swaddling clothes with a large head — the classic shape of an infant. The round top is the head, the body is tucked below.",
+    "components": [],
+    "level": "n5"
+  },
+  {
+    "kanji": "小",
+    "meaning": "small, little",
+    "story": "Three small drops or dots — tiny particles. When you see small things, they look like little specks. The kanji itself is small in size compared to 大 (big).",
+    "components": [],
+    "level": "n5"
+  },
+  {
+    "kanji": "山",
+    "meaning": "mountain",
+    "story": "A pictograph of three mountain peaks. The center peak rises highest, flanked by two smaller ones. A literal drawing of a mountain range.",
+    "components": [],
+    "level": "n5"
+  },
+  {
+    "kanji": "川",
+    "meaning": "river, stream",
+    "story": "Three strokes representing the flow of a river. The left and right strokes are the banks, and the middle stroke is the water flowing between them.",
+    "components": [],
+    "level": "n5"
+  },
+  {
+    "kanji": "日",
+    "meaning": "sun, day",
+    "story": "A circle with a dot in the center — the ancient pictograph of the sun. The outer line is the sun's shape, and the dot may represent a sunspot or the center of daylight.",
+    "components": [],
+    "level": "n5"
+  },
+  {
+    "kanji": "月",
+    "meaning": "moon, month",
+    "story": "A crescent moon shape. Unlike the round sun (日), the moon appears in phases, and this kanji captures its crescent form. Two horizontal lines suggest the moon's surface features.",
+    "components": [],
+    "level": "n5"
+  },
+  {
+    "kanji": "木",
+    "meaning": "tree, wood",
+    "story": "A pictograph of a tree with branches (top), trunk (middle), and roots (bottom). The vertical line is the trunk, the diagonal strokes are branches reaching up and roots going down.",
+    "components": [],
+    "level": "n5"
+  },
+  {
+    "kanji": "本",
+    "meaning": "book, origin",
+    "story": "A tree (木) with a mark (一) at its root. The mark indicates the 'origin' or 'base' of the tree. From this meaning, it came to mean 'book' — the source of knowledge.",
+    "components": ["木", "一"],
+    "level": "n5"
+  },
+  {
+    "kanji": "人",
+    "meaning": "person",
+    "story": "A person standing with legs apart — a simple pictograph of a human figure. The two strokes represent legs, showing a person in profile.",
+    "components": [],
+    "level": "n5"
+  },
+  {
+    "kanji": "金",
+    "meaning": "gold, metal, money",
+    "story": "A roof (人) covering dirt (土) with two dots (..) — gold nuggets hidden in the earth. The kanji suggests wealth buried underground, waiting to be uncovered.",
+    "components": ["人", "土"],
+    "level": "n5"
+  },
+  {
+    "kanji": "水",
+    "meaning": "water",
+    "story": "A flowing stream with splashes on both sides — a pictograph of water in motion. The center line is the main current, and the side strokes are droplets splashing outward.",
+    "components": [],
+    "level": "n5"
+  },
+  {
+    "kanji": "火",
+    "meaning": "fire",
+    "story": "A person with arms raised, surrounded by flames on both sides. The shape evokes a campfire with flickering flames reaching upward.",
+    "components": [],
+    "level": "n5"
+  },
+  {
+    "kanji": "土",
+    "meaning": "earth, soil, ground",
+    "story": "Ground level (一) with a plant sprouting (十) from it. The cross shape represents a plant pushing up through the soil. Everything grows from the earth.",
+    "components": ["一", "十"],
+    "level": "n5"
+  },
+  {
+    "kanji": "年",
+    "meaning": "year",
+    "story": "A person carrying a harvest of grain on their back. The passing of a year is marked by the cycle of planting and harvesting. Each harvest marks one year.",
+    "components": [],
+    "level": "n5"
+  },
+  {
+    "kanji": "時",
+    "meaning": "time, hour",
+    "story": "The sun (日) moving across the earth (土) while a person measures with a hand (寸). The sun's position at the temple tells you the time.",
+    "components": ["日", "土", "寸"],
+    "level": "n5"
+  },
+  {
+    "kanji": "間",
+    "meaning": "interval, between, space",
+    "story": "A gate (門) with sunlight (日) shining through the opening. The space 'between' the gate doors lets the light pass. It represents the interval or space between things.",
+    "components": ["門", "日"],
+    "level": "n5"
+  },
+  {
+    "kanji": "前",
+    "meaning": "before, in front, previous",
+    "story": "Sheep (䒑) standing on legs (月) with a knife (刂) cutting in front. The sheep are led from the front, going before the shepherd.",
+    "components": ["䒑", "月", "刂"],
+    "level": "n5"
+  },
+  {
+    "kanji": "後",
+    "meaning": "after, behind, later",
+    "story": "A road (彳) with a thread (糸) and a reaching hand (夂) — what follows behind, like a thread trailing after weaving. What comes 'after' is connected to what came before like thread on a spool.",
+    "components": ["彳", "糸", "夂"],
+    "level": "n5"
+  },
+  {
+    "kanji": "上",
+    "meaning": "up, above, upper",
+    "story": "A short line above a longer line — something positioned 'above' a baseline. A simple and elegant representation of relative position.",
+    "components": [],
+    "level": "n5"
+  },
+  {
+    "kanji": "下",
+    "meaning": "down, below, under",
+    "story": "A short line below a longer line — the opposite of 上. Something positioned 'below' the baseline. Together with 上, they form the basic vertical relationship.",
+    "components": [],
+    "level": "n5"
+  },
+  {
+    "kanji": "中",
+    "meaning": "middle, inside, center",
+    "story": "A rectangle with a line passing through its center — an arrow piercing the middle of a target. The line through the box represents being 'inside' or at the 'center.'",
+    "components": [],
+    "level": "n5"
+  },
+  {
+    "kanji": "外",
+    "meaning": "outside, foreign",
+    "story": "Evening (夕) and divination (卜) — in ancient times, people performed divination rituals at dusk to learn about the world 'outside' their village. The 'outside' is unknown, requiring fortune-telling.",
+    "components": ["夕", "卜"],
+    "level": "n5"
+  },
+  {
+    "kanji": "右",
+    "meaning": "right, right side",
+    "story": "A hand (又) over a mouth (口) — most people use their right hand to bring food to their mouth. The right hand is the dominant hand for eating.",
+    "components": ["又", "口"],
+    "level": "n5"
+  },
+  {
+    "kanji": "左",
+    "meaning": "left, left side",
+    "story": "A hand (𠂇) helping at a workbench (工) — your left hand assists your dominant right hand during skilled work. The left hand supports.",
+    "components": ["𠂇", "工"],
+    "level": "n5"
+  },
+  {
+    "kanji": "東",
+    "meaning": "east",
+    "story": "The sun (日) rising behind a tree (木). The sun comes up from the east, appearing through the branches of a tree. The east is where the day begins.",
+    "components": ["日", "木"],
+    "level": "n5"
+  },
+  {
+    "kanji": "西",
+    "meaning": "west",
+    "story": "A bird returning to its nest on a tree. The sun sets in the west, and birds fly home to roost at the end of the day. West is where the sun goes to rest.",
+    "components": [],
+    "level": "n5"
+  },
+  {
+    "kanji": "南",
+    "meaning": "south",
+    "story": "A tree (木) inside a boundary (冂) facing the sun. In the northern hemisphere, the south side of a tree gets the most sunlight. The south is where the sun shines strongest.",
+    "components": ["十", "冂", "￥"],
+    "level": "n5"
+  },
+  {
+    "kanji": "北",
+    "meaning": "north",
+    "story": "Two people (匕) sitting back to back. When you face south (the sun), your back is to the north. The north is behind you, the direction of shadow.",
+    "components": ["匕", "匕"],
+    "level": "n5"
+  },
+  {
+    "kanji": "百",
+    "meaning": "hundred",
+    "story": "One (一) and a white (白) sun marking the number. A hundred is a 'white' or clear milestone. Think of a white page with a single bold mark — one hundred.",
+    "components": ["一", "白"],
+    "level": "n5"
+  },
+  {
+    "kanji": "千",
+    "meaning": "thousand",
+    "story": "A person (亻) with a line (十) through them — ten hundreds make a thousand. The cross mark emphasizes the multiplier effect.",
+    "components": ["亻", "十"],
+    "level": "n5"
+  },
+  {
+    "kanji": "万",
+    "meaning": "ten thousand, myriad",
+    "story": "Originally a swastika-like symbol representing infinity or the number 10,000. It curved into the modern shape representing an endless number — 'myriads' of things.",
+    "components": [],
+    "level": "n5"
+  },
+  {
+    "kanji": "円",
+    "meaning": "circle, yen (currency)",
+    "story": "A round shape with a line through it — a pictograph of a coin. The circle represents the coin's shape, and the line shows its value. The yen is Japan's currency.",
+    "components": [],
+    "level": "n5"
+  },
+  {
+    "kanji": "雨",
+    "meaning": "rain",
+    "story": "A roof (一) with water droplets (丶) falling from the sky. The outer line is the cloud cover, and the dots are raindrops falling downward. A perfect pictograph of rainfall.",
+    "components": [],
+    "level": "n5"
+  },
+  {
+    "kanji": "電",
+    "meaning": "electricity, lightning",
+    "story": "Rain (雨) hitting a field (田) with a lightning bolt (乚) striking. Electricity arcs through the sky like lightning during a storm, connecting the clouds to the ground.",
+    "components": ["雨", "田", "乚"],
+    "level": "n5"
+  },
+  {
+    "kanji": "気",
+    "meaning": "spirit, energy, air",
+    "story": "Steam (气) rising from rice (米) — the life energy or spirit that animates all living things. Ki (気) is the invisible energy that flows through everything.",
+    "components": ["气", "米"],
+    "level": "n5"
+  },
+  {
+    "kanji": "話",
+    "meaning": "talk, speak, conversation",
+    "story": "Words (言) spoken in a group of a thousand (千) tongues plus the tongue radical (舌). Language and speech involve many tongues sharing words.",
+    "components": ["言", "千", "口"],
+    "level": "n5"
+  },
+  {
+    "kanji": "語",
+    "meaning": "language, word",
+    "story": "Words (言) spoken by five (五) mouths (口) — language involves many people speaking together. A language requires multiple speakers to survive.",
+    "components": ["言", "五", "口"],
+    "level": "n5"
+  },
+  {
+    "kanji": "読",
+    "meaning": "read",
+    "story": "Words (言) for sale (売) — when you read a book, you consume words that someone has 'sold' through writing. Reading is purchasing ideas with your attention.",
+    "components": ["言", "売"],
+    "level": "n5"
+  },
+  {
+    "kanji": "書",
+    "meaning": "write, book",
+    "story": "A hand holding a brush (聿) writing on a surface (曰). The ancient art of calligraphy — using a brush dipped in ink to create characters on paper.",
+    "components": ["聿", "曰"],
+    "level": "n5"
+  },
+  {
+    "kanji": "見",
+    "meaning": "see, look, watch",
+    "story": "An eye (目) on legs (儿) — a walking eye that goes places to see things. To see is to actively direct your eyes toward something.",
+    "components": ["目", "儿"],
+    "level": "n5"
+  },
+  {
+    "kanji": "聞",
+    "meaning": "hear, ask, listen",
+    "story": "An ear (耳) at the gate (門) — you put your ear to the gate to listen for news from outside. Hearing is the ear receiving information through the doorway.",
+    "components": ["門", "耳"],
+    "level": "n5"
+  },
+  {
+    "kanji": "食",
+    "meaning": "eat, food, meal",
+    "story": "A roof (人) over good (良) rice — good food under a roof, prepared for eating. The kanji depicts a meal: food that nourishes and satisfies.",
+    "components": ["人", "良"],
+    "level": "n5"
+  },
+  {
+    "kanji": "飲",
+    "meaning": "drink",
+    "story": "A person bending over a container (欠) to drink from a food vessel (食). Thirst makes you lean forward to drink. Picture someone sipping soup from a bowl.",
+    "components": ["食", "欠"],
+    "level": "n5"
+  },
+  {
+    "kanji": "行",
+    "meaning": "go, carry out",
+    "story": "An intersection (彳) with steps (亍) — moving forward step by step along a path. To 'go' is to put one foot in front of the other on your journey.",
+    "components": ["彳", "亍"],
+    "level": "n5"
+  },
+  {
+    "kanji": "来",
+    "meaning": "come, cause, next",
+    "story": "Wheat (来) growing toward you — the grain 'comes' from the field to your table. When something comes, it approaches from a distance like a harvest arriving.",
+    "components": [],
+    "level": "n5"
+  },
+  {
+    "kanji": "入",
+    "meaning": "enter, insert",
+    "story": "A wedge or arrowhead pointing inward. Unlike 人 (person), which has legs apart, 入 has strokes that converge inward like something entering a space.",
+    "components": [],
+    "level": "n5"
+  },
+  {
+    "kanji": "立",
+    "meaning": "stand, rise, establish",
+    "story": "A person (大) standing on the ground (一) — standing firmly on the earth. The horizontal line at the bottom represents the ground, and above it a person stands tall.",
+    "components": ["大", "一"],
+    "level": "n5"
+  },
+  {
+    "kanji": "生",
+    "meaning": "life, birth, living",
+    "story": "A sprout (𠂉) emerging from the earth (土). Life pushes up from the soil as a seedling reaches for the sun. All life begins with growth from the ground.",
+    "components": ["𠂉", "土"],
+    "level": "n5"
+  },
+  {
+    "kanji": "友",
+    "meaning": "friend, companion",
+    "story": "Two hands (又) joining together in friendship. A handshake or clasping hands — the universal gesture of friendship and companionship.",
+    "components": ["又", "又"],
+    "level": "n5"
+  },
+  {
+    "kanji": "校",
+    "meaning": "school",
+    "story": "A tree (木) where learning is exchanged (交) — in ancient times, students gathered under trees to learn from their teachers. School is where knowledge is shared.",
+    "components": ["木", "交"],
+    "level": "n5"
+  },
+  {
+    "kanji": "母",
+    "meaning": "mother",
+    "story": "A woman with two breasts, depicted from the front. The two dots represent nurturing breasts, and the enclosing lines suggest a mother's embrace. A mother nourishes and protects.",
+    "components": [],
+    "level": "n5"
+  },
+  {
+    "kanji": "父",
+    "meaning": "father",
+    "story": "A hand holding an axe or tool — the father as the worker and provider. In ancient times, a father's role involved wielding tools to provide for the family.",
+    "components": [],
+    "level": "n5"
+  },
+  {
+    "kanji": "男",
+    "meaning": "man, male",
+    "story": "A field (田) with power (力) — in traditional society, men worked the fields with their strength. The kanji associates masculinity with agricultural labor and physical power.",
+    "components": ["田", "力"],
+    "level": "n5"
+  }
+]

@@ -2,6 +2,7 @@
 import DefaultLayout from "@/layouts/DefaultLayout.astro"
 import { siteUrl, breadcrumbSchema, articleSchema } from "@/lib/seo"
 import { getCollection, render } from "astro:content"
+import { existsSync } from "fs"
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog")
@@ -16,6 +17,7 @@ export async function getStaticPaths() {
 const { post } = Astro.props
 const { Content, headings } = await render(post)
 const { data, id } = post
+const readTime = post.body ? Math.max(1, Math.ceil(post.body.trim().split(/\s+/).length / 200)) : 1
 
 const allPosts = await getCollection("blog")
 const published = allPosts.filter((p) => !p.data.draft).sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
@@ -35,7 +37,8 @@ const jsonLdBreadcrumb = breadcrumbSchema([
   { name: data.title, url: canonical },
 ])
 const levelTag = data.tags.find((t) => ["N5", "N4", "N3", "N2", "N1"].includes(t))
-const blogSpecificOg = levelTag ? `/og/og-blog-${id}.png` : null
+const blogOgPath = levelTag ? `public/og/og-blog-${id}.png` : ""
+const blogSpecificOg = blogOgPath && existsSync(blogOgPath) ? `/og/og-blog-${id}.png` : null
 const kanjiOg = data.kanji && levelTag ? `/og/og-${levelTag.toLowerCase()}-${data.kanji}.png` : null
 const blogOgImage = blogSpecificOg || kanjiOg || (levelTag ? `/og/og-${levelTag.toLowerCase()}.png` : data.image ? data.image.src : "/og/og-default.png")
 const jsonLdArticle = articleSchema(data.title, data.description, blogOgImage.startsWith("http") ? blogOgImage : siteUrl(blogOgImage), data.date.toISOString())
@@ -57,6 +60,8 @@ const jsonLdArticle = articleSchema(data.title, data.description, blogOgImage.st
         </time>
         <span>&middot;</span>
         <span>{data.author}</span>
+        <span>&middot;</span>
+        <span>{readTime} min read</span>
       </div>
 
       <h1 class="text-2xl sm:text-3xl md:text-4xl font-black text-ink leading-tight">
@@ -155,13 +160,13 @@ const jsonLdArticle = articleSchema(data.title, data.description, blogOgImage.st
     color: color-mix(in srgb, var(--color-ink) 80%, transparent);
   }
   .prose a {
-    color: #2563eb;
+    color: var(--color-vermilion);
     text-decoration: underline;
     text-underline-offset: 2px;
     transition: color 0.15s ease;
   }
   .prose a:hover {
-    color: #1d4ed8;
+    color: var(--color-vermilion-deep);
   }
   .prose ul, .prose ol {
     margin-top: 1rem;
@@ -203,7 +208,7 @@ const jsonLdArticle = articleSchema(data.title, data.description, blogOgImage.st
     font-family: ui-monospace, monospace;
   }
   .prose pre {
-    background: var(--color-ink);
+    background: var(--color-ink-solid, var(--color-ink));
     color: #fff;
     border-radius: 0.75rem;
     padding: 1rem 1.25rem;

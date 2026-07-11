@@ -1,0 +1,59 @@
+# KanjiTest.Online — Comprehensive Japanese Study Platform
+> Free JLPT kanji flashcards, grammar lessons, quizzes, and study tools for learners of all levels.
+> https://www.kanjitest.online
+
+## Key Resources
+
+- Homepage: https://www.kanjitest.online/
+- Learn Section: https://www.kanjitest.online/learn/
+- Blog: https://www.kanjitest.online/blog/
+- Tools: https://www.kanjitest.online/tools/
+- Open Source Data: https://www.kanjitest.online/open-source/
+- Word of the Day: https://www.kanjitest.online/word-of-the-day/
+
+## JLPT Levels
+
+- N5 (Foundations, 79 kanji, 20 grammar points): https://www.kanjitest.online/n5/
+- N4 (Building blocks, 168 kanji, 14 grammar points): https://www.kanjitest.online/n4/
+- N3 (Confidence, 368 kanji, 12 grammar points): https://www.kanjitest.online/n3/
+- N2 (Advanced, 382 kanji, 14 grammar points): https://www.kanjitest.online/n2/
+- N1 (Mastery, 1234 kanji, 16 grammar points): https://www.kanjitest.online/n1/
+
+## Learning Paths
+
+- Radicals (214 Kangxi): https://www.kanjitest.online/learn/radicals/
+- Hiragana: https://www.kanjitest.online/learn/hiragana/
+- Katakana: https://www.kanjitest.online/learn/katakana/
+- Particles: https://www.kanjitest.online/learn/particles/
+- Stories: https://www.kanjitest.online/stories/
+
+## JSON APIs (Open Data)
+
+- All Kanji by Level: https://www.kanjitest.online/api/decks.json
+- All Kanji (flat): https://www.kanjitest.online/api/kanji.json
+- Grammar Points: https://www.kanjitest.online/api/grammar.json
+- Radicals: https://www.kanjitest.online/api/radicals.json
+
+## Features by Level
+
+Each JLPT level page includes:
+- Study guides with detailed kanji breakdowns
+- Interactive flashcards with swipe/ keyboard navigation
+- Vocabulary lists with example sentences
+- Grammar lessons with formation, usage, and examples
+- Multiple-choice / written kanji tests
+- Progress tracking (localStorage)
+
+## Tools
+
+https://www.kanjitest.online/tools/ — 30+ study tools including:
+- Kanji Worksheet Generator, Memory Match, Reading Quiz, Vocabulary Quiz
+- Text Analyzer, Kanji Highlighter, Stroke Count Lookup
+- Study Timer, Streak Tracker, Romaji Converter
+- Age/Numbers/Weather/Professions vocabulary guides
+
+## Content
+
+- Blog: Japanese learning strategies, JLPT tips, app reviews
+- Open datasets under MIT License
+- Built with Astro + React + Tailwind CSS

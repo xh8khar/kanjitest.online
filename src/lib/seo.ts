@@ -1,5 +1,5 @@
 const SITE_URL = import.meta.env.PUBLIC_SITE_URL ?? "https://www.kanjitest.online"
-const SITE_NAME = "Kanji Test Online"
+const SITE_NAME = "KanjiTest.Online"
 
 export function siteUrl(path = ""): string {
   return `${SITE_URL}${path}`
@@ -122,6 +122,21 @@ export function itemListSchema(items: { name: string; url: string }[]) {
       position: i + 1,
       name: item.name,
       url: item.url.startsWith("http") ? item.url : `${SITE_URL}${item.url}`,
+    })),
+  }
+}
+
+export function faqSchema(questions: { question: string; answer: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: questions.map((q) => ({
+      "@type": "Question",
+      name: q.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: q.answer,
+      },
     })),
   }
 }

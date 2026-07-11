@@ -5,6 +5,7 @@ import { getCollection } from "astro:content"
 import { radicals, toSlug } from "@/lib/radicals"
 import { particles, toSlug as particleSlug } from "@/lib/particles"
 import { getAllGrammar } from "@/lib/grammar"
+import stories from "@/data/stories.json"
 
 export const GET: APIRoute = async () => {
   const BASE = siteUrl()
@@ -29,7 +30,9 @@ export const GET: APIRoute = async () => {
     "number-to-japanese", "professions", "random-kanji",
     "reading-quiz", "reading-time", "romaji-converter", "streak-tracker",
     "study-timer", "text-analyzer", "time-guide", "typing-practice",
-    "vocab-quiz", "weather-vocab", "word-counter", "word-match",
+    "vocab-quiz", "weather-vocab", "widget",
+    "word-counter", "word-match",
+    "n5-kanji-checklist", "kanji-worksheet",
   ]
 
 const entries: UrlEntry[] = [
@@ -61,6 +64,14 @@ const entries: UrlEntry[] = [
       priority: "0.6" as const,
       changefreq: "monthly" as const,
     })),
+    { loc: `${BASE}/stories/`, priority: "0.7", changefreq: "weekly" },
+    ...stories.map((s) => ({
+      loc: `${BASE}/stories/${s.kanji}/`,
+      priority: "0.6" as const,
+      changefreq: "monthly" as const,
+    })),
+    { loc: `${BASE}/word-of-the-day/`, priority: "0.7", changefreq: "daily" },
+    { loc: `${BASE}/open-source/`, priority: "0.6", changefreq: "monthly" },
     { loc: `${BASE}/about/`, priority: "0.5", changefreq: "monthly" },
     { loc: `${BASE}/privacy/`, priority: "0.3", changefreq: "monthly" },
     { loc: `${BASE}/terms/`, priority: "0.3", changefreq: "monthly" },

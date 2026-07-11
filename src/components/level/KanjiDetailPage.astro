@@ -3,7 +3,7 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro"
 import { getByKanji, getPrevNext, getSetForKanji } from "@/lib/kanji"
 import type { Level } from "@/lib/kanji"
 import { levelMeta } from "@/lib/levels"
-import { breadcrumbSchema, definedTermSchema } from "@/lib/seo"
+import { breadcrumbSchema, definedTermSchema, faqSchema } from "@/lib/seo"
 
 export interface Props {
   level: Level
@@ -26,14 +26,24 @@ const breadSchema = breadcrumbSchema([
   { name: "Study", url: `${prefix}/study/` },
   { name: k.kanji, url: `${prefix}/study/${k.kanji}/` },
 ])
+const faqEntries = k.examples.slice(0, 5).map((ex) => ({
+  question: `What is an example word for ${k.kanji}?`,
+  answer: `${ex.word} (${ex.reading}) — ${ex.english}${ex.sentence ? `. Example: ${ex.sentence}` : ''}`,
+}))
+const faqSchemaData = faqSchema(faqEntries)
 
 const title = `${k.kanji} (${k.meanings[0]}) — JLPT ${meta.label} Kanji`
 const description = `Learn the JLPT ${meta.label} kanji ${k.kanji} (${k.meanings[0]}).${ex[0] ? ` Example: ${ex[0].word} (${ex[0].reading}) — ${ex[0].english}.` : ""}`
 ---
 
 <DefaultLayout title={title} description={description} level={level}>
+  <meta name="twitter:label1" content="Readings" />
+  <meta name="twitter:data1" content={`On: ${k.on.join("、")} | Kun: ${k.kun.map(r => r.replace(/\..+$/, "")).join("、")}`} />
+  <meta name="twitter:label2" content="Strokes" />
+  <meta name="twitter:data2" content={`${k.strokes} strokes | JLPT ${meta.label}`} />
   <script type="application/ld+json" set:html={JSON.stringify(breadSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(termSchema)} />
+  {faqEntries.length > 0 && <script type="application/ld+json" set:html={JSON.stringify(faqSchemaData)} />}
 
   <div class="px-4 py-6 sm:py-8">
     <nav class="text-[11px] sm:text-xs text-ink/45 mb-4 flex flex-wrap items-center gap-1 animate-fade-in">

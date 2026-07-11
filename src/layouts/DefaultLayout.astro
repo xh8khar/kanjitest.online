@@ -35,6 +35,7 @@ const subLinks = [
   { id: "study", label: "Study", icon: "📖" },
   { id: "flashcards", label: "Cards", icon: "🃏" },
   { id: "vocabulary", label: "Vocab", icon: "📝" },
+  { id: "grammar", label: "Grammar", icon: "📋" },
   { id: "sets", label: "Test", icon: "✍️" },
 ]
 ---
@@ -55,7 +56,8 @@ const subLinks = [
     <link rel="canonical" href={siteUrl(canonical)} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/icon.svg" />
-    <meta name="theme-color" content="#faf7f2" />
+    <meta name="theme-color" content="#faf7f2" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1a1a1e" media="(prefers-color-scheme: dark)" />
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-FQ136VRYF0"></script>
     <script is:inline>
@@ -147,7 +149,7 @@ const subLinks = [
         display: flex;
         align-items: center;
         gap: 0.375rem;
-        background: #fff;
+        background: var(--card-bg, #fff);
         border: 1px solid color-mix(in srgb, var(--color-ink) 15%, transparent);
         color: color-mix(in srgb, var(--color-ink) 70%, transparent);
         transition: all 0.2s ease;
@@ -161,7 +163,7 @@ const subLinks = [
         left: 1rem;
         z-index: 9999;
         padding: 0.5rem 1rem;
-        background: var(--color-ink);
+        background: var(--color-ink-solid, var(--color-ink));
         color: #fff;
         font-size: 0.875rem;
         font-weight: 600;
@@ -174,8 +176,8 @@ const subLinks = [
         outline-offset: 2px;
       }
       .pill.on {
-        background: var(--color-ink);
-        border-color: var(--color-ink);
+        background: var(--color-ink-solid, var(--color-ink));
+        border-color: var(--color-ink-solid, var(--color-ink));
         color: #fff;
         box-shadow: 0 4px 12px -2px color-mix(in srgb, var(--color-ink) 20%, transparent);
       }

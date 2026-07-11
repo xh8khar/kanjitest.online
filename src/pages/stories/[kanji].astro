@@ -1,0 +1,115 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import { breadcrumbSchema } from "@/lib/seo"
+import { siteUrl } from "@/lib/seo"
+import { getAll } from "@/lib/kanji"
+import stories from "@/data/stories.json"
+
+export function getStaticPaths() {
+  return stories.map((s) => ({
+    params: { kanji: s.kanji },
+    props: { story: s },
+  }))
+}
+
+const { story } = Astro.props
+const allLevels = ["n5", "n4", "n3", "n2", "n1"] as const
+let kanjiData = undefined as { kanji: string; level: string } | undefined
+for (const level of allLevels) {
+  const found = getAll(level).find((k) => k.kanji === story.kanji)
+  if (found) {
+    kanjiData = { kanji: found.kanji, level }
+    break
+  }
+}
+
+const idx = stories.findIndex((s) => s.kanji === story.kanji)
+const prev = idx > 0 ? stories[idx - 1] : null
+const next = idx < stories.length - 1 ? stories[idx + 1] : null
+const studySlug = story.kanji
+const canon = `/stories/${story.kanji}/`
+---
+
+<DefaultLayout
+  title={`${story.kanji} (${story.meaning}) — Kanji Memory Story`}
+  description={`Learn how to remember the kanji ${story.kanji} (${story.meaning}) with this creative mnemonic story. ${story.components.length > 0 ? `Components: ${story.components.join(", ")}.` : ""}`}
+  keywords={`${story.kanji}, ${story.meaning}, kanji mnemonic, how to remember ${story.kanji}, kanji story, JLPT ${story.level.toUpperCase()} kanji`}
+>
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema([
+      { name: "Kanji Memory Stories", url: "/stories/" },
+      { name: `${story.kanji} — ${story.meaning}`, url: canon },
+    ]))} />
+
+    <div class="animate-fade-up">
+      <a href="/stories/" class="inline-flex items-center gap-1 text-xs font-semibold text-ink/50 hover:text-vermilion transition-colors mb-6 no-underline">
+        <span>&larr;</span> All stories
+      </a>
+
+      <div class="card p-6 sm:p-8">
+        <div class="flex flex-col sm:flex-row sm:items-start sm:gap-6">
+          <div class="text-center sm:text-left shrink-0">
+            <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-ink/[0.04] flex items-center justify-center mx-auto sm:mx-0">
+              <span class="text-5xl sm:text-6xl font-jp font-black text-ink">{story.kanji}</span>
+            </div>
+            <div class="mt-2 text-center sm:text-left">
+              <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-ink/10 text-ink/50">{story.level.toUpperCase()}</span>
+            </div>
+          </div>
+          <div class="flex-1 mt-4 sm:mt-0">
+            <h1 class="text-xl sm:text-2xl font-black text-ink tracking-tight">{story.meaning}</h1>
+            <div class="mt-4 p-4 rounded-xl bg-ink/[0.04] border border-ink/10">
+              <h2 class="text-[11px] font-bold text-ink/40 uppercase tracking-widest mb-2">Memory Story</h2>
+              <p class="text-sm sm:text-base text-ink/80 leading-relaxed">{story.story}</p>
+            </div>
+          </div>
+        </div>
+
+        {story.components.length > 0 && (
+          <div class="mt-6 pt-6 border-t border-ink/10">
+            <h2 class="text-[11px] font-bold text-ink/40 uppercase tracking-widest mb-3">Component Breakdown</h2>
+            <div class="flex flex-wrap gap-2">
+              {story.components.map((c) => (
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-ink/[0.06] text-sm font-jp font-bold text-ink">{c}</span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {kanjiData && (
+          <div class="mt-6 pt-6 border-t border-ink/10">
+            <h2 class="text-[11px] font-bold text-ink/40 uppercase tracking-widest mb-3">Study This Kanji</h2>
+            <a href={`/${kanjiData.level}/study/${kanjiData.kanji}/`} class="inline-flex items-center gap-1.5 text-sm font-semibold text-vermilion hover:text-ink transition-colors no-underline">
+              View on {kanjiData.level.toUpperCase()} study page &rarr;
+            </a>
+          </div>
+        )}
+      </div>
+
+      <nav class="flex items-center justify-between mt-6 gap-4">
+        {prev ? (
+          <a href={`/stories/${prev.kanji}/`} class="card card-hover group flex-1 px-4 py-3 no-underline min-w-0 reveal">
+            <span class="text-[10px] font-bold text-ink/40 uppercase tracking-widest">&larr; Previous</span>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="text-lg font-jp font-bold text-ink">{prev.kanji}</span>
+              <span class="text-xs text-ink/50 truncate">{prev.meaning}</span>
+            </div>
+          </a>
+        ) : (
+          <div class="flex-1" />
+        )}
+        {next ? (
+          <a href={`/stories/${next.kanji}/`} class="card card-hover group flex-1 px-4 py-3 text-right no-underline min-w-0 reveal">
+            <span class="text-[10px] font-bold text-ink/40 uppercase tracking-widest">Next &rarr;</span>
+            <div class="flex items-center justify-end gap-2 mt-1">
+              <span class="text-xs text-ink/50 truncate">{next.meaning}</span>
+              <span class="text-lg font-jp font-bold text-ink">{next.kanji}</span>
+            </div>
+          </a>
+        ) : (
+          <div class="flex-1" />
+        )}
+      </nav>
+    </div>
+  </div>
+</DefaultLayout>

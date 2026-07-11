@@ -1,0 +1,141 @@
+---
+import DefaultLayout from "@/layouts/DefaultLayout.astro"
+import { siteUrl } from "@/lib/seo"
+import { getVocabulary } from "@/lib/kanji"
+
+const allLevels = ["n5", "n4", "n3", "n2", "n1"] as const
+const allVocab = allLevels.flatMap((l) => getVocabulary(l).map((v) => ({ ...v, level: l })))
+
+const today = new Date()
+const startOfYear = new Date(today.getFullYear(), 0, 0)
+const dayOfYear = Math.floor((today.getTime() - startOfYear.getTime()) / 86400000)
+const word = allVocab[dayOfYear % allVocab.length]
+
+const yesterdayDate = new Date(today)
+yesterdayDate.setDate(yesterdayDate.getDate() - 1)
+const yesterdayDay = Math.floor((yesterdayDate.getTime() - new Date(yesterdayDate.getFullYear(), 0, 0).getTime()) / 86400000)
+const yesterdayWord = allVocab[yesterdayDay % allVocab.length]
+
+const tomorrowDate = new Date(today)
+tomorrowDate.setDate(tomorrowDate.getDate() + 1)
+const tomorrowDay = Math.floor((tomorrowDate.getTime() - new Date(tomorrowDate.getFullYear(), 0, 0).getTime()) / 86400000)
+const tomorrowWord = allVocab[tomorrowDay % allVocab.length]
+
+const dateStr = today.toLocaleDateString("en-US", {
+  weekday: "long",
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+})
+
+const pageTitle = `Japanese Word of the Day — ${word.word} (${word.reading})`
+const pageDesc = `Today's Japanese word: ${word.word} (${word.reading}) — ${word.english}. JLPT ${word.level.toUpperCase()} vocabulary.`
+---
+
+<DefaultLayout title={pageTitle} description={pageDesc} keywords={`word of the day, Japanese word of the day, ${word.word}, ${word.reading}, ${word.english}, learn Japanese, JLPT ${word.level.toUpperCase()}`}>
+  <div class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+    <div class="animate-fade-up">
+      <div class="text-center mb-8">
+        <p class="text-[11px] font-bold text-ink/40 uppercase tracking-widest mb-2">Word of the Day</p>
+        <p class="text-xs text-ink/50">{dateStr}</p>
+      </div>
+
+      <div class="card p-8 sm:p-10 text-center">
+        <div class="w-32 h-32 sm:w-36 sm:h-36 rounded-2xl bg-ink/[0.04] flex items-center justify-center mx-auto">
+          <span class="text-5xl sm:text-6xl font-jp font-black text-ink">{word.word}</span>
+        </div>
+        <div class="mt-4">
+          <p class="text-lg sm:text-xl text-ink/70 font-jp">{word.reading}</p>
+          <p class="text-sm sm:text-base font-medium text-ink mt-1.5">{word.english}</p>
+        </div>
+        <div class="mt-3">
+          <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-ink/10 text-ink/50">
+            JLPT {word.level.toUpperCase()}
+          </span>
+        </div>
+
+        <div class="mt-6 flex items-center justify-center gap-3">
+          <a
+            href={`/${word.level}/vocabulary/${word.slug}/`}
+            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-vermilion text-white text-sm font-bold hover:bg-vermilion/90 transition-colors no-underline"
+          >
+            Study This Word &rarr;
+          </a>
+          <button
+            data-share
+            data-title={pageTitle}
+            data-url={siteUrl("/word-of-the-day/")}
+            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-ink/10 text-ink/70 text-sm font-bold hover:bg-ink/20 transition-colors"
+          >
+            Share
+          </button>
+        </div>
+
+        {word.sentences.length > 0 && (
+          <div class="mt-6 pt-6 border-t border-ink/10">
+            <h2 class="text-[11px] font-bold text-ink/40 uppercase tracking-widest mb-3">Example Sentence</h2>
+            <div class="p-4 rounded-xl bg-ink/[0.04] border border-ink/10">
+              <p class="text-lg font-jp text-ink/80">{word.sentences[0].sentence}</p>
+              <p class="text-xs text-ink/50 mt-2">{word.sentences[0].sentenceEnglish}</p>
+            </div>
+          </div>
+        )}
+
+        <div class="mt-6 pt-6 border-t border-ink/10">
+          <h2 class="text-[11px] font-bold text-ink/40 uppercase tracking-widest mb-3">Components</h2>
+          <div class="flex flex-wrap justify-center gap-2">
+            {word.kanjiChars.map((c) => (
+              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-ink/[0.06] text-sm font-jp font-bold text-ink">{c}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <nav class="flex items-center justify-between mt-6 gap-4">
+        <a
+          href={`/word-of-the-day/`}
+          data-prev-word
+          data-day={yesterdayDay}
+          class="card card-hover group flex-1 px-4 py-3 no-underline min-w-0 reveal"
+        >
+          <span class="text-[10px] font-bold text-ink/40 uppercase tracking-widest">&larr; Yesterday</span>
+          <div class="flex items-center gap-2 mt-1">
+            <span class="text-lg font-jp font-bold text-ink">{yesterdayWord.word}</span>
+            <span class="text-xs text-ink/50 truncate">{yesterdayWord.english}</span>
+          </div>
+        </a>
+        <a
+          href={`/word-of-the-day/`}
+          data-next-word
+          data-day={tomorrowDay}
+          class="card card-hover group flex-1 px-4 py-3 text-right no-underline min-w-0 reveal"
+        >
+          <span class="text-[10px] font-bold text-ink/40 uppercase tracking-widest">Tomorrow &rarr;</span>
+          <div class="flex items-center justify-end gap-2 mt-1">
+            <span class="text-xs text-ink/50 truncate">{tomorrowWord.english}</span>
+            <span class="text-lg font-jp font-bold text-ink">{tomorrowWord.word}</span>
+          </div>
+        </a>
+      </nav>
+    </div>
+  </div>
+</DefaultLayout>
+
+<script>
+  document.addEventListener("click", (e) => {
+    const shareBtn = (e.target as HTMLElement).closest<HTMLElement>("[data-share]")
+    if (shareBtn) {
+      const title = shareBtn.getAttribute("data-title") || ""
+      const url = shareBtn.getAttribute("data-url") || ""
+      if (navigator.share) {
+        navigator.share({ title, url }).catch(() => {})
+      } else {
+        navigator.clipboard.writeText(url).then(() => {
+          const orig = shareBtn.textContent
+          shareBtn.textContent = "Copied!"
+          setTimeout(() => { shareBtn.textContent = orig }, 2000)
+        }).catch(() => {})
+      }
+    }
+  })
+</script>
