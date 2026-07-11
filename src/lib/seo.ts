@@ -1,5 +1,6 @@
 const SITE_URL = import.meta.env.PUBLIC_SITE_URL ?? "https://www.kanjitest.online"
 const SITE_NAME = "KanjiTest.Online"
+export const ADSENSE_PUB = import.meta.env.PUBLIC_ADSENSE_PUB ?? "ca-pub-5525538810839147"
 
 export function siteUrl(path = ""): string {
   return `${SITE_URL}${path}`
