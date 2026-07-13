@@ -4,6 +4,7 @@ import { getCollection } from "astro:content"
 import { radicals, toSlug } from "@/lib/radicals"
 import { particles, toSlug as particleSlug } from "@/lib/particles"
 import { getAllGrammar } from "@/lib/grammar"
+import { SETS_PER_LEVEL } from "@/lib/levels"
 import stories from "@/data/stories.json"
 
 export const MAX_URLS = 5000
@@ -92,7 +93,7 @@ export async function getAllEntries(): Promise<SitemapEntry[]> {
       entries.push({ loc: `${BASE}/${level}/flashcards/${k.kanji}/`, priority: "0.6", changefreq: "monthly" })
     }
 
-    for (let i = 1; i <= 20; i++) {
+    for (let i = 1; i <= SETS_PER_LEVEL; i++) {
       entries.push({ loc: `${BASE}/${level}/sets/${i}/`, priority: "0.7", changefreq: "monthly" })
     }
 

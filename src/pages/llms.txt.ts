@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro"
 import { siteUrl } from "@/lib/seo"
 import { getAll, getVocabulary } from "@/lib/kanji"
+import { SETS_PER_LEVEL, QUESTIONS_PER_SET } from "@/lib/levels"
 
 export const GET: APIRoute = () => {
   const BASE = siteUrl()
@@ -29,7 +30,7 @@ export const GET: APIRoute = () => {
     lines.push(`- [Study](${BASE}/${level}/study/): Complete study list with readings, meanings, and example sentences`)
     lines.push(`- [Flashcards](${BASE}/${level}/flashcards/): Interactive flip cards with progress tracking`)
     lines.push(`- [Vocabulary](${BASE}/${level}/vocabulary/): ${vocab.length} vocabulary words with readings and kanji associations`)
-    lines.push(`- [Practice Tests](${BASE}/${level}/sets/): 20 practice sets of 20 questions each`)
+    lines.push(`- [Practice Tests](${BASE}/${level}/sets/): ${SETS_PER_LEVEL} practice sets of ${QUESTIONS_PER_SET} questions each`)
     lines.push("")
   }
 

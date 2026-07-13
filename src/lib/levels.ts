@@ -79,7 +79,7 @@ export const LEVELS: Record<Level, LevelMeta> = {
   },
 }
 
-export const SETS_PER_LEVEL = 20
+export const SETS_PER_LEVEL = 50
 export const QUESTIONS_PER_SET = 20
 
 export function levelMeta(level: Level): LevelMeta {

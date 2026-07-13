@@ -61,7 +61,7 @@ function ScoreRing({ pct }: { pct: number }) {
   )
 }
 
-const SET_COUNT = 20
+const SET_COUNT = 50
 
 function JumpSetOverlay({
   setNum,
@@ -213,7 +213,7 @@ export default function TestClient({ level, setNum, questions }: Props) {
                 ↻ Retry set
               </button>
               <a
-                href={`${prefix}/sets/${setNum < 20 ? setNum + 1 : 1}/`}
+                href={`${prefix}/sets/${setNum < SET_COUNT ? setNum + 1 : 1}/`}
                 className="btn btn-primary h-12 text-sm"
               >
                 Next set →

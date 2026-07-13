@@ -61,7 +61,7 @@ export function getPrevNext(id: number, level: Level = "n5"): { prev: KanjiEntry
 
 export function getSetForKanji(kanjiId: number, level: Level = "n5"): number {
   const count = getData(level).length
-  const setsCount = 20
+  const setsCount = 50
   return Math.min(Math.ceil(kanjiId / Math.ceil(count / setsCount)), setsCount)
 }
 
