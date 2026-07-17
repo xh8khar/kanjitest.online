@@ -1,6 +1,9 @@
 import { siteUrl } from "@/lib/seo"
 import { getCollection } from "astro:content"
-import { SETS_PER_LEVEL } from "@/lib/levels"
+import { LEVEL_IDS, SETS_PER_LEVEL } from "@/lib/levels"
+import { getAll, getVocabulary } from "@/lib/kanji"
+import { getAllGrammar } from "@/lib/grammar"
+import { radicals, toSlug } from "@/lib/radicals"
 
 export const MAX_URLS = 5000
 
@@ -10,12 +13,36 @@ export interface SitemapEntry {
   changefreq: string
 }
 
+type Level = "n5" | "n4" | "n3" | "n2" | "n1"
+
+const LEVELS: Level[] = ["n5", "n4", "n3", "n2", "n1"]
+
+function push(entries: SitemapEntry[], path: string, priority: string, changefreq: string): void {
+  entries.push({ loc: path, priority, changefreq })
+}
+
 export async function getAllEntries(): Promise<SitemapEntry[]> {
   const BASE = siteUrl()
+  const entries: SitemapEntry[] = []
 
+  // static pages
+  push(entries, BASE, "1.0", "weekly")
+  push(entries, `${BASE}/about/`, "0.5", "monthly")
+  push(entries, `${BASE}/privacy/`, "0.3", "monthly")
+  push(entries, `${BASE}/terms/`, "0.3", "monthly")
+  push(entries, `${BASE}/open-source/`, "0.6", "monthly")
+  push(entries, `${BASE}/word-of-the-day/`, "0.7", "daily")
+  push(entries, `${BASE}/stories/`, "0.7", "weekly")
+
+  // blog
   const blogPosts = await getCollection("blog")
   const publishedBlogPosts = blogPosts.filter((p) => !p.data.draft)
+  push(entries, `${BASE}/blog/`, "0.8", "weekly")
+  for (const p of publishedBlogPosts) {
+    push(entries, `${BASE}/blog/${p.id}/`, "0.7", "monthly")
+  }
 
+  // tools
   const toolSlugs = [
     "age-converter", "body-parts", "color-names", "counter-reference",
     "daily-challenge", "date-converter", "direction-words", "family-terms",
@@ -30,45 +57,60 @@ export async function getAllEntries(): Promise<SitemapEntry[]> {
     "word-counter", "word-match",
     "n5-kanji-checklist", "kanji-worksheet",
   ]
+  push(entries, `${BASE}/tools/`, "0.8", "weekly")
+  for (const slug of toolSlugs) {
+    push(entries, `${BASE}/tools/${slug}/`, "0.7", "monthly")
+  }
 
-  const entries: SitemapEntry[] = [
-    { loc: BASE, priority: "1.0", changefreq: "weekly" },
-    { loc: `${BASE}/blog/`, priority: "0.8", changefreq: "weekly" },
-    ...publishedBlogPosts.map((p) => ({
-      loc: `${BASE}/blog/${p.id}/`,
-      priority: "0.7" as const,
-      changefreq: "monthly" as const,
-    })),
-    { loc: `${BASE}/tools/`, priority: "0.8", changefreq: "weekly" },
-    ...toolSlugs.map((slug) => ({
-      loc: `${BASE}/tools/${slug}/`,
-      priority: "0.7" as const,
-      changefreq: "monthly" as const,
-    })),
-    { loc: `${BASE}/learn/`, priority: "0.8", changefreq: "weekly" },
-    { loc: `${BASE}/learn/radicals/`, priority: "0.7", changefreq: "monthly" },
-    { loc: `${BASE}/learn/hiragana/`, priority: "0.7", changefreq: "monthly" },
-    { loc: `${BASE}/learn/katakana/`, priority: "0.7", changefreq: "monthly" },
-    { loc: `${BASE}/learn/particles/`, priority: "0.7", changefreq: "monthly" },
-    { loc: `${BASE}/stories/`, priority: "0.7", changefreq: "weekly" },
-    { loc: `${BASE}/word-of-the-day/`, priority: "0.7", changefreq: "daily" },
-    { loc: `${BASE}/open-source/`, priority: "0.6", changefreq: "monthly" },
-    { loc: `${BASE}/about/`, priority: "0.5", changefreq: "monthly" },
-    { loc: `${BASE}/privacy/`, priority: "0.3", changefreq: "monthly" },
-    { loc: `${BASE}/terms/`, priority: "0.3", changefreq: "monthly" },
-  ]
+  // learn section
+  push(entries, `${BASE}/learn/`, "0.8", "weekly")
+  push(entries, `${BASE}/learn/radicals/`, "0.7", "monthly")
+  push(entries, `${BASE}/learn/hiragana/`, "0.7", "monthly")
+  push(entries, `${BASE}/learn/katakana/`, "0.7", "monthly")
+  push(entries, `${BASE}/learn/particles/`, "0.7", "monthly")
 
-  for (const level of ["n5", "n4", "n3", "n2", "n1"] as const) {
-    entries.push({ loc: `${BASE}/${level}/`, priority: "0.9", changefreq: "weekly" })
-    entries.push({ loc: `${BASE}/${level}/study/`, priority: "0.9", changefreq: "weekly" })
-    entries.push({ loc: `${BASE}/${level}/flashcards/`, priority: "0.8", changefreq: "weekly" })
-    entries.push({ loc: `${BASE}/${level}/sets/`, priority: "0.8", changefreq: "weekly" })
-    entries.push({ loc: `${BASE}/${level}/vocabulary/`, priority: "0.8", changefreq: "weekly" })
-    entries.push({ loc: `${BASE}/${level}/grammar/`, priority: "0.8", changefreq: "weekly" })
+  // radical detail pages
+  for (const r of radicals) {
+    push(entries, `${BASE}/learn/radicals/${toSlug(r.radical)}/`, "0.6", "monthly")
+  }
 
+  for (const level of LEVELS) {
+    // level hub pages
+    push(entries, `${BASE}/${level}/`, "0.9", "weekly")
+    push(entries, `${BASE}/${level}/study/`, "0.9", "weekly")
+    push(entries, `${BASE}/${level}/flashcards/`, "0.8", "weekly")
+    push(entries, `${BASE}/${level}/sets/`, "0.8", "weekly")
+    push(entries, `${BASE}/${level}/vocabulary/`, "0.8", "weekly")
+    push(entries, `${BASE}/${level}/grammar/`, "0.8", "weekly")
+
+    // sets
     for (let i = 1; i <= SETS_PER_LEVEL; i++) {
-      entries.push({ loc: `${BASE}/${level}/sets/${i}/`, priority: "0.7", changefreq: "monthly" })
+      push(entries, `${BASE}/${level}/sets/${i}/`, "0.7", "monthly")
     }
+
+    // study detail pages (one per kanji character)
+    const kanjiList = getAll(level)
+    for (const k of kanjiList) {
+      push(entries, `${BASE}/${level}/study/${k.kanji}/`, "0.8", "monthly")
+    }
+
+    // flashcard detail pages
+    for (const k of kanjiList) {
+      push(entries, `${BASE}/${level}/flashcards/${k.kanji}/`, "0.7", "monthly")
+    }
+
+    // vocabulary detail pages
+    const vocabList = getVocabulary(level)
+    for (const v of vocabList) {
+      push(entries, `${BASE}/${level}/vocabulary/${v.slug}/`, "0.7", "monthly")
+    }
+  }
+
+  // grammar detail pages across all levels
+  const allGrammar = getAllGrammar()
+  for (const g of allGrammar) {
+    const level = g.level.toLowerCase() as Level
+    push(entries, `${BASE}/${level}/grammar/${g.id}/`, "0.7", "monthly")
   }
 
   return entries

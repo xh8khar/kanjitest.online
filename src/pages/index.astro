@@ -2,7 +2,7 @@
 import DefaultLayout from "@/layouts/DefaultLayout.astro"
 import { getAll, getVocabulary } from "@/lib/kanji"
 import { LEVELS, LEVEL_IDS, SETS_PER_LEVEL, QUESTIONS_PER_SET } from "@/lib/levels"
-import { collectionPageSchema, breadcrumbSchema } from "@/lib/seo"
+import { collectionPageSchema, breadcrumbSchema, faqSchema as faqSchemaLib } from "@/lib/seo"
 import { getCollection } from "astro:content"
 
 const featuredPosts = (await getCollection("blog"))
@@ -41,105 +41,35 @@ const sampleKanji = [
   { char: "美", meaning: "beauty", level: "N3", url: "/n3/study/美/" },
 ]
 
+const faqEntries = [
+  { question: "How many kanji are in JLPT N5?", answer: "JLPT N5 has 79 kanji characters. These are the most fundamental Japanese characters that every beginner learns first, covering basic nouns, verbs, and adjectives." },
+  { question: "How many kanji are in JLPT N4?", answer: "JLPT N4 has 168 kanji characters. These build on N5 and cover everyday kanji used in basic conversations and simple reading materials." },
+  { question: "How many kanji are in JLPT N3?", answer: "JLPT N3 has 365 kanji characters. These are upper-intermediate characters that bridge daily life vocabulary and more formal written Japanese such as news articles." },
+  { question: "How many kanji are in JLPT N2?", answer: "JLPT N2 has 686 kanji characters. These are advanced kanji found in newspapers, workplaces, and serious reading materials." },
+  { question: "How many kanji are in JLPT N1?", answer: "JLPT N1 has 1,237 kanji characters. This covers the full sweep of literary, academic, and professional Japanese required for native-level fluency." },
+  { question: "What is the best JLPT kanji test online?", answer: "KanjiTest.Online is a free JLPT kanji test platform covering all levels from N5 to N1. It offers multiple choice quizzes, flashcards, vocabulary lists, and detailed kanji study pages — all without requiring an account or payment." },
+  { question: "Where can I practice JLPT kanji?", answer: `You can practice JLPT kanji for free on KanjiTest.Online. The site offers study pages with readings and examples, flip flashcards for active recall, vocabulary lists with sentences, and ${SETS_PER_LEVEL} practice test sets per level with instant feedback.` },
+  { question: "Is JLPT N3 kanji difficult?", answer: "JLPT N3 kanji is moderately difficult — it requires learning 365 characters beyond the 247 in N5 and N4 combined. N3 marks the transition from beginner to intermediate Japanese, introducing more abstract vocabulary and concepts. With consistent practice using flashcards and quizzes, most learners find N3 achievable within 6-12 months of study." },
+  { question: "How to study JLPT N2 kanji?", answer: "To study JLPT N2 kanji effectively: (1) Review N3 kanji first to build a strong foundation. (2) Study kanji in context using example words and sentences rather than in isolation. (3) Use flashcards for spaced repetition and active recall. (4) Take practice tests to identify weak areas. KanjiTest.Online offers all these tools for free across every JLPT level." },
+  { question: "How to pass JLPT N1 kanji section?", answer: "To pass the JLPT N1 kanji section: (1) Master all 1,237 N1 kanji with their multiple readings and meanings. (2) Study vocabulary in context — N1 tests kanji within compound words and sentences. (3) Practice reading authentic materials like newspaper editorials and literary texts. (4) Use mock tests to simulate exam conditions. KanjiTest.Online provides N1 flashcards, vocabulary, and practice quizzes to help you prepare." },
+]
+
 const jsonLd = collectionPageSchema(
-  "Free JLPT Kanji Test Online — KanjiTest.Online",
+  "Master JLPT Kanji: Free Practice & Flashcards",
   "Free JLPT N5, N4, N3, N2, and N1 kanji tests with answers. Study with flashcards, vocabulary, and practice quizzes.",
   "/"
 )
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: [
-    {
-      "@type": "Question",
-      name: "How many kanji are in JLPT N5?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: `JLPT N5 has 79 kanji characters. These are the most fundamental Japanese characters that every beginner learns first, covering basic nouns, verbs, and adjectives.`,
-      },
-    },
-    {
-      "@type": "Question",
-      name: "How many kanji are in JLPT N4?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: `JLPT N4 has 168 kanji characters. These build on N5 and cover everyday kanji used in basic conversations and simple reading materials.`,
-      },
-    },
-    {
-      "@type": "Question",
-      name: "How many kanji are in JLPT N3?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: `JLPT N3 has 365 kanji characters. These are upper-intermediate characters that bridge daily life vocabulary and more formal written Japanese such as news articles.`,
-      },
-    },
-    {
-      "@type": "Question",
-      name: "How many kanji are in JLPT N2?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: `JLPT N2 has 686 kanji characters. These are advanced kanji found in newspapers, workplaces, and serious reading materials.`,
-      },
-    },
-    {
-      "@type": "Question",
-      name: "How many kanji are in JLPT N1?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: `JLPT N1 has 1,237 kanji characters. This covers the full sweep of literary, academic, and professional Japanese required for native-level fluency.`,
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What is the best JLPT kanji test online?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: `KanjiTest.Online is a free JLPT kanji test platform covering all levels from N5 to N1. It offers multiple choice quizzes, flashcards, vocabulary lists, and detailed kanji study pages — all without requiring an account or payment.`,
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Where can I practice JLPT kanji?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: `You can practice JLPT kanji for free on KanjiTest.Online. The site offers study pages with readings and examples, flip flashcards for active recall, vocabulary lists with sentences, and ${SETS_PER_LEVEL} practice test sets per level with instant feedback.`,
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Is JLPT N3 kanji difficult?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: `JLPT N3 kanji is moderately difficult — it requires learning 365 characters beyond the 247 in N5 and N4 combined. N3 marks the transition from beginner to intermediate Japanese, introducing more abstract vocabulary and concepts. With consistent practice using flashcards and quizzes, most learners find N3 achievable within 6-12 months of study.`,
-      },
-    },
-    {
-      "@type": "Question",
-      name: "How to study JLPT N2 kanji?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: `To study JLPT N2 kanji effectively: (1) Review N3 kanji first to build a strong foundation. (2) Study kanji in context using example words and sentences rather than in isolation. (3) Use flashcards for spaced repetition and active recall. (4) Take practice tests to identify weak areas. KanjiTest.Online offers all these tools for free across every JLPT level.`,
-      },
-    },
-    {
-      "@type": "Question",
-      name: "How to pass JLPT N1 kanji section?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: `To pass the JLPT N1 kanji section: (1) Master all 1,237 N1 kanji with their multiple readings and meanings. (2) Study vocabulary in context — N1 tests kanji within compound words and sentences. (3) Practice reading authentic materials like newspaper editorials and literary texts. (4) Use mock tests to simulate exam conditions. KanjiTest.Online provides N1 flashcards, vocabulary, and practice quizzes to help you prepare.`,
-      },
-    },
-  ],
-}
+const homepageBreadcrumb = breadcrumbSchema([{ name: "Home", url: "/" }])
+const faqSchema = faqSchemaLib(faqEntries)
 ---
 
 <DefaultLayout
-  title="Free JLPT Kanji Test Online — Practice Test, Quiz & Flashcards for N5 to N1"
-  description="Free JLPT kanji test online and practice test with mock exams for N5 to N1. Take a JLPT kanji quiz free, study with flashcards, and prepare for the Japanese kanji test online. No account needed."
+  title="Master JLPT Kanji: Free Practice & Flashcards"
+  description="Master JLPT kanji from N5 to N1 with free flashcards, vocabulary lists, and practice tests. Study readings, take quizzes, prepare for the JLPT — no account needed."
 >
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <script type="application/ld+json" set:html={JSON.stringify(homepageBreadcrumb)} />
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
   <!-- ———————— Hero ———————— -->
@@ -209,7 +139,25 @@ const faqSchema = {
     </div>
   </section>
 
-
+  <!-- ———————— Summary / Definition ———————— -->
+  <section class="border-t border-ink/5" style="background:var(--card-bg,#fff)">
+    <div class="max-w-5xl mx-auto px-4 py-16 sm:py-20">
+      <div class="max-w-3xl mx-auto text-center">
+        <p class="text-xs font-semibold uppercase tracking-widest text-ink/40 mb-3 reveal">What is KanjiTest.Online?</p>
+        <p class="text-lg sm:text-xl text-ink/85 leading-relaxed reveal" style="--reveal-delay: 60ms">
+          <strong class="text-ink">KanjiTest.Online</strong> is a free JLPT kanji study platform for Japanese learners at every level — from N5 beginners just starting out to N1 advanced students preparing for the exam. We provide kanji study pages with readings and example sentences, flip flashcards for active recall, vocabulary lists with real example sentences, and timed practice tests with instant feedback — all without requiring an account or payment.
+        </p>
+        <p class="text-sm text-ink/60 mt-4 reveal" style="--reveal-delay: 120ms">
+          Whether you are self-studying for the JLPT, brushing up on kanji for work, or learning Japanese for travel, everything here is built to help you master kanji one character at a time.
+        </p>
+        <div class="flex flex-wrap justify-center gap-6 mt-6 text-xs text-ink/50 reveal" style="--reveal-delay: 160ms">
+          <span>&check; 2,535+ kanji across all levels</span>
+          <span>&check; 6,900+ vocabulary words</span>
+          <span>&check; {SETS_PER_LEVEL} practice tests per level</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- ———————— Levels ———————— -->
   <section id="levels" class="border-t border-ink/5 scroll-mt-14">
@@ -360,6 +308,33 @@ const faqSchema = {
           Learn more about the platform
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
         </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ———————— FAQ ———————— -->
+  <section class="border-t border-ink/5" style="background:var(--card-bg,#fff)">
+    <div class="max-w-3xl mx-auto px-4 py-16 sm:py-24">
+      <h2 class="text-2xl sm:text-4xl font-black text-ink text-center reveal">Frequently asked questions</h2>
+
+      <div class="mt-10 sm:mt-12 space-y-6">
+        {faqEntries.slice(0, 5).map((entry, i) => (
+          <details class="group reveal" style={`--reveal-delay: ${i * 60}ms`}>
+            <summary class="flex items-center justify-between cursor-pointer text-sm sm:text-base font-bold text-ink py-3 px-4 rounded-xl border border-ink/10 group-open:border-ink/20 list-none">
+              <span>{entry.question}</span>
+              <svg class="w-4 h-4 text-ink/40 shrink-0 transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </summary>
+            <div class="px-4 pb-4 pt-2 text-sm sm:text-base text-ink/70 leading-relaxed">
+              {entry.answer}
+            </div>
+          </details>
+        ))}
+      </div>
+
+      <div class="flex flex-wrap justify-center gap-4 mt-10 text-xs sm:text-sm text-ink/50 reveal">
+        <span>Source: <a href="https://www.jlpt.jp/e/" target="_blank" rel="noopener noreferrer" class="underline underline-offset-2 hover:text-vermilion transition-colors">Official JLPT website</a></span>
+        <span>·</span>
+        <span>Learn more on <a href="/about/" class="underline underline-offset-2 hover:text-vermilion transition-colors">About KanjiTest.Online</a></span>
       </div>
     </div>
   </section>
