@@ -1,0 +1,382 @@
+{
+  "exportedAt": "2026-07-17T17:19:30.751Z",
+  "tool": "SEO / AEO / GEO Checker by PPCBlogPro",
+  "report": {
+    "checks": {
+      "AEO": [
+        {
+          "detail": "Question headings found: 6.",
+          "fix": "Add H2/H3 questions that match what users ask in Google, Bing, and AI answers.",
+          "name": "Question-style headings",
+          "pass": true,
+          "weight": 16
+        },
+        {
+          "detail": "Answered question headings: 6/6.",
+          "fix": "Place a concise answer paragraph, list, or table directly after each important question heading.",
+          "name": "Answers after questions",
+          "pass": true,
+          "weight": 14
+        },
+        {
+          "detail": "No strong direct-answer wording found.",
+          "fix": "Add a short answer or summary immediately after important question headings.",
+          "name": "Direct answer signals",
+          "pass": false,
+          "weight": 16
+        },
+        {
+          "detail": "No short-answer signal found in the opening section.",
+          "fix": "Add a short summary, key takeaway, or bottom-line answer near the top of the page.",
+          "name": "Top summary answer",
+          "pass": false,
+          "weight": 12
+        },
+        {
+          "detail": "No clear definition wording found.",
+          "fix": "For conceptual topics, include a sentence that defines the main topic in plain language.",
+          "name": "Definition support",
+          "pass": false,
+          "weight": 8
+        },
+        {
+          "detail": "FAQ schema found.",
+          "fix": "Add an FAQ section with concise answers to high-intent questions.",
+          "name": "FAQ section",
+          "pass": true,
+          "weight": 14
+        },
+        {
+          "detail": "Lists found: 0.",
+          "fix": "Use bullet lists, numbered steps, or checklists to make answers easy to extract.",
+          "name": "Lists or steps",
+          "pass": true,
+          "weight": 14
+        },
+        {
+          "detail": "Conversational query phrasing found.",
+          "fix": "Include natural-language questions such as \"what is\", \"how to\", or \"should I\".",
+          "name": "Conversational query coverage",
+          "pass": true,
+          "weight": 12
+        },
+        {
+          "detail": "No key takeaway signal found.",
+          "fix": "Add a short summary or key takeaway near the top.",
+          "name": "Key takeaway or summary",
+          "pass": false,
+          "weight": 12
+        },
+        {
+          "detail": "Tables: 0. Lists: 0.",
+          "fix": "Use a comparison table, checklist, or HowTo structure where useful.",
+          "name": "Structured answer support",
+          "pass": false,
+          "weight": 10
+        },
+        {
+          "detail": "Comparison or decision wording found.",
+          "fix": "Add comparison, pros/cons, best-for, pricing, or feature breakdowns when users need a decision.",
+          "name": "Comparison or decision support",
+          "pass": true,
+          "weight": 8
+        },
+        {
+          "detail": "Weak audience/use-case signal.",
+          "fix": "State who the content is for, when to use the advice, and which use cases it supports.",
+          "name": "Audience and use-case clarity",
+          "pass": false,
+          "weight": 8
+        },
+        {
+          "detail": "FAQ/HowTo schema found.",
+          "fix": "Add FAQPage or HowTo schema only when the visible content supports it.",
+          "name": "FAQ or HowTo schema",
+          "pass": true,
+          "weight": 12
+        }
+      ],
+      "GEO": [
+        {
+          "detail": "Entity-related terms found.",
+          "fix": "Clearly mention the product, brand, category, use case, audience, and industry context.",
+          "name": "Entity clarity",
+          "pass": true,
+          "weight": 14
+        },
+        {
+          "detail": "Weak audience or use-case signal.",
+          "fix": "Name the audience, use case, industry, and decision context clearly.",
+          "name": "Audience and use-case clarity",
+          "pass": false,
+          "weight": 10
+        },
+        {
+          "detail": "Person or organization schema found.",
+          "fix": "Show the company, organization, author, or reviewer behind this page.",
+          "name": "Ownership signal",
+          "pass": true,
+          "weight": 12
+        },
+        {
+          "detail": "WebPage schema found.",
+          "fix": "Add WebPage schema, or show a last updated date when the page covers time-sensitive information.",
+          "name": "Freshness or page schema",
+          "pass": true,
+          "weight": 10
+        },
+        {
+          "detail": "No strong original-experience signal found.",
+          "fix": "Add examples, screenshots, templates, first-hand testing, or real data.",
+          "name": "Original experience",
+          "pass": false,
+          "weight": 16
+        },
+        {
+          "detail": "Weak proof/example signal.",
+          "fix": "Add examples, screenshots, customer proof, benchmarks, templates, or case-study evidence.",
+          "name": "Proof and examples",
+          "pass": false,
+          "weight": 12
+        },
+        {
+          "detail": "Data, date, percentage, report, or benchmark signal found.",
+          "fix": "Add current data, statistics, benchmark results, dates, or cited research where claims need support.",
+          "name": "Data and statistics",
+          "pass": true,
+          "weight": 10
+        },
+        {
+          "detail": "Unique content external links: 0. Source wording: yes.",
+          "fix": "Cite credible sources, studies, reports, or official documentation.",
+          "name": "Credible citations",
+          "pass": true,
+          "weight": 14
+        },
+        {
+          "detail": "Person or Organization schema found.",
+          "fix": "Add Organization, Person, author, publisher, or reviewedBy schema so AI systems can attribute the page.",
+          "name": "Organization identity schema",
+          "pass": true,
+          "weight": 10
+        },
+        {
+          "detail": "sameAs schema: yes. Product/service schema: no.",
+          "fix": "Use sameAs, Organization, Product, Service, or SoftwareApplication schema to disambiguate important entities.",
+          "name": "Entity disambiguation",
+          "pass": true,
+          "weight": 8
+        },
+        {
+          "detail": "Schema found: WebSite, SearchAction, EntryPoint, Organization, CollectionPage, FAQPage, Question, Answer.",
+          "fix": "Use WebPage schema and connect it to organization, publisher, or author data.",
+          "name": "Page / organization schema",
+          "pass": true,
+          "weight": 12
+        },
+        {
+          "detail": "No summary signal found.",
+          "fix": "Add a concise top summary that states the main answer and who it is for.",
+          "name": "Clear summary for AI extraction",
+          "pass": false,
+          "weight": 12
+        },
+        {
+          "detail": "Word count: 512. H2 count: 5.",
+          "fix": "Cover the topic deeply with clear subtopics, examples, and related questions.",
+          "name": "Depth and topical coverage",
+          "pass": true,
+          "weight": 10
+        }
+      ],
+      "SEO": [
+        {
+          "detail": "Current title length: 75 characters.",
+          "fix": "Use a clear title around 30-65 characters with the main topic near the front.",
+          "name": "Title length",
+          "pass": false,
+          "weight": 10
+        },
+        {
+          "detail": "Current meta description length: 194 characters.",
+          "fix": "Write a benefit-driven meta description around 110-165 characters.",
+          "name": "Meta description",
+          "pass": false,
+          "weight": 10
+        },
+        {
+          "detail": "Page uses HTTPS.",
+          "fix": "Use HTTPS for the page URL.",
+          "name": "HTTPS URL",
+          "pass": true,
+          "weight": 5
+        },
+        {
+          "detail": "Path: /",
+          "fix": "Use a short, readable URL with words separated by hyphens.",
+          "name": "Readable URL slug",
+          "pass": true,
+          "weight": 5
+        },
+        {
+          "detail": "H1 count: 1.",
+          "fix": "Use exactly one H1 that clearly describes the main topic or offer.",
+          "name": "One clear H1",
+          "pass": true,
+          "weight": 8
+        },
+        {
+          "detail": "Title and H1 checked. H1: Master JLPT kanji, one character at a time..",
+          "fix": "Make the title tag and H1 describe the same core topic without being exact duplicates.",
+          "name": "Title and H1 alignment",
+          "pass": false,
+          "weight": 6
+        },
+        {
+          "detail": "Checked title, H1, meta description, and intro.",
+          "fix": "Add the main topic naturally in the title, H1, meta description, and first 250 words.",
+          "name": "Main topic placement",
+          "pass": false,
+          "weight": 12
+        },
+        {
+          "detail": "Word count: 512. Target for page: 300+ words.",
+          "fix": "For important pages, add enough useful copy to explain the offer, audience, proof, and next step.",
+          "name": "Enough content depth",
+          "pass": true,
+          "weight": 10
+        },
+        {
+          "detail": "H2 count: 5. Heading order: good.",
+          "fix": "Use H2s to break the content into clear sections and avoid skipping heading levels.",
+          "name": "Useful heading structure",
+          "pass": true,
+          "weight": 8
+        },
+        {
+          "detail": "Average paragraph: 19 words. Long paragraphs: 0.",
+          "fix": "Break long paragraphs into shorter sections for readability and easier extraction.",
+          "name": "Scannable paragraphs",
+          "pass": true,
+          "weight": 6
+        },
+        {
+          "detail": "Unique content internal links found: 38.",
+          "fix": "Add at least 2 relevant internal links to supporting pages or related posts.",
+          "name": "Internal links",
+          "pass": true,
+          "weight": 8
+        },
+        {
+          "detail": "Unique content external links found: 0.",
+          "fix": "Add at least 1 credible external source when making factual claims.",
+          "name": "External/source links",
+          "pass": false,
+          "weight": 6
+        },
+        {
+          "detail": "Descriptive anchors: 38/38.",
+          "fix": "Use descriptive anchor text instead of generic labels like click here or read more.",
+          "name": "Descriptive anchor text",
+          "pass": true,
+          "weight": 5
+        },
+        {
+          "detail": "Images with alt text: 0/0.",
+          "fix": "Add descriptive alt text for important images.",
+          "name": "Image alt text",
+          "pass": true,
+          "weight": 8
+        },
+        {
+          "detail": "Images with dimensions: 0/0.",
+          "fix": "Add width and height attributes or stable dimensions for key images to reduce layout shifts.",
+          "name": "Image dimensions",
+          "pass": true,
+          "weight": 4
+        },
+        {
+          "detail": "Canonical tag found. Self canonical: yes.",
+          "fix": "Add a canonical tag that points to the preferred version of this page.",
+          "name": "Canonical URL",
+          "pass": true,
+          "weight": 6
+        },
+        {
+          "detail": "Robots meta: index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1.",
+          "fix": "Remove noindex or nofollow if this page should rank and pass link signals.",
+          "name": "Indexable page",
+          "pass": true,
+          "weight": 6
+        },
+        {
+          "detail": "Viewport: width=device-width, initial-scale=1.",
+          "fix": "Add a responsive viewport meta tag such as width=device-width, initial-scale=1.",
+          "name": "Mobile viewport",
+          "pass": true,
+          "weight": 5
+        },
+        {
+          "detail": "HTML lang: en.",
+          "fix": "Set the html lang attribute so search engines and assistive tools understand the page language.",
+          "name": "Language attribute",
+          "pass": true,
+          "weight": 4
+        },
+        {
+          "detail": "OG title: yes. OG description: yes. OG image: yes.",
+          "fix": "Add Open Graph title, description, and image metadata for better sharing previews.",
+          "name": "Social preview metadata",
+          "pass": true,
+          "weight": 4
+        },
+        {
+          "detail": "No BreadcrumbList schema found.",
+          "fix": "Add BreadcrumbList schema when the page belongs in a clear site hierarchy.",
+          "name": "Breadcrumb schema",
+          "pass": false,
+          "weight": 4
+        },
+        {
+          "detail": "Schema found: WebSite, SearchAction, EntryPoint, Organization, CollectionPage, FAQPage, Question, Answer.",
+          "fix": "Add WebPage schema, or Article/BlogPosting schema when this page is editorial content.",
+          "name": "Page schema",
+          "pass": true,
+          "weight": 8
+        }
+      ]
+    },
+    "contentLabel": "Page",
+    "contentType": "page",
+    "externalLinkCount": 0,
+    "h1s": [
+      "Master JLPT kanji, one character at a time."
+    ],
+    "h2Count": 5,
+    "h3Count": 6,
+    "imageCount": 0,
+    "imagesWithAltCount": 0,
+    "internalLinkCount": 38,
+    "linkScope": "article content",
+    "metaDescription": "Free JLPT kanji test online and practice test with mock exams for N5 to N1. Take a JLPT kanji quiz free, study with flashcards, and prepare for the Japanese kanji test online. No account needed.",
+    "schemaTypes": [
+      "WebSite",
+      "SearchAction",
+      "EntryPoint",
+      "Organization",
+      "CollectionPage",
+      "FAQPage",
+      "Question",
+      "Answer"
+    ],
+    "scores": {
+      "AEO": 58,
+      "GEO": 67,
+      "SEO": 68
+    },
+    "title": "Free JLPT Kanji Test Online — Practice Test, Quiz & Flashcards for N5 to N1",
+    "totalScore": 64,
+    "url": "https://www.kanjitest.online/",
+    "wordCount": 512
+  }
+}

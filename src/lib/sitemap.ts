@@ -26,7 +26,7 @@ export async function getAllEntries(): Promise<SitemapEntry[]> {
   const entries: SitemapEntry[] = []
 
   // static pages
-  push(entries, BASE, "1.0", "weekly")
+  push(entries, `${BASE}/`, "1.0", "weekly")
   push(entries, `${BASE}/about/`, "0.5", "monthly")
   push(entries, `${BASE}/privacy/`, "0.3", "monthly")
   push(entries, `${BASE}/terms/`, "0.3", "monthly")
